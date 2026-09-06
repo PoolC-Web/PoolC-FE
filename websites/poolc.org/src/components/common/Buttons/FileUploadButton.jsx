@@ -5,8 +5,9 @@ import FileUploadModal from '../FileUploadModal/FileUploadModal';
 import Modal from '../Modal/Modal';
 import uploadableTypes from '../../../constants/uploadableTypes';
 import { SUCCESS } from '../../../constants/statusCode';
+import { publicConfig } from '../../../lib/config/publicConfig';
 
-const FileUploadButton = ({ files, onSubmit, multiple }) => {
+const FileUploadButton = ({ files, onSubmit, multiple, buttonStyle }) => {
   const formData = new FormData();
 
   const [file, setFile] = useState(null);
@@ -16,7 +17,7 @@ const FileUploadButton = ({ files, onSubmit, multiple }) => {
 
   const onBrowseFile = (e) => {
     e.preventDefault();
-    if (e.target.files[0].size > +process.env.VITE_MAX_FILE_SIZE) {
+    if (e.target.files[0].size > publicConfig.maxFileSize) {
       setErrorMessage('첨부 가능한 최대 크기를 초과하였습니다.');
       onShowErrorModal();
       return;
@@ -80,7 +81,7 @@ const FileUploadButton = ({ files, onSubmit, multiple }) => {
     <>
       <FileUploadModal visible={modalVisible} file={file} onUploadFile={onUploadFile} onBrowseFile={onBrowseFile} onCancel={() => setModalVisible(false)} />
       <Modal contents={errorMessage} buttons={buttons} visible={errorModalVisible} onConfirm={onCloseErrorModal} onCancel={onCloseErrorModal} />
-      <ActionButton className="file" onClick={onShowModal} style={{ marginBottom: '1rem' }}>
+      <ActionButton className="file" onClick={onShowModal} style={buttonStyle ?? { marginBottom: '1rem' }}>
         파일 첨부
       </ActionButton>
     </>

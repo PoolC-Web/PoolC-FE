@@ -1,11 +1,13 @@
 import styled from '@emotion/styled';
 import colors from '../../lib/styles/colors';
+import { media } from '../../styles/responsive';
 
 export const HeaderBlock = styled.div`
   box-sizing: border-box;
   display: flex;
   align-items: center;
-  padding: 10px 5%;
+  min-height: 60px;
+  padding: 8px 5%;
   top: 0;
   left: 0;
   right: 0;
@@ -16,11 +18,10 @@ export const HeaderBlock = styled.div`
   border-bottom: 1px solid #eee;
   z-index: 100;
 
-  @media (max-width: 768px) {
+  ${media.mobile} {
     position: sticky;
     flex-direction: column;
     align-items: flex-start;
-    margin-bottom: 20px;
     z-index: 100;
     top: 0;
     left: 0;
@@ -29,13 +30,13 @@ export const HeaderBlock = styled.div`
     box-shadow: 0 0 20px ${colors.gray[1]};
     padding: 0 5%;
     & > .open {
-      top: 50px;
-      box-shadow: 0px 20px 20px ${colors.gray[1]};
+      top: 60px;
+      box-shadow: 0 18px 28px rgba(32, 49, 43, 0.08);
       -webkit-transition: all 0.5s ease;
       -moz-transition: all 0.5s ease;
       transition: all 0.5s ease;
-      border-bottom-left-radius: 50px;
-      border-bottom-right-radius: 50px;
+      border-bottom-left-radius: 12px;
+      border-bottom-right-radius: 12px;
     }
   }
 `;
@@ -43,7 +44,7 @@ export const HeaderBlock = styled.div`
 export const HeaderIcons = styled.div`
   color: ${colors.brown[0]};
 
-  @media (max-width: 768px) {
+  ${media.mobile} {
     display: flex;
     align-items: center;
     justify-content: space-between;
@@ -60,19 +61,22 @@ export const HeaderIcons = styled.div`
 export const LogoImage = styled.img`
   height: auto;
   width: auto;
-  max-width: 20px;
+  max-width: 22px;
   cursor: pointer;
-  margin-right: 10px;
 `;
 
-export const BarsIcon = styled.i`
+export const BarsIcon = styled.button`
   display: none;
   cursor: pointer;
-  padding: 10px 0 10px 10px;
-  @media (max-width: 768px) {
+  border: 0;
+  background: transparent;
+  padding: 10px;
+  border-radius: 8px;
+  ${media.mobile} {
     display: block;
   }
   &:hover {
+    background-color: ${colors.mint[0]};
     color: ${colors.brown[1]};
   }
 `;
@@ -80,7 +84,7 @@ export const BarsIcon = styled.i`
 export const HeaderIconBox = styled.div`
   display: none;
 
-  @media (max-width: 768px) {
+  ${media.mobile} {
     display: flex;
     align-items: center;
     gap: 4px;

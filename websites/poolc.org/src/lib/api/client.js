@@ -1,12 +1,14 @@
 import axios from 'axios';
-import { handleExpiredAccessToken } from '~/modules/auth';
-import { store } from '~';
-
-const API_BASE_URL = import.meta.env.DEV ? '/api/mincho' : import.meta.env.VITE_API_BASE_URL;
+import { publicConfig } from '~/lib/config/publicConfig';
 
 const client = axios.create();
+let onUnauthorized = () => {};
 
-client.defaults.baseURL = API_BASE_URL;
+export const setUnauthorizedHandler = (handler) => {
+  onUnauthorized = handler;
+};
+
+client.defaults.baseURL = publicConfig.apiBaseUrl;
 
 if (localStorage.getItem('accessToken')) {
   client.defaults.headers.common.Authorization = `Bearer ${localStorage.getItem('accessToken')}`;
@@ -36,8 +38,8 @@ client.interceptors.response.use(
     response,
   (error) => {
     // 요청 실패 시 특정 작업 수행
-    if (error.response.status === 401) {
-      store.dispatch(handleExpiredAccessToken());
+    if (error.response?.status === 401) {
+      onUnauthorized();
     }
     return Promise.reject(error);
   },

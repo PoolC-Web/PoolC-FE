@@ -1,10 +1,8 @@
 import { useEffect, useState } from 'react';
 import { withRouter } from 'react-router-dom';
 import { useSelector } from 'react-redux';
-import ActivityMenu from '../../../components/activity/ActivityMenu/ActivityMenu';
 import ActivityList from '../../../components/activity/ActivityList/ActivityList';
 import * as activityAPI from '../../../lib/api/activity';
-import { TwoColumnsContainerBlock } from '../../../styles/common/Block.styles.tsx';
 import { MENU } from '../../../constants/menus';
 import { SUCCESS } from '../../../constants/statusCode';
 
@@ -68,11 +66,21 @@ const ActivityListContainer = ({ location, history }) => {
     });
   };
 
+  const onChangeSemester = (semester) => {
+    history.push(`/${MENU.ACTIVITIES}?semester=${semester}`);
+  };
+
   return (
-    <TwoColumnsContainerBlock>
-      <ActivityMenu loading={loading} semesters={semesters} currentLocation={currentLocation} />
-      <ActivityList loading={loading} activities={activities} onToggleRegisterActivity={onToggleRegisterActivity} onDeleteActivity={onDeleteActivity} member={member} />
-    </TwoColumnsContainerBlock>
+    <ActivityList
+      loading={loading}
+      activities={activities}
+      semesters={semesters}
+      currentLocation={currentLocation}
+      onChangeSemester={onChangeSemester}
+      onToggleRegisterActivity={onToggleRegisterActivity}
+      onDeleteActivity={onDeleteActivity}
+      member={member}
+    />
   );
 };
 

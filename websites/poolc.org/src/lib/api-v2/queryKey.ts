@@ -3,23 +3,23 @@ import { BoardType } from '~/lib/utils/boardUtil';
 export const queryKey = {
   member: {
     hour: ['member.hour'] as const,
+    activitySummary: ['member.activitySummary'] as const,
     me: ['member.me'] as const,
     all: ['member.all'] as const,
+    roles: ['member.roles'] as const,
     id: (loginId: string) => ['member.id', loginId] as const,
-  },
-  badge: {
-    badge: ['badge.badge'] as const,
-    all: ['badge.all'] as const,
-    member: (loginId: string) => ['badge.member', loginId] as const,
   },
   book: {
     book: (id: number) => ['book.book', id] as const,
-    all: (sorting: string, page?: number) => (page !== undefined ? (['book.all', page, sorting] as const) : (['book.all', sorting] as const)),
+    all: (sorting: string, page?: number, category?: string) =>
+      page !== undefined ? (['book.all', page, sorting, category] as const) : (['book.all', sorting, category] as const),
     borrowed: ['book.borrowed'] as const,
-    search: (sorting: string, keyword: string, searchType: string, page?: number) => ['book.search', sorting, keyword, searchType, page] as const,
+    search: (sorting: string, keyword: string, searchType: string, page?: number, category?: string) =>
+      ['book.search', sorting, keyword, searchType, page, category] as const,
   },
   post: {
     all: (boardType: BoardType, page: number) => ['post.all', boardType, page] as const,
+    search: (boardType: BoardType, keyword: string, page: number) => ['post.search', boardType, keyword, page] as const,
     post: (id: number) => ['post.post', id] as const,
     myPosts: (page: number) => ['post.myPosts', page] as const,
   },

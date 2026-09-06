@@ -23,6 +23,7 @@ export const NoticeContainerTitle = styled.h3`
   padding-left: 20px;
   width: 90%;
   margin-bottom: 30px;
+  font-size: 1.17em;
   font-weight: 700;
 `;
 
@@ -62,7 +63,7 @@ export const RecentNoticeCardTitle = styled.p`
   font-weight: 500;
   cursor: pointer;
   word-break: keep-all;
-  @media (max-width: 576px) {
+  @media (max-width: 767px) {
     font-size: 0.8rem;
   }
 `;

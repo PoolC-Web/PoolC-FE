@@ -1,22 +1,27 @@
 import { createStyles } from 'antd-style';
 import { Suspense } from 'react';
-import { useLocation } from 'react-router';
+import { Redirect } from 'react-router-dom';
 import { Block, WhiteBlock } from '~/styles/common/Block.styles';
 import MyPageContainer from '~/components/my-page/MyPageContainer';
 import Skeleton from '~/components/common/Skeleton';
+import { MEMBER_ROLE } from '~/constants/memberRoles';
+import { MENU } from '~/constants/menus';
+import { useAppSelector } from '~/hooks/useAppSelector';
 
 export default function MyPage() {
   const { styles } = useStyles();
-  const location = useLocation();
+  const role = useAppSelector((state) => state.auth.user.role);
 
-  const locationHash = location.hash.replace(/^#/, '');
+  if (role === MEMBER_ROLE.UNACCEPTED) {
+    return <Redirect to={`/${MENU.APPLY}`} />;
+  }
 
   return (
     <Block>
       <WhiteBlock className={styles.whiteBlock}>
         <div className={styles.wrapper}>
           <Suspense fallback={<Skeleton />}>
-            <MyPageContainer locationHash={locationHash} />
+            <MyPageContainer />
           </Suspense>
         </div>
       </WhiteBlock>
@@ -31,6 +36,8 @@ const useStyles = createStyles(({ css }) => ({
   `,
   wrapper: css`
     width: 100%;
+    max-width: 1180px;
+    margin: 0 auto;
     box-sizing: border-box;
   `,
 }));

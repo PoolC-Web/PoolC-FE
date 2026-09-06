@@ -2,12 +2,13 @@ import { useState } from 'react';
 import { Link } from 'react-router-dom';
 import { Avatar, Button, Dropdown } from 'antd';
 import { createStyles } from 'antd-style';
-import { MenuOutlined } from '@ant-design/icons';
+import { CloseOutlined, MenuOutlined } from '@ant-design/icons';
 import poolcIcon from '~/assets/images/poolc-icon.png';
 import { BarsIcon, HeaderBlock, HeaderIconBox, HeaderIcons, LogoImage } from './Header.styles';
 import Menus from './Menus/Menus';
 import { MENU } from '~/constants/menus';
 import Notification from './Notification/Notification';
+import { media } from '~/styles/responsive';
 
 const useStyles = createStyles(({ css }) => ({
   avatarButton: css`
@@ -29,6 +30,11 @@ const useStyles = createStyles(({ css }) => ({
     align-items: center;
     gap: 8px;
   `,
+  profileMenu: css`
+    ${media.mobile} {
+      display: none;
+    }
+  `,
 }));
 
 const Header = ({ member, onLogout }) => {
@@ -36,7 +42,7 @@ const Header = ({ member, onLogout }) => {
 
   const {
     status: { isLogin },
-    user: { isAdmin, role, profileImageURL },
+    user: { isAdmin, name, role, profileImageURL },
   } = member;
 
   const [menuVisible, setMenuVisible] = useState(false);
@@ -57,7 +63,7 @@ const Header = ({ member, onLogout }) => {
   const dropDownItems = (() => {
     const arr = [
       {
-        label: <Link to={`/${MENU.MY_PAGE}`}>My Page</Link>,
+        label: <Link to={`/${MENU.MY_PAGE}`} onClick={onCloseMenu}>My Page</Link>,
         key: 'my-page',
       },
       {
@@ -69,7 +75,7 @@ const Header = ({ member, onLogout }) => {
 
     if (isAdmin) {
       arr.splice(2, 0, {
-        label: <Link to={`/${MENU.ADMIN}`}>Admin</Link>,
+        label: <Link to={`/${MENU.ADMIN}`} onClick={onCloseMenu}>Admin</Link>,
         key: 'admin',
       });
     }
@@ -80,7 +86,7 @@ const Header = ({ member, onLogout }) => {
   return (
     <HeaderBlock>
       <HeaderIcons>
-        <Link to="/">
+        <Link to="/" aria-label="PoolC home">
           <div className={styles.logo}>
             <LogoImage src={poolcIcon} alt="logo" onClick={onCloseMenu} />
           </div>
@@ -91,19 +97,21 @@ const Header = ({ member, onLogout }) => {
               {/** Noti */}
               <Notification />
               {/** Profile */}
-              <Dropdown menu={{ items: dropDownItems }}>
-                <Button shape="circle" className={styles.avatarButton}>
-                  <Avatar src={profileImageURL} size={36} />
-                </Button>
-              </Dropdown>
+              <div className={styles.profileMenu}>
+                <Dropdown menu={{ items: dropDownItems }}>
+                  <Button shape="circle" className={styles.avatarButton}>
+                    <Avatar src={profileImageURL} size={36} />
+                  </Button>
+                </Dropdown>
+              </div>
             </div>
           )}
-          <BarsIcon onClick={onToggleMenu}>
-            <MenuOutlined />
+          <BarsIcon type="button" aria-label={menuVisible ? '메뉴 닫기' : '메뉴 열기'} onClick={onToggleMenu}>
+            {menuVisible ? <CloseOutlined /> : <MenuOutlined />}
           </BarsIcon>
         </HeaderIconBox>
       </HeaderIcons>
-      <Menus menuVisible={menuVisible} onToggleMenu={onToggleMenu} isLogin={isLogin} role={role} isAdmin={isAdmin} dropDownItems={dropDownItems} profileImageURL={profileImageURL} />
+      <Menus menuVisible={menuVisible} onToggleMenu={onToggleMenu} isLogin={isLogin} name={name} role={role} isAdmin={isAdmin} dropDownItems={dropDownItems} profileImageURL={profileImageURL} />
     </HeaderBlock>
   );
 };

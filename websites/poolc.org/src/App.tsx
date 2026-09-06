@@ -1,9 +1,13 @@
-import { Route, Switch } from 'react-router-dom';
+import { Redirect, Route, Switch } from 'react-router-dom';
 import { createStyles } from 'antd-style';
 import { lazy, Suspense } from 'react';
+import type { ComponentType } from 'react';
 import { MENU } from './constants/menus';
 import FooterContainer from './containers/footer/FooterContainer';
 import HeaderContainer from './containers/header/HeaderContainer';
+import { media } from './styles/responsive';
+
+type LazyPageModule = { default: ComponentType<Record<string, never>> };
 
 const useStyles = createStyles(({ css }) => ({
   appContainer: css`
@@ -18,8 +22,13 @@ const useStyles = createStyles(({ css }) => ({
     padding-top: 90px;
     flex: 1;
 
-    @media (max-width: 768px) {
+    ${media.mobile} {
       padding-top: 0;
+      background: #ffffff;
+
+      &:has([data-admin-layout='true']) {
+        background: transparent;
+      }
     }
   `,
 }));
@@ -52,19 +61,22 @@ const PasswordResetEmailPage = lazy(() => import('./pages/auth/PasswordResetEmai
 const ApplyPage = lazy(() => import('./pages/apply/ApplyPage'));
 const InterviewPage = lazy(() => import('./pages/apply/InterviewPage'));
 
-const AdminHomePage = lazy(() => import('./pages/admin/AdminHomePage'));
+const AdminHomePage = lazy(() => import('./pages/admin/AdminHomePage') as unknown as Promise<LazyPageModule>);
 
-const AccessDeniedPage = lazy(() => import('./pages/error/AccessDeniedPage'));
-const NotFoundPage = lazy(() => import('./pages/error/NotFoundPage'));
+const AccessDeniedPage = lazy(() => import('./pages/error/AccessDeniedPage') as unknown as Promise<LazyPageModule>);
+const NotFoundPage = lazy(() => import('./pages/error/NotFoundPage') as unknown as Promise<LazyPageModule>);
 
 const BoardListPage = lazy(() => import('~/pages/board/BoardListPage'));
 const BoardDetailPage = lazy(() => import('~/pages/board/BoardDetailPage'));
 const BoardWritePage = lazy(() => import('~/pages/board/BoardWritePage'));
 
+const PksPage = lazy(() => import('~/pages/pks/PksPage'));
+
 const MyPage = lazy(() => import('./pages/my-page/MyPage'));
-const MyPageBadgeListPage = lazy(() => import('./pages/my-page/MyPageBadgeListPage'));
 const MyPageMyPostsPage = lazy(() => import('./pages/my-page/MyPageMyPostsPage'));
 const MyPageMyScrapsPage = lazy(() => import('./pages/my-page/MyPageMyScrapsPage'));
+const MyPageCollectionPage = lazy(() => import('./pages/my-page/MyPageCollectionPage'));
+const PokemonAchievementsPage = lazy(() => import('./pages/pokemon/PokemonAchievementsPage'));
 
 const MessageAllListPage = lazy(() => import('./pages/message/MessageAllListPage'));
 const MessageListPage = lazy(() => import('./pages/message/MessageListPage'));
@@ -104,13 +116,17 @@ function App() {
             <Route component={BoardListPage} path={`/${MENU.BOARD}`} exact />
             <Route component={BoardWritePage} path={`/${MENU.BOARD}/write`} />
             <Route component={BoardDetailPage} path={`/${MENU.BOARD}/:id`} />
+            <Route component={PksPage} path={`/${MENU.PKS}`} exact />
+            <Route exact path={`/${MENU.POKEMON}`} render={() => <Redirect to={`/${MENU.POKEMON}/${MENU.POKEMON_COLLECTION}`} />} />
+            <Route component={MyPageCollectionPage} path={`/${MENU.POKEMON}/${MENU.POKEMON_COLLECTION}`} exact />
+            <Route component={PokemonAchievementsPage} path={`/${MENU.POKEMON}/${MENU.POKEMON_ACHIEVEMENTS}`} exact />
             <Route component={MessageAllListPage} path={`/${MENU.MESSAGE}`} exact />
             <Route component={MessageListPage} path={`/${MENU.MESSAGE}/:conversationId`} exact />
             <Route component={MessageFormPage} path={`/${MENU.MESSAGE}/:conversationId/${MENU.MESSAGE_FORM}`} />
             <Route component={MyPage} path={`/${MENU.MY_PAGE}`} exact />
-            <Route component={MyPageBadgeListPage} path={`/${MENU.MY_PAGE}/${MENU.MY_PAGE_BADGE_LIST}`} />
             <Route component={MyPageMyPostsPage} path={`/${MENU.MY_PAGE}/${MENU.MY_PAGE_MY_POSTS}`} />
             <Route component={MyPageMyScrapsPage} path={`/${MENU.MY_PAGE}/${MENU.MY_PAGE_MY_SCRAPS}`} />
+            <Route component={MyPageCollectionPage} path={`/${MENU.MY_PAGE}/${MENU.MY_PAGE_COLLECTION}`} />
             <Route component={SpaceReservationPage} path={`/${MENU.ROOM_RESERVATION}`} />
             <Route component={NotFoundPage} path="/" />
           </Switch>

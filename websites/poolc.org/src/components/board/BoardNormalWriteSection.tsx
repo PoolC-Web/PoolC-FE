@@ -4,15 +4,15 @@ import { useEffect, useRef } from 'react';
 import { Editor } from '@dialga/react-editor';
 import { useForm, zodResolver } from '@mantine/form';
 import { z } from 'zod';
-import { Breadcrumb, Button, Divider, Form, Input, Space, Typography, Upload } from 'antd';
+import { Button, Form, Input, Space, Upload } from 'antd';
 import { UploadChangeParam } from 'antd/es/upload';
-import { Link, useHistory } from 'react-router-dom';
+import { useHistory } from 'react-router-dom';
 import { stringify } from 'qs';
 import { createStyles } from 'antd-style';
-import { match } from 'ts-pattern';
 import { UploadOutlined } from '@ant-design/icons';
 import { ApiError, CustomApi, PostControllerService, queryKey, useAppMutation, useAppQuery } from '~/lib/api-v2';
 import { Block, WhiteBlock } from '~/styles/common/Block.styles';
+import { PageHeader } from '~/components/common/PageHeader/PageHeader';
 import { MENU } from '~/constants/menus';
 import { BoardType, getBoardTitle } from '~/lib/utils/boardUtil';
 import { useMessage } from '~/hooks/useMessage';
@@ -29,8 +29,7 @@ const useStyles = createStyles(({ css }) => ({
     width: 100%;
   `,
   titleWrap: css`
-    border-left: 4px solid #47be9b;
-    padding-left: 16px;
+    width: 100%;
   `,
   buttonWrap: css`
     width: 100%;
@@ -38,9 +37,6 @@ const useStyles = createStyles(({ css }) => ({
   `,
   editorWrap: css`
     margin-bottom: 24px;
-  `,
-  divider: css`
-    margin: 12px 0;
   `,
 }));
 
@@ -52,7 +48,7 @@ const schema = z.object({
   fileList: z.array(z.string()),
 });
 
-export default function BoardNormalWriteSection({ boardType, postId }: { boardType: Exclude<BoardType, 'JOB'>; postId: number }) {
+export default function BoardNormalWriteSection({ boardType, postId }: { boardType: BoardType; postId: number }) {
   const { styles } = useStyles();
   const history = useHistory();
   const message = useMessage();
@@ -130,7 +126,7 @@ export default function BoardNormalWriteSection({ boardType, postId }: { boardTy
           request: {
             body: val.body,
             title: val.title,
-            boardType,
+            boardType: boardType as never,
             fileList: val.fileList,
             postType: 'GENERAL_POST',
             /* always false */
@@ -147,14 +143,6 @@ export default function BoardNormalWriteSection({ boardType, postId }: { boardTy
       );
     }
   };
-
-  const renderDescription = () =>
-    match(boardType)
-      .with('FREE', () => '자유롭게 글을 작성해보아요')
-      .with('NOTICE', () => '공지사항을 올릴 수 있어요')
-      .with('PROJECT', () => '프로젝트 팀원을 구해요')
-      .with('CS', () => 'CS 전공지식을 공유해요')
-      .exhaustive();
 
   const onUploadChange = (info: UploadChangeParam) => {
     if (info.file.status === 'removed') {
@@ -207,21 +195,12 @@ export default function BoardNormalWriteSection({ boardType, postId }: { boardTy
   return (
     <Block>
       <WhiteBlock>
-        <Space direction="vertical" size={0} className={styles.wrapper} split={<Divider className={styles.divider} />}>
-          <Breadcrumb
-            items={[
-              { title: <Link to={`/${MENU.BOARD}`}>게시판</Link> },
-              {
-                title: <Link to={`/${MENU.BOARD}?${stringify({ boardType })}`}>{getBoardTitle(boardType)}</Link>,
-              },
-            ]}
-          />
+        <Space direction="vertical" size={0} className={styles.wrapper}>
           <Form onSubmitCapture={form.onSubmit(onFormSubmit, () => {})}>
             <Space direction="vertical" className={styles.fullWidth} size="middle">
-              <Space direction="vertical" className={styles.titleWrap} size={0}>
-                <Typography.Title level={3}>{getBoardTitle(boardType)}</Typography.Title>
-                <Typography>{renderDescription()}</Typography>
-              </Space>
+              <div className={styles.titleWrap}>
+                <PageHeader title={getBoardTitle(boardType)} />
+              </div>
               <div className={styles.fullWidth}>
                 <Form.Item label="제목">
                   <Input placeholder="제목을 입력해주세요." {...form.getInputProps('title')} />
