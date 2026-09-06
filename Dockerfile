@@ -15,11 +15,9 @@ COPY . .
 
 ARG VITE_API_BASE_URL=https://dev.poolc.org/api
 ARG VITE_FILE_URL=https://dev.poolc.org/api
-ARG VITE_PKS_GITEA_URL=https://git.poolc.org
 
 ENV VITE_API_BASE_URL=$VITE_API_BASE_URL
 ENV VITE_FILE_URL=$VITE_FILE_URL
-ENV VITE_PKS_GITEA_URL=$VITE_PKS_GITEA_URL
 
 RUN yarn workspace @dialga/poolc.org build
 

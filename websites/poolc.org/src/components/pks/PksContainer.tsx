@@ -6,15 +6,13 @@ import {
   DeploymentUnitOutlined,
   EyeTwoTone,
   FormOutlined,
-  GithubOutlined,
   SettingTwoTone,
 } from '@ant-design/icons';
-import { message, Typography } from 'antd';
+import { Typography } from 'antd';
 import { createStyles } from 'antd-style';
-import { MouseEvent, ReactNode, useState } from 'react';
+import { ReactNode } from 'react';
 import { PageHeader } from '~/components/common/PageHeader/PageHeader';
 import PksKubectlSection from '~/components/pks/PksKubectlSection';
-import { createGiteaLoginTicket } from '~/lib/api/gitea';
 import { KubernetesControllerService, queryKey, useAppQuery } from '~/lib/api-v2';
 import { publicConfig } from '~/lib/config/publicConfig';
 
@@ -40,12 +38,6 @@ const PKS_RESOURCES: PksResource[] = [
     link: publicConfig.pks.docs.url,
   },
   {
-    title: 'Gitea',
-    description: 'PoolC Git 저장소 열기',
-    icon: <GithubOutlined />,
-    link: publicConfig.pks.gitea.url,
-  },
-  {
     title: 'Argo CD',
     description: '배포 상태 확인',
     icon: <DeploymentUnitOutlined />,
@@ -67,7 +59,6 @@ const PKS_RESOURCES: PksResource[] = [
 
 export default function PksContainer() {
   const { styles } = useStyles();
-  const [isGiteaLoginLoading, setIsGiteaLoginLoading] = useState(false);
   const availableResources = PKS_RESOURCES.filter((item) => item.link);
   const pendingResources = PKS_RESOURCES.filter((item) => !item.link);
 
@@ -87,25 +78,6 @@ export default function PksContainer() {
     }
 
     return <Typography.Text className={styles.mutedText}>키 정보를 확인하고 있습니다.</Typography.Text>;
-  };
-
-  const handleGiteaClick = async (event: MouseEvent<HTMLAnchorElement>) => {
-    event.preventDefault();
-
-    if (isGiteaLoginLoading) {
-      return;
-    }
-
-    try {
-      setIsGiteaLoginLoading(true);
-      const { data } = await createGiteaLoginTicket();
-      const loginUrl = new URL('/_poolc_login', publicConfig.pks.gitea.url);
-      loginUrl.searchParams.set('ticket', data.ticket);
-      window.location.href = loginUrl.toString();
-    } catch {
-      message.error('Gitea 로그인에 실패했습니다.');
-      setIsGiteaLoginLoading(false);
-    }
   };
 
   return (
@@ -140,9 +112,8 @@ export default function PksContainer() {
                 key={item.title}
                 href={item.link}
                 className={styles.resourceCard}
-                target={item.title === 'Gitea' ? undefined : '_blank'}
+                target="_blank"
                 rel="noreferrer"
-                onClick={item.title === 'Gitea' ? handleGiteaClick : undefined}
               >
                 {content}
               </a>

@@ -18,10 +18,6 @@ export const publicConfig = Object.freeze({
   fileUrl: getEnv('VITE_FILE_URL', import.meta.env.PROD ? DEFAULT_PROD_FILE_URL : DEFAULT_DEV_FILE_URL),
   maxFileSize: getEnvNumber('VITE_MAX_FILE_SIZE', 50_000_000),
   pks: Object.freeze({
-    gitea: Object.freeze({
-      url: getEnv('VITE_PKS_GITEA_URL', 'https://git.poolc.org'),
-      description: getEnv('VITE_PKS_GITEA_DESCRIPTION', 'git.poolc.org'),
-    }),
     argoCd: Object.freeze({
       url: getEnv('VITE_PKS_ARGOCD_URL', 'https://argocd.poolc.org'),
       description: getEnv('VITE_PKS_ARGOCD_DESCRIPTION', 'argocd.poolc.org'),
