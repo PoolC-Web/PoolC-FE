@@ -7,6 +7,7 @@ RUN corepack enable
 COPY package.json yarn.lock .yarnrc.yml ./
 COPY .yarn .yarn
 COPY packages/react-editor/package.json packages/react-editor/package.json
+COPY extensions/baekjoon-hub/package.json extensions/baekjoon-hub/package.json
 COPY websites/poolc.org/package.json websites/poolc.org/package.json
 
 RUN yarn install --immutable
@@ -18,7 +19,6 @@ ARG VITE_FILE_URL=https://dev.poolc.org/api
 
 ENV VITE_API_BASE_URL=$VITE_API_BASE_URL
 ENV VITE_FILE_URL=$VITE_FILE_URL
-
 RUN yarn workspace @dialga/poolc.org build
 
 FROM nginxinc/nginx-unprivileged:1.27-alpine
