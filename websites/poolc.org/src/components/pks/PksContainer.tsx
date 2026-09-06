@@ -2,10 +2,8 @@ import {
   ArrowRightOutlined,
   BookTwoTone,
   CloudServerOutlined,
-  ClockCircleOutlined,
   DeploymentUnitOutlined,
   EyeTwoTone,
-  FormOutlined,
   SettingTwoTone,
 } from '@ant-design/icons';
 import { Typography } from 'antd';
@@ -21,7 +19,6 @@ type PksResource = {
   description?: string;
   icon: ReactNode;
   link?: string;
-  badge?: string;
 };
 
 const PKS_RESOURCES: PksResource[] = [
@@ -49,18 +46,11 @@ const PKS_RESOURCES: PksResource[] = [
     icon: <EyeTwoTone twoToneColor="#4dabf7" />,
     link: publicConfig.pks.grafana.url,
   },
-  {
-    title: '프로젝트 인프라 요청',
-    description: '배포, DB, 스토리지 등 운영 환경 요청',
-    icon: <FormOutlined />,
-    badge: '준비 중',
-  },
 ];
 
 export default function PksContainer() {
   const { styles } = useStyles();
   const availableResources = PKS_RESOURCES.filter((item) => item.link);
-  const pendingResources = PKS_RESOURCES.filter((item) => !item.link);
 
   const { data: kubernetes, isError: isKubernetesError } = useAppQuery({
     queryKey: queryKey.kubernetes.me,
@@ -102,7 +92,7 @@ export default function PksContainer() {
                   {item.description && <span className={styles.resourceDescription}>{item.description}</span>}
                 </span>
                 <span className={styles.resourceMeta}>
-                  {item.badge ? <span className={styles.pendingBadge}><ClockCircleOutlined />{item.badge}</span> : <ArrowRightOutlined className={styles.resourceArrow} />}
+                  <ArrowRightOutlined className={styles.resourceArrow} />
                 </span>
               </>
             );
@@ -123,24 +113,6 @@ export default function PksContainer() {
               </article>
             );
           })}
-        </div>
-      </section>
-
-      <section className={`${styles.section} ${styles.pendingSection}`}>
-        <h3 className={styles.sectionTitle}>준비 중</h3>
-        <div className={styles.resourceGrid}>
-          {pendingResources.map((item) => (
-            <article key={item.title} className={styles.resourceCard} aria-disabled="true">
-              <span className={styles.resourceIcon}>{item.icon}</span>
-              <span className={styles.resourceText}>
-                <span className={styles.resourceTitle}>{item.title}</span>
-                {item.description && <span className={styles.resourceDescription}>{item.description}</span>}
-              </span>
-              <span className={styles.resourceMeta}>
-                <span className={styles.pendingBadge}><ClockCircleOutlined />{item.badge}</span>
-              </span>
-            </article>
-          ))}
         </div>
       </section>
 
@@ -173,9 +145,6 @@ const useStyles = createStyles(({ css }) => ({
     & + & {
       margin-top: 38px;
     }
-  `,
-  pendingSection: css`
-    margin-bottom: 38px;
   `,
   sectionTitle: css`
     margin: 0;
