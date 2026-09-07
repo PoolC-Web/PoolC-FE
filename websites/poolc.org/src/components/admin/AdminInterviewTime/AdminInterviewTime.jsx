@@ -1,8 +1,8 @@
 import { useState } from 'react';
+import { Spin } from 'antd';
 import { WhiteNarrowBlock } from '../../../styles/common/Block.styles';
 import ActionButton from '../../common/Buttons/ActionButton';
 import { SectionTabs } from '../../common/SectionTabs/SectionTabs';
-import Spinner from '../../common/Spinner/Spinner';
 import { notEmptyValidation } from '../../../lib/utils/validation';
 import useInput from '../../../hooks/useInput';
 import { StyledDeleteButton } from '../../activity/ActivityCard/ActivityCard.styles';
@@ -119,7 +119,7 @@ const AdminInterviewTime = ({ data, loading, setData, onCreateInterviewTime, onD
         <div><Title>면접 시간 관리</Title></div>
         <HeaderActions><ActionButton onClick={addDate}>날짜 추가</ActionButton></HeaderActions>
       </PageHeader>
-      {loading && <Spinner />}
+      {loading && <Spin />}
       {!loading && <>
         <SectionTabs items={dateTabs} activeKey={activeDate} onChange={setActiveDate} />
         <DateList>{visibleGroups.map((group, index) => <InterviewForm key={group.date || `new-date-${index}`} data={group} onCreateInterviewTime={onCreateInterviewTime} onDeleteInterviewTime={onDeleteInterviewTime} onUpdateInterviewTime={onUpdateInterviewTime} />)}{data.length === 0 && <DateSection>날짜 추가를 눌러 면접 일정을 등록하세요.</DateSection>}<DateSection><p>모든 면접 슬롯과 신청 정보를 제거합니다.</p><StyledDeleteButton onClick={deleteAll}>전체 삭제</StyledDeleteButton></DateSection></DateList>

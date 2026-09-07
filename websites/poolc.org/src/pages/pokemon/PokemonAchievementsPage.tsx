@@ -96,7 +96,7 @@ export default function PokemonAchievementsPage() {
             onChange={(value) => setSelectedType(value as QuestType | 'ALL')}
             items={QUEST_TYPE_ITEMS}
           />
-          {loading ? <Spin className={styles.spinner} /> : <>
+          {loading ? <Spin /> : <>
             {sections.map(({ type, quests: sectionQuests }) => <QuestSection key={type} title={selectedType === 'ALL' ? QUEST_SECTION_TITLES[type] : undefined} quests={sectionQuests} claiming={claiming} onClaim={claim} styles={styles} />)}
           </>}
         </PageContent>
@@ -133,7 +133,6 @@ const useStyles = createStyles(({ css }) => ({
   whiteBlock: css`box-sizing:border-box; padding:60px 0; align-items:center;`,
   content: css`max-width:1210px;`,
   questTabs: css`margin-bottom:24px;`,
-  spinner: css`display:block; margin:72px auto;`,
   dailySummary: css`padding:20px 24px; margin:0 0 24px; border:1px solid #d9ebe5; border-radius:8px; background:#f4fbf8;`,
   summaryHeading: css`display:flex; justify-content:space-between; gap:20px; h2{margin:0 0 4px; color:#4c3722; font-size:1.2rem;} p{margin:0; color:#747b77; font-size:.85rem;}`,
   resetInfo: css`display:flex; align-items:center; gap:6px; align-self:flex-start; color:#747b77; font-size:.78rem; white-space:nowrap;`,

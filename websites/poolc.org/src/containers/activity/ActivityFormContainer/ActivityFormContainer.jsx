@@ -1,11 +1,11 @@
 import { useEffect, useState } from 'react';
 import { withRouter } from 'react-router-dom';
+import { Spin } from 'antd';
 import { useSelector } from 'react-redux';
 import ActivityForm from '../../../components/activity/ActivityForm/ActivityForm';
 import * as activityAPI from '../../../lib/api/activity';
 import * as authAPI from '../../../lib/api/auth';
 import { MENU } from '../../../constants/menus';
-import Spinner from '../../../components/common/Spinner/Spinner';
 import ActionButton from '../../../components/common/Buttons/ActionButton';
 import { CLIENT_ERROR, SUCCESS } from '../../../constants/statusCode';
 
@@ -145,7 +145,7 @@ const ActivityFormContainer = ({ match, history }) => {
 
   return (
     <>
-      {loading && <Spinner />}
+      {loading && <Spin />}
       {!loading && (
         <ActivityForm
           activity={activity}

@@ -1,4 +1,5 @@
 import { useState } from 'react';
+import { Spin } from 'antd';
 // FIXME: eslint issue 수정 필요. 터미널에서는 에러가 나지 않으나, 에디터에서만 에러가 나고 있음
 // eslint-disable-next-line import/no-extraneous-dependencies
 import { Viewer } from '@dialga/react-editor';
@@ -35,7 +36,6 @@ import {
 import getFileUrl, { getDecodedFileUrl } from '../../../lib/utils/getFileUrl';
 import { FullText } from '../ActivityCard/ActivityCard.styles';
 import ActivityRegisterModalContainer from '../../../containers/activity/ActivityModalContainer/ActivityRegisterModalContainer';
-import Spinner from '../../common/Spinner/Spinner';
 import { isAuthorizedRole } from '../../../lib/utils/checkRole';
 import { PagePanel, PageShell } from '../../common/PageLayout/PageLayout';
 
@@ -85,7 +85,7 @@ const ActivityDetail = ({ loading, activity, activityMembers, activityMemberIDs,
       )}
       <PageShell>
         <PagePanel>
-          {loading && <Spinner />}
+          {loading && <Spin />}
           {!loading && (
             <DetailContent data-has-register-action={hasMobileRegisterAction}>
               <SummaryCard>

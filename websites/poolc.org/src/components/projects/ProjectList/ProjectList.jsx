@@ -1,6 +1,6 @@
 import { useMemo, useState } from 'react';
 import styled from '@emotion/styled';
-import { Empty } from 'antd';
+import { Empty, Spin } from 'antd';
 import { media } from '~/styles/responsive';
 import { CardGrid } from '../../common/CardGrid/CardGrid';
 import { PageHeader } from '../../common/PageHeader/PageHeader';
@@ -8,7 +8,6 @@ import { PageContent, PagePanel, PageShell } from '../../common/PageLayout/PageL
 import { SectionTabs } from '../../common/SectionTabs/SectionTabs';
 import { MobileSectionFilter } from '../../common/MobileSectionFilter/MobileSectionFilter';
 import { ListSearchToolbar } from '../../common/ListSearchToolbar/ListSearchToolbar';
-import Spinner from '../../common/Spinner/Spinner';
 import ProjectCard from '../ProjectCard/ProjectCard';
 
 const PROJECT_CATEGORY_ITEMS = [
@@ -45,7 +44,7 @@ const ProjectList = ({ projects, loading, category, onCategoryChange }) => {
           <ProjectCategoryTabs>
             <SectionTabs items={PROJECT_CATEGORY_ITEMS} activeKey={category} onChange={onCategoryChange} />
           </ProjectCategoryTabs>
-          {loading && <Spinner />}
+          {loading && <Spin />}
           {!loading && (
             <ProjectGrid>
               {visibleProjects?.length === 0 && (

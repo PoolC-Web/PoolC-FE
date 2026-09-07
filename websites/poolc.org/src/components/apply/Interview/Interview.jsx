@@ -1,7 +1,7 @@
 import { useState } from 'react';
 import { useSelector } from 'react-redux';
+import { Spin } from 'antd';
 import { Block, WhiteBlock } from '../../../styles/common/Block.styles';
-import Spinner from '../../common/Spinner/Spinner';
 import { DisabledActionButton, InterviewWarningBlock, StyledDateBlock, StyledTimeBlock, StyledTimeList, TimeBlockCapacity, TimeBlockTime } from './Interview.styles';
 import ActionButton from '../../common/Buttons/ActionButton';
 import { StyledDeleteButton } from '../../activity/ActivityCard/ActivityCard.styles';
@@ -121,7 +121,7 @@ const Interview = ({ loading, data, mySlotId, handleSelectInterviewTime, handleC
     <Block>
       <WhiteBlock>
         <h2 className="block_title">면접 시간 제출</h2>
-        {loading && <Spinner />}
+        {loading && <Spin />}
         {!loading && !isLogin && (
           <InterviewWarningBlock>
             <p>회원가입 후 로그인을 하셔야 면접 신청이 가능합니다.</p>

@@ -1,7 +1,7 @@
 import { useEffect, useState } from 'react';
+import { Spin } from 'antd';
 import AdminMember from '../../../components/admin/AdminMember/AdminMember';
 import * as memberAPI from '../../../lib/api/member';
-import Spinner from '../../../components/common/Spinner/Spinner';
 import { SUCCESS } from '../../../constants/statusCode';
 import { MEMBER_ROLE } from '../../../constants/memberRoles';
 import { useMessage } from '../../../hooks/useMessage';
@@ -67,7 +67,7 @@ const AdminMemberContainer = () => {
 
   return (
     <>
-      {(memberLoading || rolesLoading) && <Spinner />}
+      {(memberLoading || rolesLoading) && <Spin />}
       {!(memberLoading || rolesLoading) && (
         <AdminMember
           members={members}

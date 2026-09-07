@@ -1,5 +1,6 @@
 import { useMemo, useState } from 'react';
 import { DownOutlined, PlusOutlined } from '@ant-design/icons';
+import { Spin } from 'antd';
 import { Link } from 'react-router-dom';
 import { MENU } from '../../../constants/menus';
 import ActionButton from '../../common/Buttons/ActionButton';
@@ -11,7 +12,6 @@ import { MobileSectionFilter } from '../../common/MobileSectionFilter/MobileSect
 import ActivityCard from '../ActivityCard/ActivityCard';
 
 import { ActivityContent, ActivityFloatingCreateButton, ActivityGrid, HeaderActionArea, HeaderControls, SeminarPageShell, SemesterMenuBlock, SemesterMenuButton, SemesterMenuItem, SemesterMenuList } from './ActivityList.styles';
-import Spinner from '../../common/Spinner/Spinner';
 import { isAuthorizedRole } from '../../../lib/utils/checkRole';
 
 const isOpenForRegistration = (activity) => (
@@ -48,7 +48,7 @@ const ActivityList = ({ loading, activities, semesters, currentLocation, onChang
     <SeminarPageShell>
       <SemesterMenuBlock>
         <SemesterMenuList>
-          {loading && <Spinner small />}
+          {loading && <Spin className="poolc-inline-spinner" />}
           {!loading && semesterItems.map((semester) => (
             <SemesterMenuItem key={semester}>
               <SemesterMenuButton type="button" data-selected={currentLocation === semester} onClick={() => onChangeSemester(semester)}>
@@ -79,7 +79,7 @@ const ActivityList = ({ loading, activities, semesters, currentLocation, onChang
               </HeaderControls>
             }
           />
-          {loading && <Spinner />}
+          {loading && <Spin />}
           {!loading && (
             <ActivityGrid>
               {visibleActivities.length === 0 && <EmptyState>조건에 맞는 세미나 및 스터디가 없습니다.</EmptyState>}

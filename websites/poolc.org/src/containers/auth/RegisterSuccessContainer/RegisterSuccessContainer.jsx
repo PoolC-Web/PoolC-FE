@@ -1,7 +1,7 @@
 import { useEffect, useState } from 'react';
+import { Spin } from 'antd';
 import RegisterSuccess from '../../../components/auth/RegisterSuccess';
 import * as infoAPI from '../../../lib/api/info';
-import Spinner from '../../../components/common/Spinner/Spinner';
 import { SUCCESS } from '../../../constants/statusCode';
 
 const RegisterSuccessContainer = () => {
@@ -21,7 +21,7 @@ const RegisterSuccessContainer = () => {
 
   return (
     <>
-      {loading && <Spinner />}
+      {loading && <Spin />}
       {!loading && <RegisterSuccess isSubscriptionPeriod={isSubscriptionPeriod} />}
     </>
   );

@@ -1,5 +1,5 @@
 import { Block, WhiteBlock } from '../../../styles/common/Block.styles';
-import Spinner from '../../common/Spinner/Spinner';
+import { Spin } from 'antd';
 import BookCard from '../BookCard/BookCard';
 import { List } from './BookList.styles';
 
@@ -13,7 +13,7 @@ const BookList = ({ loading, books, member, onBorrowBook, onReturnBook }) => {
     <Block>
       <WhiteBlock>
         <h2 className="block_title">보유 도서</h2>
-        {loading && <Spinner />}
+        {loading && <Spin />}
         {!loading && (
           <List>
             {books.map((book) => (

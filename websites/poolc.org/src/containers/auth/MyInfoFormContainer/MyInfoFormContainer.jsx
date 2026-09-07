@@ -1,12 +1,12 @@
 import { useEffect, useState } from 'react';
 import { useDispatch } from 'react-redux';
 import { withRouter } from 'react-router-dom';
+import { Spin } from 'antd';
 import AuthForm from '../../../components/auth/AuthForm';
 import * as authAPI from '../../../lib/api/auth';
 import * as memberAPI from '../../../lib/api/member';
 import { removeHeaderAccessToken, setHeaderAccessToken } from '../../../lib/utils/axiosUtil';
 import { MENU } from '../../../constants/menus';
-import Spinner from '../../../components/common/Spinner/Spinner';
 import { logout } from '../../../modules/auth';
 import { SUCCESS } from '../../../constants/statusCode';
 
@@ -137,7 +137,7 @@ const MyInfoFormContainer = ({ history }) => {
 
   return (
     <>
-      {(userLoading || rolesLoading) && <Spinner />}
+      {(userLoading || rolesLoading) && <Spin />}
       {!(userLoading || rolesLoading) && (
         <AuthForm
           type="update"

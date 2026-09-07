@@ -1,6 +1,6 @@
 import { useMemo, useState } from 'react';
+import { Spin } from 'antd';
 import { WhiteNarrowBlock } from '../../../styles/common/Block.styles';
-import Spinner from '../../common/Spinner/Spinner';
 import { SectionTabs } from '../../common/SectionTabs/SectionTabs';
 import { getHourMinuteString } from '../../../lib/utils/getDateString';
 import { StyledDeleteButton } from '../../activity/ActivityCard/ActivityCard.styles';
@@ -110,7 +110,7 @@ const AdminInterview = ({ loading, data, handleCancelInterview }) => {
           <Title>면접 신청 조회</Title>
         </div>
       </PageHeader>
-      {loading && <Spinner />}
+      {loading && <Spin />}
       {!loading && (
         <>
           <SectionTabs
