@@ -33,6 +33,8 @@ type CollectionItem = {
   rarity: Rarity;
   spriteUrl?: string;
   shinySpriteUrl?: string;
+  cardSpriteUrl?: string;
+  shinyCardSpriteUrl?: string;
   category?: string;
   description?: string;
   heightDecimeters?: number;
@@ -150,8 +152,8 @@ const CollectionCard = memo(({
       tabIndex={canOpen ? 0 : undefined}
     >
       {shinyOwned && <span className={shinyBadgeClassName}><StarFilled /> 이로치</span>}
-      {shinyOwned && item.shinySpriteUrl && <img src={item.shinySpriteUrl} alt="" aria-hidden="true" className={shinyPreviewClassName} loading="lazy" />}
-      {item.spriteUrl ? <img src={item.spriteUrl} alt={canOpen ? item.name : '미획득'} className={spriteClassName} loading="lazy" /> : <div className={spriteFallbackClassName} />}
+      {shinyOwned && (item.shinyCardSpriteUrl ?? item.shinySpriteUrl) && <img src={item.shinyCardSpriteUrl ?? item.shinySpriteUrl} alt="" aria-hidden="true" className={shinyPreviewClassName} loading="lazy" decoding="async" />}
+      {item.cardSpriteUrl ?? item.spriteUrl ? <img src={item.cardSpriteUrl ?? item.spriteUrl} alt={canOpen ? item.name : '미획득'} className={spriteClassName} loading="lazy" decoding="async" /> : <div className={spriteFallbackClassName} />}
       <div className={cardMetaClassName}>
         <Typography.Text className={numberClassName} style={{ color: canOpen ? rarityColor[item.rarity] : undefined }}>No.{String(item.externalId).padStart(3, '0')}</Typography.Text>
         <Typography.Text className={cardNameClassName}>{canOpen ? item.name : '????'}</Typography.Text>

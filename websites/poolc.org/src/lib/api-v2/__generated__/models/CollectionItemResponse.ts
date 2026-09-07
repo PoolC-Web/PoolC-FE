@@ -18,6 +18,8 @@ export type CollectionItemResponse = {
     rarity?: 'COMMON' | 'EPIC' | 'LEGENDARY' | 'RARE';
     shinyOwned?: boolean;
     shinySpriteUrl?: string;
+    cardSpriteUrl?: string;
+    shinyCardSpriteUrl?: string;
     specialAttack?: number;
     specialDefense?: number;
     speed?: number;
@@ -25,4 +27,3 @@ export type CollectionItemResponse = {
     types?: string;
     weightHectograms?: number;
 };
-
