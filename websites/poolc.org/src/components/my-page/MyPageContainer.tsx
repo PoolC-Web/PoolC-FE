@@ -351,7 +351,9 @@ export default function MyPageContainer() {
                   {visibleItems.map((item) => (
                     <div className={styles.activityDetailItem} key={item.id}>
                       <div className={styles.activityDetailItemContent}>
-                        <Typography.Text className={styles.activityDetailItemTitle}>{item.title}</Typography.Text>
+                        <Typography.Text className={styles.activityDetailItemTitle} ellipsis={{ tooltip: item.title }}>
+                          {item.title}
+                        </Typography.Text>
                         {item.hosted && <Typography.Text className={styles.activityDetailHost}>주최</Typography.Text>}
                       </div>
                       <Typography.Text className={styles.activityDetailItemHours}>{formatHours(item.hours)}시간</Typography.Text>
@@ -1057,28 +1059,30 @@ const useStyles = createStyles(({ css }) => ({
   `,
   activityDetailItemContent: css`
     display: flex;
+    flex: 1;
     align-items: center;
+    width: 100%;
     min-width: 0;
     gap: 8px;
   `,
   activityDetailItemTitle: css`
+    flex: 1;
+    min-width: 0;
     overflow: hidden;
     color: #343a40;
     font-weight: 500;
     text-overflow: ellipsis;
     white-space: nowrap;
-
-    ${media.mobile} {
-      white-space: normal;
-    }
   `,
   activityDetailHost: css`
+    flex: none;
     padding: 2px 6px;
     border-radius: 4px;
     background: #e6fcf5;
     color: #2f9d7e;
     font-size: 11px;
     font-weight: 600;
+    white-space: nowrap;
   `,
   activityDetailItemHours: css`
     flex: none;
