@@ -42,7 +42,7 @@ const editSchema = z.object({
   description: z.string(),
   pubdate: z.string().regex(/^\d{4}-\d{2}-\d{2}$/),
   donor: z.string(),
-  category: z.enum(['PROGRAMMING', 'ALGORITHM', 'SYSTEM', 'DATA', 'DESIGN']),
+  category: z.enum(['COMPUTER_LANGUAGE', 'CERTIFICATION_CAREER', 'ETC', 'FRONTEND', 'GAME', 'APP', 'LECTURE_TEXTBOOK', 'AI', 'DATA_ANALYSIS_SECURITY', 'MATH_ELECTRONICS']),
 });
 
 type BookFormValues = z.infer<typeof editSchema>;
@@ -58,7 +58,7 @@ const getInitialValues = (initValues?: FormType): BookFormValues => ({
   description: initValues?.description ?? '',
   pubdate: initValues?.pubdate ?? '',
   donor: initValues?.donor ?? '',
-  category: initValues?.category ?? 'PROGRAMMING',
+  category: initValues?.category ?? 'COMPUTER_LANGUAGE',
 });
 
 interface AdminBookFormProp {

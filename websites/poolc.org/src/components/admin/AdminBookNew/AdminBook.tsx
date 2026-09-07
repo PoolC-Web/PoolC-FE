@@ -244,7 +244,7 @@ export default function AdminBook() {
       donor: book.donor || '',
       link: book.link || '',
       pubdate: book.publishedDate || '',
-      category: book.category ?? 'PROGRAMMING',
+      category: book.category ?? 'COMPUTER_LANGUAGE',
       status: book.status,
       borrower: book.borrower,
     }));

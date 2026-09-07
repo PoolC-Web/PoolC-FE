@@ -24,7 +24,7 @@ export class BookControllerService {
         /**
          * category
          */
-        category?: 'ALGORITHM' | 'DATA' | 'DESIGN' | 'PROGRAMMING' | 'SYSTEM',
+        category?: 'AI' | 'APP' | 'CERTIFICATION_CAREER' | 'COMPUTER_LANGUAGE' | 'DATA_ANALYSIS_SECURITY' | 'ETC' | 'FRONTEND' | 'GAME' | 'LECTURE_TEXTBOOK' | 'MATH_ELECTRONICS',
         /**
          * page
          */
@@ -113,7 +113,7 @@ export class BookControllerService {
         /**
          * category
          */
-        category?: 'ALGORITHM' | 'DATA' | 'DESIGN' | 'PROGRAMMING' | 'SYSTEM',
+        category?: 'AI' | 'APP' | 'CERTIFICATION_CAREER' | 'COMPUTER_LANGUAGE' | 'DATA_ANALYSIS_SECURITY' | 'ETC' | 'FRONTEND' | 'GAME' | 'LECTURE_TEXTBOOK' | 'MATH_ELECTRONICS',
         /**
          * page
          */
