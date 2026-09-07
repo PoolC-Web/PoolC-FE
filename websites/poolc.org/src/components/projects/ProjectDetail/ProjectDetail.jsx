@@ -19,7 +19,7 @@ import {
   TextContainer,
 } from './ProjectDetail.styles';
 import { PagePanel, PageShell } from '../../common/PageLayout/PageLayout';
-import getFileUrl from '../../../lib/utils/getFileUrl';
+import getImageVariantUrl from '../../../lib/utils/getImageVariantUrl';
 import { isAuthorizedRole } from '../../../lib/utils/checkRole';
 
 const getProjectPlaceholder = (id) => `https://picsum.photos/seed/poolc-project-detail-${id}/1200/675`;
@@ -29,7 +29,7 @@ const getProjectThumbnail = ({ id, thumbnailURL }) => {
     return getProjectPlaceholder(id);
   }
 
-  return getFileUrl(thumbnailURL);
+  return getImageVariantUrl(thumbnailURL, 'DETAIL');
 };
 
 const normalizeProjectBody = (body) =>

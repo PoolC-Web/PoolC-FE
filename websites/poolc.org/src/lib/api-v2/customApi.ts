@@ -15,4 +15,15 @@ export class CustomApi {
       },
     });
   }
+
+  public static uploadImageSet(original: File, card: File, detail: File) {
+    return request<string>(OpenAPI, {
+      method: 'POST',
+      url: '/files/images',
+      formData: { original, card, detail },
+      headers: {
+        Accept: 'text/plain;charset=UTF-8',
+      },
+    });
+  }
 }
