@@ -1,4 +1,4 @@
-import { useEffect, useState } from 'react';
+import { useEffect, useRef, useState } from 'react';
 import { withRouter } from 'react-router-dom';
 import { useSelector } from 'react-redux';
 import ActivityList from '../../../components/activity/ActivityList/ActivityList';
@@ -14,29 +14,40 @@ const ActivityListContainer = ({ location, history }) => {
 
   const [activities, setActivities] = useState(null);
   const [semesters, setSemesters] = useState(null);
+  const loadedSemesterRef = useRef(null);
 
   useEffect(() => {
+    let active = true;
     activityAPI.getActivityYears().then((res) => {
+      if (!active) return;
       if (res.status === SUCCESS.OK) {
         setSemesters(res.data.data);
-        if (res.data.data.length === 0) {
-          activityAPI.getActivities().then((activities) => {
-            setActivities(activities.data.data);
-            setLoading(false);
-          });
-        } else {
-          if (!currentLocation) {
-            history.push(`/${MENU.ACTIVITIES}?semester=${res.data.data[0]}`);
-            return;
-          }
-          activityAPI.getActivitiesByYears(currentLocation || res.data.data[0]).then((activities) => {
-            setActivities(activities.data.data);
-            setLoading(false);
-          });
-        }
       }
     });
-  }, [history, currentLocation]);
+    return () => { active = false; };
+  }, []);
+
+  useEffect(() => {
+    if (semesters === null) return;
+    const semester = currentLocation || semesters[0];
+    if (!semester) {
+      activityAPI.getActivities().then((res) => {
+        setActivities(res.data.data);
+        setLoading(false);
+      });
+      return;
+    }
+    if (!currentLocation) {
+      history.replace(`/${MENU.ACTIVITIES}?semester=${semester}`);
+    }
+    if (loadedSemesterRef.current === semester) return;
+    loadedSemesterRef.current = semester;
+    setLoading(true);
+    activityAPI.getActivitiesByYears(semester).then((res) => {
+      setActivities(res.data.data);
+      setLoading(false);
+    });
+  }, [currentLocation, history, semesters]);
 
   const onToggleRegisterActivity = (activityID, members, setMembers) => {
     activityAPI
