@@ -7,7 +7,7 @@ const getImageVariantUrl = (url: string | undefined, variant: ImageVariant) => {
   if (!fileUrl.includes('/files/')) {
     return fileUrl;
   }
-  return `${fileUrl}${fileUrl.includes('?') ? '&' : '?'}variant=${variant}`;
+  return `${fileUrl}${fileUrl.includes('?') ? '&' : '?'}variant=${variant}&image-variant-version=1`;
 };
 
 export default getImageVariantUrl;
