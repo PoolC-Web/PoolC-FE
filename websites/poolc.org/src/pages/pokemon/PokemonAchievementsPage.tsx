@@ -10,7 +10,7 @@ import * as gameAPI from '~/lib/api/gamification';
 import { Block, WhiteBlock } from '~/styles/common/Block.styles';
 import { media } from '~/styles/responsive';
 
-type QuestType = 'DAILY' | 'SEASON' | 'REPEATABLE' | 'PERMANENT';
+type QuestType = 'DAILY' | 'SEASON' | 'PERMANENT';
 type Quest = {
   key: string;
   type: QuestType;
@@ -31,7 +31,6 @@ const questIcons = { attendance: CheckCircleOutlined, wifi: WifiOutlined, draw: 
 const QUEST_TYPE_ITEMS = [
   { key: 'DAILY', label: '일일' },
   { key: 'SEASON', label: '시즌' },
-  { key: 'REPEATABLE', label: '반복' },
   { key: 'PERMANENT', label: '업적' },
   { key: 'ALL', label: '전체' },
 ];
@@ -39,7 +38,6 @@ const QUEST_TYPE_ITEMS = [
 const QUEST_SECTION_TITLES: Record<QuestType, string> = {
   DAILY: '일일 퀘스트',
   SEASON: '시즌 퀘스트',
-  REPEATABLE: '반복 퀘스트',
   PERMANENT: '업적 퀘스트',
 };
 
@@ -77,7 +75,7 @@ export default function PokemonAchievementsPage() {
     }
   };
 
-  const sections = useMemo(() => (['DAILY', 'SEASON', 'REPEATABLE', 'PERMANENT'] as QuestType[])
+  const sections = useMemo(() => (['DAILY', 'SEASON', 'PERMANENT'] as QuestType[])
     .filter((type) => selectedType === 'ALL' || selectedType === type)
     .map((type) => ({
       type,
@@ -112,22 +110,18 @@ function QuestSection({ title, quests, claiming, onClaim, styles }: { title?: st
     {title && <h2 className={styles.sectionTitle}>{title}</h2>}
     <div className={styles.questList}>{quests.map((quest) => {
       const completed = quest.progress >= quest.target;
-      const canClaim = quest.type === 'REPEATABLE'
-        ? quest.claimableCount > 0
-        : completed && !quest.claimed;
+      const canClaim = completed && !quest.claimed;
       const isCompleted = completed && !canClaim;
       const percentage = Math.min(100, Math.round((quest.progress / quest.target) * 100));
       const QuestIcon = quest.key.includes('CLUB_WIFI') ? questIcons.wifi
         : quest.key.includes('DRAW') ? questIcons.draw : questIcons.attendance;
-      const progressLabel = quest.type === 'REPEATABLE' && canClaim
-        ? `${quest.claimableCount}회 수령 가능`
-        : `${Math.min(quest.progress, quest.target)} / ${quest.target}`;
+      const progressLabel = `${Math.min(quest.progress, quest.target)} / ${quest.target}`;
       return <article className={`${styles.quest} ${canClaim ? styles.claimable : ''} ${isCompleted ? styles.completed : ''}`} key={quest.key}>
         <div className={styles.questIcon}><QuestIcon /></div>
         <div className={styles.questBody}><div className={styles.questTitle}><h3>{quest.title}</h3></div>{!isCompleted && <div className={styles.questProgress}><Progress percent={percentage} showInfo={false} strokeColor={completed ? '#48b99a' : '#9bbab0'} trailColor="#e7efed" /><strong>{progressLabel}</strong></div>}</div>
         <div className={styles.questActions}>
-          <div className={styles.questReward}><strong><img className={styles.rewardBallIcon} src={normalBallImage} alt="일반 포켓볼" /> × {quest.type === 'REPEATABLE' && canClaim ? quest.rewardAmount * quest.claimableCount : quest.rewardAmount}</strong></div>
-          {isCompleted ? <span className={styles.completedBadge}><CheckOutlined /> 수령 완료</span> : canClaim && <Button type="primary" loading={claiming === quest.key} onClick={() => onClaim(quest.key)} icon={<CheckOutlined />}>{quest.type === 'REPEATABLE' ? `${quest.claimableCount}개 받기` : '보상 받기'}</Button>}
+          <div className={styles.questReward}><strong><img className={styles.rewardBallIcon} src={normalBallImage} alt="일반 포켓볼" /> × {quest.rewardAmount}</strong></div>
+          {isCompleted ? <span className={styles.completedBadge}><CheckOutlined /> 수령 완료</span> : canClaim && <Button type="primary" loading={claiming === quest.key} onClick={() => onClaim(quest.key)} icon={<CheckOutlined />}>보상 받기</Button>}
         </div>
       </article>;
     })}</div>
