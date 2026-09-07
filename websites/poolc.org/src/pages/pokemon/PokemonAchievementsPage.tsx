@@ -116,9 +116,10 @@ function QuestSection({ title, quests, claiming, onClaim, styles }: { title?: st
       const QuestIcon = quest.key.includes('CLUB_WIFI') ? questIcons.wifi
         : quest.key.includes('DRAW') ? questIcons.draw : questIcons.attendance;
       const progressLabel = `${Math.min(quest.progress, quest.target)} / ${quest.target}`;
+      const isClubWifiQuest = quest.key === 'DAILY_CLUB_WIFI';
       return <article className={`${styles.quest} ${canClaim ? styles.claimable : ''} ${isCompleted ? styles.completed : ''}`} key={quest.key}>
         <div className={styles.questIcon}><QuestIcon /></div>
-        <div className={styles.questBody}><div className={styles.questTitle}><h3>{quest.title}</h3></div>{!isCompleted && <div className={styles.questProgress}><Progress percent={percentage} showInfo={false} strokeColor={completed ? '#48b99a' : '#9bbab0'} trailColor="#e7efed" /><strong>{progressLabel}</strong></div>}</div>
+        <div className={styles.questBody}><div className={styles.questTitle}><h3>{isClubWifiQuest ? `${quest.title} [준비 중]` : quest.title}</h3></div>{isClubWifiQuest && !isCompleted && <p className={styles.clubWifiGuide}>동아리방 Wi-Fi에 연결한 뒤 VPN과 iCloud Private Relay를 해제하면 출석할 수 있어요.</p>}{!isCompleted && <div className={styles.questProgress}><Progress percent={percentage} showInfo={false} strokeColor={completed ? '#48b99a' : '#9bbab0'} trailColor="#e7efed" /><strong>{progressLabel}</strong></div>}</div>
         <div className={styles.questActions}>
           <div className={styles.questReward}><strong><img className={styles.rewardBallIcon} src={normalBallImage} alt="일반 포켓볼" /> × {quest.rewardAmount}</strong></div>
           {isCompleted ? <span className={styles.completedBadge}><CheckOutlined /> 수령 완료</span> : canClaim && <Button type="primary" loading={claiming === quest.key} onClick={() => onClaim(quest.key)} icon={<CheckOutlined />}>보상 받기</Button>}
@@ -147,6 +148,7 @@ const useStyles = createStyles(({ css }) => ({
   questIcon: css`display:flex; align-items:center; justify-content:center; width:42px; height:42px; flex:none; border-radius:50%; background:#e7f5f0; color:#2b9c7d; font-size:1rem;`,
   questBody: css`min-width:0;`,
   questTitle: css`display:flex; align-items:center; h3{margin:0; color:#4c3722; font-size:1rem; font-weight:700; line-height:1.35; word-break:keep-all;}`,
+  clubWifiGuide: css`margin:5px 0 0; color:#747b77; font-size:.76rem; line-height:1.45; word-break:keep-all;`,
   questActions: css`display:flex; align-items:center; justify-content:flex-end; gap:24px; min-width:220px; ${media.mobile}{min-width:72px; flex-direction:column; align-items:flex-end; justify-content:space-between; gap:8px;}`,
   questReward: css`display:flex; min-width:0; strong{display:flex; align-items:center; gap:5px; color:#4c3722; font-size:.78rem; white-space:nowrap;}`,
   rewardBallIcon: css`width:30px; height:30px; object-fit:contain; image-rendering:auto; ${media.mobile}{width:24px; height:24px;}`,
