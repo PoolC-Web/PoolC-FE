@@ -7,6 +7,7 @@ export const getFeaturedCollectible = () => client.get('/gamification/me/feature
 export const updateFeaturedCollectible = ({ collectibleId, shiny }) => client.put('/gamification/me/featured', { collectibleId, shiny });
 export const clearFeaturedCollectible = () => client.delete('/gamification/me/featured');
 export const drawCollectible = ({ shiny = false } = {}) => client.post('/gamification/me/draws', { shiny });
+export const exchangeMasterBall = () => client.post('/gamification/me/master-balls/exchange');
 export const getAchievements = () => client.get('/gamification/me/achievements');
 export const claimAchievement = (achievementKey) => client.post(`/gamification/me/achievements/${achievementKey}/claim`);
 export const startCatalogSync = () => client.post('/gamification/admin/catalog/sync');

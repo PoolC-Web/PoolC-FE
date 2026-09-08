@@ -76,6 +76,12 @@ export const MobileDrawerContent = styled.div`
   overflow-y: auto;
   overscroll-behavior: contain;
   padding-bottom: env(safe-area-inset-bottom, 0px);
+
+  /* Safari's floating toolbar can overlap the visual viewport even when the
+     device safe-area inset is zero. Keep this compensation WebKit-only. */
+  @supports (-webkit-touch-callout: none) {
+    padding-bottom: max(24px, env(safe-area-inset-bottom, 0px));
+  }
 `;
 
 export const MobileDrawerCloseButton = styled.button`
