@@ -6,8 +6,10 @@ import * as memberAPI from '../../../lib/api/member';
 import { MENU } from '../../../constants/menus';
 import ActionButton from '../../../components/common/Buttons/ActionButton';
 import { SUCCESS } from '../../../constants/statusCode';
+import { useMessage } from '../../../hooks/useMessage';
 
 const AdminProjectFormContainer = ({ match, history }) => {
+  const message = useMessage();
   const { projectID } = match.params;
 
   const [members, setMembers] = useState([]);
@@ -31,8 +33,8 @@ const AdminProjectFormContainer = ({ match, history }) => {
     return null;
   }
 
-  const onCreateProject = ({ name, thumbnailURL, genre, duration, description, body }) => {
-    if (!name || !description || !duration || !thumbnailURL || !body) {
+  const onCreateProject = ({ name, thumbnailURL, genre, category, startDate, endDate, description, body }) => {
+    if (!name || !category || !description || !startDate || !thumbnailURL || !body) {
       setErrorMessage('모든 항목을 입력하세요');
       onShowErrorModal();
       return;
@@ -41,7 +43,9 @@ const AdminProjectFormContainer = ({ match, history }) => {
       .createProject({
         name,
         genre,
-        duration,
+        category,
+        startDate,
+        endDate,
         thumbnailURL,
         description,
         body,
@@ -49,11 +53,12 @@ const AdminProjectFormContainer = ({ match, history }) => {
       })
       .then((res) => {
         if (res.status === SUCCESS.OK) {
+          message.success('프로젝트가 생성되었습니다.');
           history.push('/admin/projects');
         }
       })
-      .catch(() => {
-        if (e.response.data.status === 403) {
+      .catch((error) => {
+        if (error.response?.data?.status === 403) {
           history.push(`/${MENU.FORBIDDEN}`);
         }
         setErrorMessage('오류가 발생했습니다');
@@ -61,8 +66,8 @@ const AdminProjectFormContainer = ({ match, history }) => {
       });
   };
 
-  const onUpdateProject = ({ name, description, genre, duration, thumbnailURL, body }) => {
-    if (!name || !description || !duration || !thumbnailURL || !body) {
+  const onUpdateProject = ({ name, description, genre, category, startDate, endDate, thumbnailURL, body }) => {
+    if (!name || !category || !description || !startDate || !thumbnailURL || !body) {
       setErrorMessage('모든 항목을 입력하세요');
       onShowErrorModal();
       return;
@@ -73,18 +78,21 @@ const AdminProjectFormContainer = ({ match, history }) => {
         name,
         description,
         genre,
-        duration,
+        category,
+        startDate,
+        endDate,
         thumbnailURL,
         body,
         memberLoginIDs: members.map((member) => member.loginID),
       })
       .then((res) => {
         if (res.status === SUCCESS.OK) {
+          message.success('프로젝트가 수정되었습니다.');
           history.push('/admin/projects');
         }
       })
-      .catch(() => {
-        if (e.response.data.status === 403) {
+      .catch((error) => {
+        if (error.response?.data?.status === 403) {
           history.push(`/${MENU.FORBIDDEN}`);
         }
         setErrorMessage('오류가 발생했습니다');

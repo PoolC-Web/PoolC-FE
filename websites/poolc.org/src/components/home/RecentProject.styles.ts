@@ -14,6 +14,7 @@ export const RecentProjectBlock = styled.div`
   & > .project_container_title {
     padding-left: 20px;
     width: 90%;
+    font-size: 1.17em;
     font-weight: 700;
     margin-bottom: 30px;
     color: ${colors.brown[1]};
@@ -60,7 +61,7 @@ export const PrevButton = styled.a`
   font-size: 1rem;
   color: ${colors.brown[1]};
   box-shadow: 0 1px 3px 0 rgb(0 0 0 / 20%);
-  @media (max-width: 768px) {
+  @media (max-width: 767px) {
     display: none;
   }
   &:hover {
@@ -85,7 +86,7 @@ export const NextButton = styled.a`
   font-size: 1rem;
   color: ${colors.brown[1]};
   box-shadow: 0 1px 3px 0 rgb(0 0 0 / 20%);
-  @media (max-width: 768px) {
+  @media (max-width: 767px) {
     display: none;
   }
   &:hover {

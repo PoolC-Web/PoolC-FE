@@ -2,18 +2,16 @@
 import { UploadOutlined } from '@ant-design/icons';
 import { useForm, zodResolver } from '@mantine/form';
 import { z } from 'zod';
-import { Form, Input, Typography, Upload, Button, Space, UploadFile, InputNumber } from 'antd';
+import { Form, Input, Typography, Upload, Button, Space, UploadFile, InputNumber, Select } from 'antd';
 import { UploadChangeParam } from 'antd/es/upload';
 import { useQueryClient } from '@tanstack/react-query';
 import TextArea from 'antd/es/input/TextArea';
 import { BookControllerService, CreateBookRequest, CustomApi, queryKey, useAppMutation } from '~/lib/api-v2';
+import { useMessage } from '~/hooks/useMessage';
 import getFileUrl from '~/lib/utils/getFileUrl';
+import { BOOK_CATEGORY_OPTIONS, BookCategory } from '~/constants/bookCategories';
 
-interface dynamic {
-  [prop: string]: number | string | undefined;
-}
-
-export interface FormType extends dynamic {
+export interface FormType {
   id: number;
   title: string;
   link: string;
@@ -25,6 +23,7 @@ export interface FormType extends dynamic {
   description: string;
   pubdate: string;
   donor: string;
+  category: BookCategory;
 }
 type PreviewType = {
   uid: string;
@@ -42,26 +41,44 @@ const editSchema = z.object({
   isbn: z.string().min(1),
   description: z.string(),
   pubdate: z.string().regex(/^\d{4}-\d{2}-\d{2}$/),
-  // donor: z.string(),
+  donor: z.string(),
+  category: z.enum(['PROGRAMMING', 'ALGORITHM', 'SYSTEM', 'DATA', 'DESIGN']),
+});
+
+type BookFormValues = z.infer<typeof editSchema>;
+
+const getInitialValues = (initValues?: FormType): BookFormValues => ({
+  title: initValues?.title ?? '',
+  link: initValues?.link ?? '',
+  image: initValues?.image ?? '',
+  author: initValues?.author ?? '',
+  discount: initValues?.discount ?? 0,
+  publisher: initValues?.publisher ?? '',
+  isbn: initValues?.isbn ?? '',
+  description: initValues?.description ?? '',
+  pubdate: initValues?.pubdate ?? '',
+  donor: initValues?.donor ?? '',
+  category: initValues?.category ?? 'PROGRAMMING',
 });
 
 interface AdminBookFormProp {
   initValues?: FormType;
   onModalCancel: () => void;
-  aaa: number;
 }
 export default function AdminBookForm({ initValues, onModalCancel }: AdminBookFormProp) {
   const queryClient = useQueryClient();
-  const form = useForm<z.infer<typeof editSchema>>(
-    initValues
-      ? {
-          validate: zodResolver(editSchema),
-          initialValues: initValues,
-        }
-      : { validate: zodResolver(editSchema) },
-  );
-  const { mutate: createBook } = useAppMutation({ mutationFn: BookControllerService.addBookUsingPost });
-  const { mutate: updateBook } = useAppMutation({ mutationFn: BookControllerService.updateBookUsingPut });
+  const message = useMessage();
+  const form = useForm<BookFormValues>({
+    validate: zodResolver(editSchema),
+    initialValues: getInitialValues(initValues),
+  });
+  const handleSaveSuccess = () => {
+    message.success(initValues ? '도서 정보가 수정되었습니다.' : '도서가 등록되었습니다.');
+    queryClient.invalidateQueries({ queryKey: queryKey.book.all('TITLE') });
+    onModalCancel();
+  };
+  const { mutate: createBook } = useAppMutation({ mutationFn: BookControllerService.addBookUsingPost, onSuccess: handleSaveSuccess });
+  const { mutate: updateBook } = useAppMutation({ mutationFn: BookControllerService.updateBookUsingPut, onSuccess: handleSaveSuccess });
   const { mutate: uploadImage, isPending: isUploadPending } = useAppMutation({ mutationFn: CustomApi.uploadFile });
 
   const handleChangeBookImage = (info: UploadChangeParam<UploadFile>) => {
@@ -94,18 +111,16 @@ export default function AdminBookForm({ initValues, onModalCancel }: AdminBookFo
     return [];
   };
 
-  const onSubmit = (val: typeof form.values) => {
+  const onSubmit = (val: BookFormValues) => {
     if (initValues) {
       updateBook({ id: initValues.id, request: val });
     } else {
       createBook({ request: val as CreateBookRequest });
     }
 
-    onModalCancel();
-    queryClient.invalidateQueries({ queryKey: queryKey.book.all('TITLE') });
   };
 
-  const InputInfo = [
+  const InputInfo: { label: string; name: keyof BookFormValues | 'upload' }[] = [
     { label: '책 제목', name: 'title' },
     { label: '저자', name: 'author' },
     { label: '표지 이미지', name: 'upload' },
@@ -141,24 +156,27 @@ export default function AdminBookForm({ initValues, onModalCancel }: AdminBookFo
             case 'discount':
               return (
                 <Form.Item label={info.label} name={info.name} key={info.name}>
-                  <InputNumber {...form.getInputProps(info.name)} status={form?.errors?.[info.name] ? 'error' : ''} defaultValue={initValues?.[info.name] || ''} />
+                  <InputNumber {...form.getInputProps(info.name)} status={form.errors[info.name] ? 'error' : ''} />
                 </Form.Item>
               );
             case 'pubdate':
               return (
                 <Form.Item label={info.label} name={info.name} key={info.name}>
-                  <Input {...form.getInputProps(info.name)} status={form?.errors?.[info.name] ? 'error' : ''} placeholder="yyyy-mm-dd" defaultValue={initValues?.[info.name] || ''} />
+                  <Input {...form.getInputProps(info.name)} status={form.errors[info.name] ? 'error' : ''} placeholder="yyyy-mm-dd" />
                 </Form.Item>
               );
 
             default:
               return (
                 <Form.Item label={info.label} name={info.name} key={info.name}>
-                  <Input {...form.getInputProps(info.name)} status={form?.errors?.[info.name] ? 'error' : ''} defaultValue={initValues?.[info.name]} />
+                  <Input {...form.getInputProps(info.name)} status={form.errors[info.name] ? 'error' : ''} />
                 </Form.Item>
               );
           }
         })}
+        <Form.Item label="카테고리" name="category">
+          <Select {...form.getInputProps('category')} options={[...BOOK_CATEGORY_OPTIONS]} placeholder="카테고리를 선택하세요" />
+        </Form.Item>
         {/* <StyledInput valueText={title} labelText="책 제목" typeText="text" nameText="title" onChangeFunc={onChangeTitle} placeholderText="ex) 클린 코드" />
         <StyledInput valueText={author} labelText="저자" typeText="text" nameText="author" onChangeFunc={onChangeAuthor} placeholderText="ex) 로버트 C. 마틴" />
         <label>표지 이미지 첨부</label>

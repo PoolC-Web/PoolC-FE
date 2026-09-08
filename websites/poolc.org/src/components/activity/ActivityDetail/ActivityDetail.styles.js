@@ -1,102 +1,256 @@
 import styled from '@emotion/styled';
 import colors from '../../../lib/styles/colors';
 import ActionButton from '../../common/Buttons/ActionButton';
+import { media } from '../../../styles/responsive';
 
-export const StyledButton = styled(ActionButton)`
-  width: 5rem;
+export const DetailContent = styled.div`
+  display: flex;
+  width: 100%;
+  max-width: 904px;
+  flex-direction: column;
+  align-items: stretch;
+  gap: 20px;
+
+  &[data-has-register-action='true'] {
+    ${media.mobile} {
+      padding-bottom: calc(76px + env(safe-area-inset-bottom));
+    }
+  }
+`;
+
+export const SummaryCard = styled.section`
+  display: flex;
+  flex-direction: column;
+  gap: 18px;
+  width: 100%;
+  padding: 22px 24px;
+  border-radius: 8px;
+  background: ${colors.mint[0]};
+  box-shadow: 0 0 10px ${colors.gray[1]};
+  box-sizing: border-box;
+`;
+
+export const SummaryHeader = styled.div`
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 8px;
+`;
+
+export const SummaryType = styled.span`
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  padding: 4px 8px;
+  border-radius: 999px;
+  background-color: ${(props) => (props['data-muted'] ? colors.gray[0] : '#ffffff')};
+  color: ${(props) => (props['data-muted'] ? colors.brown[0] : colors.mint[3])};
+  font-size: 0.75rem;
+  font-weight: 800;
+`;
+
+export const SummaryBody = styled.div`
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) minmax(260px, 0.55fr);
+  align-items: end;
+  gap: 18px;
+
+  ${media.mobile} {
+    grid-template-columns: 1fr;
+    align-items: start;
+  }
+`;
+
+export const Title = styled.h1`
+  margin: 0;
+  color: ${colors.brown[1]};
+  font-size: 1.9rem;
+  font-weight: 800;
+  line-height: 1.28;
+  word-break: keep-all;
+
+  ${media.mobile} {
+    font-size: 1.55rem;
+  }
+`;
+
+export const SummaryMeta = styled.div`
+  display: flex;
+  min-width: 0;
+  flex-direction: column;
+  gap: 6px;
+  color: ${colors.brown[0]};
+  font-size: 0.86rem;
+  line-height: 1.45;
+
+  &[data-overview] {
+    width: 100%;
+  }
+`;
+
+export const MetaRow = styled.p`
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: flex-end;
+  gap: 8px;
+  margin: 0;
+
+  &[data-overview] {
+    justify-content: flex-start;
+  }
+
+  & > span + span::before {
+    content: '·';
+    margin-right: 8px;
+    color: ${colors.brown[0]};
+  }
+
+  ${media.mobile} {
+    justify-content: flex-start;
+  }
+`;
+
+export const CapacityText = styled.span`
+  color: ${colors.brown[1]};
+  font-weight: 700;
 `;
 
 export const ButtonContainer = styled.div`
   display: flex;
-  flex-direction: column;
-  align-items: center;
-  margin-bottom: 1rem;
-  h2 {
-    color: ${colors.brown[0]};
-    margin-bottom: 10px;
-    font-weight: 300;
-    font-size: 0.8rem;
+  justify-content: flex-end;
+  min-height: 36px;
+  margin-top: -4px;
+
+  ${media.mobile} {
+    display: none;
   }
 `;
 
-export const ActivityDetailContainer = styled.div`
-  width: 90%;
-  margin: 0 5%;
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  background-color: white;
-  box-shadow: 0px 0px 20px ${colors.gray[1]};
-  border-radius: 50px;
-  padding: 80px 0px;
-  & > .project_container_title {
-    font-weight: 700;
-    margin-bottom: 30px;
-    max-width: 1200px;
+export const StyledButton = styled(ActionButton)`
+  width: auto;
+  min-width: 92px;
+  margin: 0;
+`;
+
+export const ActivityFloatingRegisterButton = styled.div`
+  display: none;
+
+  ${media.mobile} {
+    position: fixed;
+    right: 0;
+    bottom: 0;
+    left: 0;
+    z-index: 20;
+    display: block;
+    padding-bottom: env(safe-area-inset-bottom);
+    background: ${colors.mint[2]};
+
+    & > button {
+      width: 100%;
+      min-height: 64px;
+      padding: 0 20px;
+      border-radius: 0;
+      box-shadow: none;
+      font-size: 1rem;
+    }
   }
 `;
 
-export const TitleContainer = styled.div`
-  margin: 0px 1rem 40px 1rem;
+export const DetailSection = styled.section`
   display: flex;
-  justify-content: center;
+  flex-direction: column;
+  gap: 14px;
+  width: 100%;
+  padding: 18px;
+  border: 1px solid #eee7de;
+  border-radius: 8px;
+  background: #ffffff;
+  box-sizing: border-box;
+`;
+
+export const SectionTitle = styled.h2`
+  margin: 0;
+  color: ${colors.brown[1]};
+  font-size: 1rem;
+  font-weight: 800;
+  line-height: 1.35;
+`;
+
+export const DetailGrid = styled.div`
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 12px;
+
+  @media (max-width: 1199px) {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+
+  ${media.mobile} {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 8px;
+  }
+`;
+
+export const DetailItem = styled.div`
+  display: flex;
+  min-width: 0;
+  flex-direction: column;
+  gap: 7px;
+  padding: 12px;
+  border-radius: 8px;
+  background: #fbfaf8;
+  box-sizing: border-box;
+
+  ${media.mobile} {
+    gap: 5px;
+    padding: 10px;
+
+    &[data-wide] {
+      grid-column: 1 / -1;
+    }
+  }
+`;
+
+export const DetailLabel = styled.span`
+  color: ${colors.brown[0]};
+  font-size: 0.76rem;
+  font-weight: 700;
+  line-height: 1.2;
+`;
+
+export const DetailValue = styled.p`
+  display: flex;
+  flex-wrap: wrap;
   align-items: center;
-  line-height: 2.5rem;
+  gap: 4px;
+  min-height: 24px;
+  margin: 0;
+  color: ${colors.brown[1]};
+  font-size: 0.92rem;
+  font-weight: 800;
+  line-height: 1.35;
   word-break: keep-all;
 `;
 
-export const Title = styled.p`
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  text-align: center;
-  font-size: 2rem;
-  font-weight: 700;
-`;
-
-export const ContentContainer = styled.div`
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  margin-bottom: 30px;
-  h2 {
-    color: ${colors.brown[0]};
-    margin-bottom: 10px;
-    font-weight: 300;
-    font-size: 0.8rem;
-  }
-`;
-
-export const Content = styled.p`
-  margin-bottom: 0.5rem;
-`;
-
-export const TagContainer = styled.div`
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  margin-bottom: 30px;
-  h2 {
-    color: ${colors.brown[0]};
-    margin-bottom: 10px;
-    font-weight: 300;
-    font-size: 0.8rem;
-  }
-`;
+export const PlanContainer = styled(DetailSection)``;
 
 export const PlanContents = styled.div`
-  border: 1px solid ${colors.gray[2]};
-  border-radius: 20px;
-  padding: 2rem 1rem;
-  word-break: break-all;
-  line-height: 1.5rem;
-  width: 90%;
-  max-width: 600px;
+  width: 100%;
+  min-height: 128px;
+  padding: 18px;
+  border: 1px solid #eee7de;
+  border-radius: 8px;
+  word-break: keep-all;
+  line-height: 1.65;
+  box-sizing: border-box;
+
   p,
   ul,
   ol {
-    font-weight: 400;
-    font-size: 0.9rem;
+    color: ${colors.brown[1]};
+    font-size: 0.92rem;
+    font-weight: 500;
   }
   ul,
   ol {
@@ -109,6 +263,7 @@ export const PlanContents = styled.div`
   h5,
   h6 {
     margin: 1rem 0;
+    color: ${colors.brown[1]};
     line-height: normal;
   }
   hr {
@@ -118,90 +273,127 @@ export const PlanContents = styled.div`
     word-break: break-all;
   }
   img {
-    max-width: 90%;
+    max-width: 100%;
   }
 `;
 
-export const PlanContainer = styled.div`
+export const PlanFileMeta = styled.div`
   display: flex;
-  flex-direction: column;
-  align-items: center;
-  padding: 20px 2rem;
-  margin-bottom: 30px;
-  width: 90%;
-  max-width: 600px;
-
-  & > .title {
-    color: ${colors.brown[0]};
-    margin-bottom: 2rem;
-    font-weight: 300;
-    font-size: 0.8rem;
-  }
-`;
-
-export const MemberContainer = styled.div`
-  display: flex;
-  width: 80%;
-  flex-direction: column;
-  align-items: center;
-  margin-bottom: 30px;
-  h2 {
-    color: ${colors.brown[0]};
-    margin-bottom: 10px;
-    font-weight: 300;
-    font-size: 0.8rem;
-  }
-`;
-
-export const Member = styled.ul`
-  width: 90%;
-  display: flex;
-  align-items: center;
-  justify-content: center;
   flex-wrap: wrap;
+  align-items: center;
+  gap: 8px;
+  width: 100%;
+  padding: 12px;
+  border-radius: 8px;
+  background: #fbfaf8;
+  box-sizing: border-box;
+`;
+
+export const PlanFileList = styled.ul`
+  display: flex;
+  width: 100%;
+  flex-direction: column;
+  gap: 6px;
   margin: 0;
+  padding: 0;
   list-style: none;
 `;
 
-export const SessionBlock = styled.div`
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  margin-bottom: 30px;
-  h2 {
+export const PlanFileItem = styled.li`
+  min-width: 0;
+  padding: 9px 12px;
+  border: 1px solid #eee7de;
+  border-radius: 8px;
+  background: #ffffff;
+  box-sizing: border-box;
+
+  a {
     color: ${colors.brown[0]};
-    margin-bottom: 0px;
-    font-weight: 300;
-    font-size: 0.8rem;
+    font-size: 0.82rem;
+    font-weight: 600;
+    line-height: 1.35;
+    word-break: break-all;
+    text-decoration: none;
+
+    &:hover {
+      color: ${colors.mint[3]};
+      text-decoration: underline;
+      text-underline-offset: 3px;
+    }
   }
 `;
 
-export const Sessions = styled.ul`
+export const EmptyFileState = styled.div`
   width: 100%;
-  display: flex;
-  flex-direction: column;
-  align-items: center;
+  padding: 12px;
+  border: 1px solid #eee7de;
+  border-radius: 8px;
+  background: #fbfaf8;
+  color: ${colors.brown[0]};
+  font-size: 0.84rem;
+  font-weight: 500;
+  text-align: center;
+  box-sizing: border-box;
+`;
+
+export const MemberContainer = styled(DetailSection)``;
+
+export const Member = styled.ul`
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 292px));
   justify-content: center;
+  gap: 10px;
+  width: 100%;
   margin: 0;
+  padding: 0;
+  list-style: none;
+
+  @media (max-width: 1199px) {
+    grid-template-columns: repeat(2, minmax(0, 292px));
+  }
+
+  ${media.mobile} {
+    grid-template-columns: minmax(0, 292px);
+  }
+`;
+
+export const SessionBlock = styled(DetailSection)``;
+
+export const Sessions = styled.ul`
+  display: flex;
+  width: 100%;
+  flex-direction: column;
+  align-items: stretch;
+  gap: 12px;
+  margin: 0;
+  padding: 0;
 `;
 
 export const TagList = styled.ul`
   display: flex;
   flex-wrap: wrap;
   align-items: center;
-  justify-content: center;
-  margin: 0 1rem;
+  justify-content: flex-start;
+  gap: 4px;
+  max-height: ${(props) => (props['data-compact'] ? 'none' : '42px')};
+  min-height: ${(props) => (props['data-compact'] ? '24px' : '42px')};
+  overflow: hidden;
+  margin: 0;
+  padding: 0;
 `;
 
 export const TagCard = styled.li`
-  cursor: default;
-  background-color: ${colors.gray[0]};
-  border: 1px solid ${colors.mint[1]};
-  border-radius: 2px;
-  font-size: 0.9rem;
-  font-weight: 300;
-  padding: 2px;
-  margin: 5px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
   list-style: none;
+  margin: 0;
+  padding: 2px 5px;
+  border: 1px solid ${colors.mint[1]};
+  border-radius: 4px;
+  background-color: ${colors.gray[0]};
+  color: ${colors.brown[0]};
+  font-size: 0.75rem;
+  font-weight: 500;
   word-break: keep-all;
 `;

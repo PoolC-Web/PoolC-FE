@@ -1,5 +1,6 @@
 import styled from '@emotion/styled';
 import colors from '../../lib/styles/colors';
+import { media } from '../../styles/responsive';
 
 export const CarouselBlock = styled.div`
   display: flex;
@@ -9,6 +10,10 @@ export const CarouselBlock = styled.div`
   max-width: 1366px;
   max-height: 400px;
   margin: 0px auto 40px;
+
+  ${media.mobile} {
+    margin-top: 20px;
+  }
 `;
 
 export const MainCarousel = styled.div`
@@ -24,7 +29,9 @@ export const MainCarousel = styled.div`
 `;
 
 export const MainCarouselImage = styled.img`
+  width: auto;
   height: 50vh;
+  max-width: none;
   max-height: 400px;
   border-radius: 50px;
 `;
