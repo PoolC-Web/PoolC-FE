@@ -1,5 +1,5 @@
 import { ArrowRightOutlined, FilterOutlined, StarFilled } from '@ant-design/icons';
-import { Button, Empty, Popover, Select, Spin, Tooltip, Typography } from 'antd';
+import { Button, Drawer, Empty, Popover, Select, Spin, Tooltip, Typography } from 'antd';
 import { createStyles } from 'antd-style';
 import { memo, useCallback, useEffect, useMemo, useState } from 'react';
 import CollectibleDetailModal, { type CollectibleDetail } from '~/components/my-page/CollectibleDetailModal/CollectibleDetailModal';
@@ -10,7 +10,7 @@ import { PageContent } from '~/components/common/PageLayout/PageLayout';
 import { useMessage } from '~/hooks/useMessage';
 import * as gameAPI from '~/lib/api/gamification';
 import pokeballImage from '~/assets/images/pokeball.png';
-import { media } from '~/styles/responsive';
+import { breakpoints, media } from '~/styles/responsive';
 
 type Rarity = 'COMMON' | 'RARE' | 'EPIC' | 'LEGENDARY';
 
@@ -116,7 +116,7 @@ const rarityColor: Record<Rarity, string> = {
   LEGENDARY: '#d59a12',
 };
 
-const masterBallImage = 'https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/items/master-ball.png';
+const masterBallImage = 'https://archives.bulbagarden.net/media/upload/a/a6/Bag_Master_Ball_SV_Sprite.png';
 
 const hasNormalOwned = (item: Pick<CollectionItem, 'normalOwned' | 'normalOwnedCount'>) => item.normalOwned ?? (item.normalOwnedCount ?? 0) > 0;
 const hasShinyOwned = (item: Pick<CollectionItem, 'shinyOwned' | 'shinyCount'>) => item.shinyOwned ?? (item.shinyCount ?? 0) > 0;
@@ -172,8 +172,9 @@ export default function MyPageCollectionPage() {
   const [draws, setDraws] = useState<DrawResult[]>([]);
   const [loading, setLoading] = useState(true);
   const [drawing, setDrawing] = useState<'NORMAL' | 'SHINY' | null>(null);
-  const [drawingTen, setDrawingTen] = useState(false);
   const [exchanging, setExchanging] = useState(false);
+  const [drawMenuOpen, setDrawMenuOpen] = useState(false);
+  const [isMobileViewport, setIsMobileViewport] = useState(() => typeof window !== 'undefined' && window.matchMedia(`(max-width: ${breakpoints.compact - 1}px)`).matches);
   const [generation, setGeneration] = useState<number | 'ALL'>('ALL');
   const [rarity, setRarity] = useState<Rarity | 'ALL'>('ALL');
   const [ownership, setOwnership] = useState<CollectionView>('ALL');
@@ -195,6 +196,14 @@ export default function MyPageCollectionPage() {
 
   useEffect(() => {
     load();
+  }, []);
+
+  useEffect(() => {
+    const query = window.matchMedia(`(max-width: ${breakpoints.compact - 1}px)`);
+    const updateViewport = () => setIsMobileViewport(query.matches);
+    updateViewport();
+    query.addEventListener('change', updateViewport);
+    return () => query.removeEventListener('change', updateViewport);
   }, []);
 
   const generations = useMemo(() => [...new Set(collection.map((item) => item.generation))].sort((a, b) => a - b), [collection]);
@@ -267,19 +276,6 @@ export default function MyPageCollectionPage() {
     }
   };
 
-  const handleDrawTen = async () => {
-    setDrawingTen(true);
-    try {
-      const response = await gameAPI.drawTenCollectibles();
-      await load();
-      message.success(`10연차 뽑기를 완료했습니다. (${response.data.length}마리 획득)`);
-    } catch (error: any) {
-      message.error(error.response?.data?.message ?? '10연차 뽑기에 실패했습니다.');
-    } finally {
-      setDrawingTen(false);
-    }
-  };
-
   const handleExchangeMasterBall = async () => {
     setExchanging(true);
     try {
@@ -292,6 +288,18 @@ export default function MyPageCollectionPage() {
       setExchanging(false);
     }
   };
+
+  const drawMenu = <div className={styles.drawMenu}>
+    <Tooltip title={normalDrawUnavailable ? '일반 도감을 모두 완성했습니다.' : '포켓볼 1개로 일반 포켓몬 뽑기'}>
+      <Button className={styles.drawMenuButton} type="primary" loading={drawing === 'NORMAL'} disabled={!summary || drawing !== null || normalDrawUnavailable || ballCount < 1} onClick={() => { handleDraw(false); setDrawMenuOpen(false); }}><img src={pokeballImage} alt="" aria-hidden="true" />일반 뽑기 <span>×1 / {ballCount}</span></Button>
+    </Tooltip>
+    <Tooltip title={shinyDrawUnavailable ? '획득한 포켓몬의 이로치를 모두 수집했습니다.' : '마스터볼 1개로 이로치 포켓몬 뽑기'}>
+      <Button className={styles.drawMenuShinyButton} loading={drawing === 'SHINY'} disabled={!summary || drawing !== null || shinyDrawUnavailable || masterBallCount < 1} onClick={() => { handleDraw(true); setDrawMenuOpen(false); }}><img src={masterBallImage} alt="" aria-hidden="true" />이로치 뽑기 <span>×1 / {masterBallCount}</span></Button>
+    </Tooltip>
+    <div className={styles.drawMenuExchange}>
+      <Button className={styles.drawMenuExchangeButton} loading={exchanging} disabled={!summary || drawing !== null || exchanging || ballCount < 20} onClick={() => { handleExchangeMasterBall(); setDrawMenuOpen(false); }}><img src={pokeballImage} alt="" aria-hidden="true" /><strong>마스터볼 교환</strong><span>20 <ArrowRightOutlined aria-hidden="true" /> 1</span><img src={masterBallImage} alt="" aria-hidden="true" /></Button>
+    </div>
+  </div>;
 
   return (
     <Block>
@@ -307,21 +315,13 @@ export default function MyPageCollectionPage() {
                 </span>
               </span>
             }
-            actions={
-              <div className={styles.drawPanel}>
-                <div className={styles.drawAction}>
-                  <span className={styles.ballBalance} aria-label={`포켓볼 ${ballCount}개 보유`}><img src={pokeballImage} alt="" aria-hidden="true" /><strong>{ballCount}</strong></span>
-                  <span className={styles.ballBalance} aria-label={`마스터볼 ${masterBallCount}개 보유`}><img src={masterBallImage} alt="" aria-hidden="true" /><strong>{masterBallCount}</strong></span>
-                  <div className={styles.drawButtons}>
-                    <Tooltip title={normalDrawUnavailable ? '일반 도감을 모두 완성했습니다.' : '포켓볼 1개로 일반 포켓몬 뽑기'}><Button aria-label={normalDrawUnavailable ? '일반 도감을 모두 완성했습니다.' : '포켓볼 1개로 일반 포켓몬 뽑기'} className={styles.drawButton} type="primary" loading={drawing === 'NORMAL'} disabled={!summary || drawing !== null || normalDrawUnavailable || ballCount < 1} onClick={() => handleDraw(false)}><img src={pokeballImage} alt="" aria-hidden="true" /><span>×1</span></Button></Tooltip>
-                    <Tooltip title="포켓볼 10개로 일반 포켓몬 10마리 뽑기"><Button aria-label="포켓볼 10개로 일반 포켓몬 10마리 뽑기" className={styles.drawButton} loading={drawingTen} disabled={!summary || drawing !== null || drawingTen || normalDrawUnavailable || ballCount < 10} onClick={handleDrawTen}><img src={pokeballImage} alt="" aria-hidden="true" /><span>10연차</span></Button></Tooltip>
-                    <Tooltip title={shinyDrawUnavailable ? '획득한 포켓몬의 이로치를 모두 수집했습니다.' : '마스터볼 1개로 이로치 포켓몬 뽑기'}><Button aria-label={shinyDrawUnavailable ? '획득한 포켓몬의 이로치를 모두 수집했습니다.' : '마스터볼 1개로 이로치 포켓몬 뽑기'} className={cx(styles.drawButton, styles.shinyDrawButton, { [styles.shinyDrawUnavailable]: shinyDrawUnavailable })} loading={drawing === 'SHINY'} disabled={!summary || drawing !== null || drawingTen || shinyDrawUnavailable || masterBallCount < 1} onClick={() => handleDraw(true)}><img src={masterBallImage} alt="" aria-hidden="true" /><StarFilled aria-hidden="true" /><span>이로치 뽑기</span></Button></Tooltip>
-                  </div>
-                  <Button className={styles.exchangeButton} loading={exchanging} disabled={!summary || drawing !== null || drawingTen || exchanging || ballCount < 20} onClick={handleExchangeMasterBall}><img src={pokeballImage} alt="" aria-hidden="true" />20 <ArrowRightOutlined aria-hidden="true" /><img src={masterBallImage} alt="" aria-hidden="true" />1 교환</Button>
-                </div>
-              </div>
-            }
+            actions={!isMobileViewport ? <Popover trigger="click" placement="bottomRight" open={drawMenuOpen} onOpenChange={setDrawMenuOpen} content={drawMenu}><Button className={styles.drawTrigger} type="primary">뽑기</Button></Popover> : undefined}
           />
+
+          <Drawer closable={false} destroyOnClose placement="bottom" open={isMobileViewport && drawMenuOpen} onClose={() => setDrawMenuOpen(false)} height="auto" styles={{ header: { display: 'none' }, body: { paddingTop: 16, paddingRight: 20, paddingBottom: 'max(24px, env(safe-area-inset-bottom, 0px))', paddingLeft: 20 }, mask: { position: 'fixed', top: 0, right: 0, bottom: 0, left: 0, width: '100vw', height: '100vh', minHeight: '100dvh', transform: 'translateZ(0)', background: 'rgba(34, 35, 35, 0.42)', backdropFilter: 'blur(2px)', WebkitBackdropFilter: 'blur(2px)' } }}>
+            {drawMenu}
+          </Drawer>
+          {!drawMenuOpen && <Button className={styles.mobileDrawTrigger} type="primary" onClick={() => setDrawMenuOpen(true)}>+ 포켓몬 뽑기</Button>}
 
           {!loading && collectedCount === 0 && <section className={styles.emptyGuide}>
             <strong>첫 포켓몬을 만나 보세요.</strong>
@@ -399,6 +399,9 @@ export default function MyPageCollectionPage() {
         title={detailModal?.title}
         description={detailModal?.description}
         onClose={() => setDetailModal(null)}
+        onDrawAgain={detailModal?.title ? () => handleDraw(false) : undefined}
+        drawAgainLoading={drawing === 'NORMAL'}
+        drawAgainDisabled={!summary || drawing !== null || normalDrawUnavailable || ballCount < 1}
       />
     </Block>
   );
@@ -406,19 +409,18 @@ export default function MyPageCollectionPage() {
 
 const useStyles = createStyles(({ css }) => ({
   whiteBlock: css`box-sizing:border-box; padding:30px 20px; align-items:center;`,
-  content: css`max-width:1180px;`,
-  collectionHeader: css`${media.mobile}{gap:12px; margin-bottom:10px; > div:first-of-type{gap:4px;} > div:last-child{width:100%; justify-content:center;} h2{font-size:1.75rem;}}`,
+  content: css`max-width:1180px; ${media.mobile}{padding-bottom:calc(76px + env(safe-area-inset-bottom, 0px));}`,
+  collectionHeader: css`margin-bottom:18px; ${media.mobile}{gap:12px; margin-bottom:14px; > div:first-of-type{gap:4px;} h2{font-size:1.75rem;}}`,
   catalogTitle: css`display:inline-flex; align-items:center; gap:18px; ${media.mobile}{flex-direction:column; gap:4px;}`,
   catalogMetrics: css`display:inline-flex; align-items:center; color:#737c77; font-size:.82rem; font-weight:600; font-variant-numeric:tabular-nums; white-space:nowrap; > span{display:inline-flex; align-items:center;} strong{min-width:108px; color:#249b78; font-size:.9rem; text-align:center;} ${media.mobile}{strong{font-size:1rem;}}`,
   catalogMetricSkeleton: css`display:inline-flex; width:108px; height:18px; border-radius:4px; background:#e7efed;`,
-  drawPanel: css`display:flex; width:520px; align-items:center; justify-content:flex-end; ${media.mobile}{width:100%; align-items:flex-start;}`,
-  drawAction: css`display:flex; width:100%; align-items:center; justify-content:flex-end; gap:8px; ${media.mobile}{flex-wrap:wrap; justify-content:center;}`,
-  drawButtons: css`display:flex; gap:8px; flex-wrap:nowrap; .ant-btn{display:inline-flex; align-items:center; gap:5px; font-size:.82rem;} .ant-btn img{width:18px; height:18px; object-fit:contain;} .ant-btn .anticon{font-size:.68rem;} ${media.mobile}{width:100%; justify-content:center; flex-wrap:wrap;}`,
-  drawButton: css`${media.mobile}{min-width:68px; min-height:44px; padding:0 10px;}`,
-  shinyDrawButton: css`border-color:#d5a62d !important; color:#8d6810 !important; &:not(:disabled):hover{border-color:#ba8a13 !important; color:#74530a !important;} ${media.mobile}{min-width:78px;}`,
-  shinyDrawUnavailable: css`cursor:not-allowed; opacity:.55;`,
-  exchangeButton: css`display:inline-flex; align-items:center; gap:3px; min-height:36px; padding:0 9px; border-color:#d9c7a0 !important; color:#765419 !important; font-size:.75rem; font-weight:700; img{width:17px; height:17px; object-fit:contain;} ${media.mobile}{min-height:40px;}`,
-  ballBalance: css`display:inline-flex; align-items:center; gap:5px; min-width:68px; color:#276f59; font-variant-numeric:tabular-nums; font-weight:700; img{width:21px; height:21px; object-fit:contain;} strong{font-size:.9rem;} ${media.mobile}{min-height:44px; justify-content:center;}`,
+  drawTrigger: css`min-height:36px; padding:0 14px; font-size:.8rem; font-weight:700; ${media.mobile}{min-height:40px;}`,
+  mobileDrawTrigger: css`display:none; ${media.mobile}{position:fixed; right:0; bottom:0; left:0; z-index:20; display:inline-flex; width:100%; min-height:calc(64px + env(safe-area-inset-bottom, 0px)); align-items:center; justify-content:center; padding:0 20px env(safe-area-inset-bottom, 0px); border-radius:0; background:#49bf9e; color:#fff; font-size:1rem; font-weight:800; &:hover,&:focus{background:#49bf9e !important; color:#fff !important;}}`,
+  drawMenu: css`display:flex; width:248px; flex-direction:column; gap:8px; ${media.mobile}{width:100%;}`,
+  drawMenuButton: css`display:flex; align-items:center; justify-content:flex-start; gap:7px; height:44px; padding:0 12px; font-weight:700; img{width:22px; height:22px; object-fit:contain;} span{margin-left:auto;}`,
+  drawMenuShinyButton: css`display:flex; align-items:center; justify-content:flex-start; gap:7px; height:44px; padding:0 12px; border-color:#d9c7a0 !important; color:#8d6810 !important; font-weight:700; img{width:22px; height:22px; object-fit:contain;} span{margin-left:auto;}`,
+  drawMenuExchange: css`margin-top:2px; padding-top:9px; border-top:1px solid #edf0ef;`,
+  drawMenuExchangeButton: css`display:flex; width:100%; align-items:center; gap:5px; height:42px; padding:0 10px; border-color:#d9c7a0 !important; color:#765419 !important; strong{font-size:.76rem;} span{display:inline-flex; align-items:center; gap:2px; margin-left:auto; font-size:.74rem; font-weight:700;} img{width:18px; height:18px; object-fit:contain;}`,
   emptyGuide: css`display:flex; flex-direction:column; gap:4px; padding:14px 16px; margin:0 0 18px; border-left:3px solid #49bf9e; background:#f8fcfb; strong{color:#276f59;} .ant-typography{font-size:.82rem; color:#6e7772;}`,
   filters: css`display:flex; align-items:center; gap:8px; margin-bottom:18px; border-bottom:1px solid rgba(76, 55, 34, .08); ${media.mobile}{min-height:44px; gap:12px;}`,
   collectionTabs: css`width:auto; flex:none; min-width:0; .ant-tabs-nav{margin:0; border-bottom:0;} .ant-tabs-tab{padding:12px 0 14px;} ${media.mobile}{flex:1; .ant-tabs-nav-wrap{overflow:visible;} .ant-tabs-tab{display:flex; min-height:44px; align-items:center; padding:0 0 2px;}}`,

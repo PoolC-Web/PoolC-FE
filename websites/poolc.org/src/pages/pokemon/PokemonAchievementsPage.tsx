@@ -53,6 +53,7 @@ export default function PokemonAchievementsPage() {
   const [quests, setQuests] = useState<Quest[]>([]);
   const [loading, setLoading] = useState(true);
   const [claiming, setClaiming] = useState<string | null>(null);
+  const [claimingAll, setClaimingAll] = useState(false);
   const [selectedType, setSelectedType] = useState<QuestType | 'ALL'>('DAILY');
   const [ballCount, setBallCount] = useState(0);
 
@@ -83,11 +84,34 @@ export default function PokemonAchievementsPage() {
     }
   };
 
+  const claimableQuests = useMemo(() => quests.filter((quest) => quest.progress >= quest.target && !quest.claimed), [quests]);
+
+  const claimAll = async () => {
+    setClaimingAll(true);
+    let claimedCount = 0;
+    try {
+      for (const quest of claimableQuests) {
+        await gameAPI.claimAchievement(quest.key);
+        claimedCount += 1;
+      }
+      message.success(`${claimedCount}개의 퀘스트 보상을 수령했습니다.`);
+    } catch (error: any) {
+      message.error(error.response?.data?.message ?? '일부 퀘스트 보상을 수령하지 못했습니다.');
+    } finally {
+      await load();
+      setClaimingAll(false);
+    }
+  };
+
   const sections = useMemo(() => (['DAILY', 'SEASON', 'PERMANENT'] as QuestType[])
     .filter((type) => selectedType === 'ALL' || selectedType === type)
     .map((type) => ({
       type,
       quests: quests.filter((quest) => quest.type === type).sort((a, b) => {
+        const aClaimable = a.progress >= a.target && !a.claimed;
+        const bClaimable = b.progress >= b.target && !b.claimed;
+        if (aClaimable !== bClaimable) return Number(bClaimable) - Number(aClaimable);
+
         const aCompleted = a.claimed || (a.progress >= a.target && a.claimableCount === 0);
         const bCompleted = b.claimed || (b.progress >= b.target && b.claimableCount === 0);
         return Number(aCompleted) - Number(bCompleted);
@@ -97,7 +121,7 @@ export default function PokemonAchievementsPage() {
     <Block>
       <WhiteBlock className={styles.whiteBlock}>
         <PageContent className={styles.content}>
-          <PageHeader title="퀘스트" />
+          <PageHeader title="퀘스트" actions={claimableQuests.length > 0 ? <Button type="primary" icon={<GiftOutlined />} loading={claimingAll} disabled={claiming !== null} onClick={claimAll}>모두 수령 ({claimableQuests.length})</Button> : undefined} />
           <section className={styles.drawCta} aria-label="포켓몬 도감">
             <div className={styles.drawCtaInfo}>
               <span><img src={normalBallImage} alt="" aria-hidden="true" /> 포켓볼 {ballCount}개 보유</span>
@@ -114,7 +138,7 @@ export default function PokemonAchievementsPage() {
             items={QUEST_TYPE_ITEMS}
           />
           {loading ? <Spin /> : <>
-            {sections.map(({ type, quests: sectionQuests }) => <QuestSection key={type} title={selectedType === 'ALL' ? QUEST_SECTION_TITLES[type] : undefined} quests={sectionQuests} claiming={claiming} onClaim={claim} styles={styles} />)}
+            {sections.map(({ type, quests: sectionQuests }) => <QuestSection key={type} title={selectedType === 'ALL' ? QUEST_SECTION_TITLES[type] : undefined} quests={sectionQuests} claiming={claiming} claimingAll={claimingAll} onClaim={claim} styles={styles} />)}
           </>}
         </PageContent>
       </WhiteBlock>
@@ -122,7 +146,7 @@ export default function PokemonAchievementsPage() {
   );
 }
 
-function QuestSection({ title, quests, claiming, onClaim, styles }: { title?: string; quests: Quest[]; claiming: string | null; onClaim: (key: string) => void; styles: Record<string, string> }) {
+function QuestSection({ title, quests, claiming, claimingAll, onClaim, styles }: { title?: string; quests: Quest[]; claiming: string | null; claimingAll: boolean; onClaim: (key: string) => void; styles: Record<string, string> }) {
   return <section className={styles.section}>
     {title && <h2 className={styles.sectionTitle}>{title}</h2>}
     <div className={styles.questList}>{quests.map((quest) => {
@@ -139,7 +163,7 @@ function QuestSection({ title, quests, claiming, onClaim, styles }: { title?: st
         <div className={styles.questBody}><div className={styles.questTitle}><h3>{isClubWifiQuest ? `${quest.title} [준비 중]` : quest.title}</h3></div>{isClubWifiQuest && !isCompleted && <p className={styles.clubWifiGuide}>동아리방 Wi-Fi에 연결한 뒤 VPN과 iCloud Private Relay를 해제하면 출석할 수 있어요.</p>}{!isCompleted && <div className={styles.questProgress}><Progress percent={percentage} showInfo={false} strokeColor={completed ? '#48b99a' : '#9bbab0'} trailColor="#e7efed" /><strong>{progressLabel}</strong></div>}</div>
         <div className={styles.questActions}>
           <div className={styles.questReward}><strong><img className={styles.rewardBallIcon} src={normalBallImage} alt="일반 포켓볼" /> × {quest.rewardAmount}</strong></div>
-          {isCompleted ? <span className={styles.completedBadge}><CheckOutlined /> 수령 완료</span> : canClaim && <Button type="primary" loading={claiming === quest.key} onClick={() => onClaim(quest.key)} icon={<CheckOutlined />}>보상 받기</Button>}
+          {isCompleted ? <span className={styles.completedBadge}><CheckOutlined /> 수령 완료</span> : canClaim && <Button type="primary" loading={claiming === quest.key} disabled={claimingAll} onClick={() => onClaim(quest.key)} icon={<CheckOutlined />}>보상 받기</Button>}
         </div>
       </article>;
     })}</div>

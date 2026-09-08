@@ -174,6 +174,7 @@ const Menus = ({
       <Drawer
         className={styles.mobileDrawer}
         closable={false}
+        destroyOnClose
         open={menuVisible}
         placement="right"
         width="86vw"

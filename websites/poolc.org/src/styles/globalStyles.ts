@@ -4,7 +4,9 @@ import { fontFamily } from '~/styles/font';
 export const globalStyles = css`
   html {
     min-height: 100%;
-    background: transparent;
+    /* iOS Safari paints its lower safe area from the root element. A transparent
+       root can retain the last Drawer compositing layer after it closes. */
+    background: rgb(250, 250, 250);
   }
 
   * {

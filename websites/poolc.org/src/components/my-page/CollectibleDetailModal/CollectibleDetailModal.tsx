@@ -2,6 +2,7 @@ import { CloseOutlined } from '@ant-design/icons';
 import { Button, Modal, Segmented, Tag, Typography } from 'antd';
 import { createStyles } from 'antd-style';
 import { useEffect, useState } from 'react';
+import pokeballImage from '~/assets/images/pokeball.png';
 
 type Rarity = 'COMMON' | 'RARE' | 'EPIC' | 'LEGENDARY';
 
@@ -31,6 +32,9 @@ type CollectibleDetailModalProps = {
   title?: string;
   description?: string;
   onClose: () => void;
+  onDrawAgain?: () => void;
+  drawAgainLoading?: boolean;
+  drawAgainDisabled?: boolean;
 };
 
 const rarityLabel: Record<Rarity, string> = {
@@ -47,7 +51,7 @@ const rarityColor: Record<Rarity, string> = {
   LEGENDARY: '#d59a12',
 };
 
-export default function CollectibleDetailModal({ collectible, title, description, onClose }: CollectibleDetailModalProps) {
+export default function CollectibleDetailModal({ collectible, title, description, onClose, onDrawAgain, drawAgainLoading = false, drawAgainDisabled = false }: CollectibleDetailModalProps) {
   const { styles } = useStyles();
   const [showShiny, setShowShiny] = useState(false);
   const canShowShiny = Boolean(collectible?.shinyOwned && collectible.shinySpriteUrl);
@@ -59,7 +63,7 @@ export default function CollectibleDetailModal({ collectible, title, description
   return (
     <Modal
       open={Boolean(collectible)}
-      footer={<Button type="primary" onClick={onClose}>닫기</Button>}
+      footer={<div className={styles.footer}>{onDrawAgain && <Button className={styles.drawAgainButton} loading={drawAgainLoading} disabled={drawAgainDisabled} onClick={onDrawAgain}><img src={pokeballImage} alt="" aria-hidden="true" />한 번 더 뽑기</Button>}<Button type="primary" onClick={onClose}>닫기</Button></div>}
       closeIcon={<CloseOutlined aria-label="닫기" />}
       onCancel={onClose}
       centered
@@ -104,4 +108,6 @@ const useStyles = createStyles(({ css }) => ({
   dexEntry: css`width:100%; padding:12px; border-top:1px solid #e5f0ed; border-bottom:1px solid #e5f0ed; text-align:left; strong{font-size:.82rem; color:#276f59;} .ant-typography{margin:4px 0 0 !important; color:#5f6462; font-size:.85rem; line-height:1.6;}`,
   profile: css`display:grid; width:100%; grid-template-columns:1fr 1fr; margin:0; border:1px solid #e5f0ed; border-radius:4px; > div{padding:9px 12px; text-align:left;} dt{font-size:.72rem; color:#7b736a;} dd{margin:2px 0 0; color:#3d4843; font-size:.86rem; font-weight:700;} [data-ability]{grid-column:1 / -1; border-top:1px solid #e5f0ed;}`,
   stats: css`width:100%; text-align:left; > strong{display:block; margin-bottom:7px; color:#4c3722; font-size:.82rem;} > div{display:grid; grid-template-columns:repeat(3, 1fr); gap:5px;} span{padding:6px 7px; border-radius:3px; background:#f5f8f7; color:#67716c; font-size:.72rem;} b{float:right; color:#276f59;}`,
+  footer: css`display:flex; align-items:center; justify-content:flex-end; gap:8px;`,
+  drawAgainButton: css`display:inline-flex; align-items:center; gap:5px; img{width:18px; height:18px; object-fit:contain;}`,
 }));

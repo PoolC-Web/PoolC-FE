@@ -53,7 +53,15 @@ export const MobileSectionFilter = ({
         height="auto"
         styles={{
           mask: {
-            height: '100dvh',
+            position: 'fixed',
+            top: 0,
+            right: 0,
+            bottom: 0,
+            left: 0,
+            width: '100vw',
+            height: '100vh',
+            minHeight: '100dvh',
+            transform: 'translateZ(0)',
             background: 'rgba(34, 35, 35, 0.42)',
             backdropFilter: 'blur(2px)',
             WebkitBackdropFilter: 'blur(2px)',
