@@ -1,4 +1,5 @@
 import { useState } from 'react';
+import { Spin } from 'antd';
 import styled from '@emotion/styled';
 import useInput from '../../hooks/useInput';
 import { emailValidation, passwordValidation } from '../../lib/utils/validation';
@@ -7,7 +8,6 @@ import { FormList, FormListHeader, SubmitButton } from './AuthForm.styles';
 import { Input } from './AuthForm';
 import colors from '../../lib/styles/colors';
 import RegisterModalContainer from '../../containers/auth/RegisterModalContainer/RegisterModalContainer';
-import Spinner from '../common/Spinner/Spinner';
 import throttle from '../../lib/utils/throttle';
 
 const Description = styled.p`
@@ -86,7 +86,7 @@ const PasswordResetForm = ({ type, message, onChangeMessage, modalVisible, handl
       <RegisterModalContainer visible={modalVisible} onConfirm={handleModalClose} onCancel={handleModalClose} message={message} />
       <Block>
         <WhiteBlock>
-          {loading && <Spinner />}
+          {loading && <Spin />}
           <FormListHeader>
             <h2 className="form_list_title">{type === 'email' ? '비밀번호 찾기' : '비밀번호 재설정'}</h2>
           </FormListHeader>

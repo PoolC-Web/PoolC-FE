@@ -1,7 +1,7 @@
 import { Suspense } from 'react';
+import { Spin } from 'antd';
 import { useParams } from 'react-router';
 import { Block, WhiteBlock } from '../../../styles/common/Block.styles';
-import Spinner from '~/components/common/Spinner/Spinner';
 import MemberDetailContent from './MemberDetailContent';
 
 const MemberDetail = () => {
@@ -10,7 +10,7 @@ const MemberDetail = () => {
   return (
     <Block>
       <WhiteBlock>
-        <Suspense fallback={<Spinner />}>
+        <Suspense fallback={<Spin />}>
           <MemberDetailContent loginId={memberID} />
         </Suspense>
       </WhiteBlock>

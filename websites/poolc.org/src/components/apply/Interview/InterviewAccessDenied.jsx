@@ -1,13 +1,13 @@
 import { ExclamationCircleTwoTone } from '@ant-design/icons';
+import { Spin } from 'antd';
 import { Block, WhiteBlock } from '../../../styles/common/Block.styles';
 import { Content } from '../Apply';
-import Spinner from '../../common/Spinner/Spinner';
 
 const InterviewAccessDenied = ({ loading }) => (
   <Block>
     <WhiteBlock>
       <h2 className="block_title">면접 시간 제출</h2>
-      {loading && <Spinner />}
+      {loading && <Spin />}
       {!loading && (
         <Content>
           <div>

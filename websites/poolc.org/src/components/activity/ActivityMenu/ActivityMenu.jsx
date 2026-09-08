@@ -1,10 +1,10 @@
 import { SectionMenu } from '../../common/SectionMenu/SectionMenu';
-import Spinner from '../../common/Spinner/Spinner';
+import { Spin } from 'antd';
 
 const ActivityMenu = ({ loading, semesters, currentLocation }) => (
   <SectionMenu
     loading={loading}
-    loadingFallback={<Spinner small />}
+    loadingFallback={<Spin className="poolc-inline-spinner" />}
     items={(semesters ?? []).map((semester) => ({
       label: semester,
       to: `/activities?semester=${semester}`,

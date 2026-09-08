@@ -56,7 +56,7 @@ export default function AdminGamification() {
         </div>
         <ActionButton className={styles.syncButton} disabled={starting || run?.status === 'RUNNING'} onClick={startSync}>동기화 실행</ActionButton>
       </header>
-      {loading ? <Spin className={styles.spinner} /> : !run ? <div className={styles.emptyState}>아직 동기화한 도감이 없습니다.</div> : (
+      {loading ? <Spin /> : !run ? <div className={styles.emptyState}>아직 동기화한 도감이 없습니다.</div> : (
         <div className={styles.status}>
           <div><span>상태</span><Tag color={run.status === 'COMPLETED' ? 'green' : run.status === 'FAILED' ? 'red' : 'blue'}>{run.status}</Tag></div>
           <div><span>처리한 종</span><strong>{run.processedCount}종</strong></div>
@@ -74,7 +74,6 @@ const useStyles = createStyles(({ css }) => ({
   title: css`margin:0; color:#4c3722; font-size:1.75rem; font-weight:800; line-height:1.25;`,
   description: css`margin:8px 0 0; color:#827971; font-size:.85rem; line-height:1.45;`,
   syncButton: css`margin:0;`,
-  spinner: css`display:block; margin:64px auto;`,
   emptyState: css`width:100%; padding:42px 20px; border:1px solid rgba(76,55,34,.12); border-radius:8px; color:#827971; font-size:.9rem; text-align:center; box-sizing:border-box;`,
   status: css`display:grid; grid-template-columns:repeat(2, minmax(0,1fr)); gap:1px; overflow:hidden; border:1px solid #e5f0ed; border-radius:8px; background:#e5f0ed; > div{display:flex; flex-direction:column; gap:8px; min-height:96px; padding:16px; background:#fff;} span{font-size:.8rem; color:#7b736a;} strong{color:#4c3722;} @media (max-width: 767px){grid-template-columns:1fr;}`,
 }));

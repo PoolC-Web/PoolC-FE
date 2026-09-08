@@ -1,10 +1,10 @@
 import { useEffect, useState } from 'react';
 import { withRouter } from 'react-router-dom';
+import { Spin } from 'antd';
 import ActivityAttendance from '../../../components/activity/ActivityForm/ActivityAttendance';
 import * as activityAPI from '../../../lib/api/activity';
 import * as authAPI from '../../../lib/api/auth';
 import { MENU } from '../../../constants/menus';
-import Spinner from '../../../components/common/Spinner/Spinner';
 import ActionButton from '../../../components/common/Buttons/ActionButton';
 import { SUCCESS } from '../../../constants/statusCode';
 
@@ -138,7 +138,7 @@ const ActivityAttendanceContainer = ({ match, history }) => {
 
   return (
     <>
-      {loading && <Spinner />}
+      {loading && <Spin />}
       {!loading && (
         <ActivityAttendance
           activity={activity}

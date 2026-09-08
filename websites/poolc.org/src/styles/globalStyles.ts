@@ -85,6 +85,37 @@ export const globalStyles = css`
     max-width: 100%;
   }
 
+  .ant-spin:not(.ant-spin-sm) {
+    display: flex;
+    width: 100%;
+    min-height: 40vh;
+    align-items: center;
+    justify-content: center;
+  }
+
+  .ant-spin:not(.ant-spin-sm) .ant-spin-dot,
+  .ant-spin:not(.ant-spin-sm) .ant-spin-dot-holder {
+    font-size: 2.8rem !important;
+  }
+
+  .ant-spin:not(.ant-spin-sm) .ant-spin-dot {
+    width: 2.8rem !important;
+    height: 2.8rem !important;
+  }
+
+  .ant-spin:not(.ant-spin-sm) .ant-spin-dot-item {
+    width: 1.4rem !important;
+    height: 1.4rem !important;
+  }
+
+  .poolc-inline-spinner.ant-spin {
+    display: inline-flex;
+    min-width: 45px;
+    min-height: 45px;
+    align-items: center;
+    justify-content: center;
+  }
+
   .tui-editor-defaultUI,
   .tui-editor-contents {
     font-family: ${fontFamily};

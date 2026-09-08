@@ -7,7 +7,7 @@ export type BookResponse = {
     author?: string;
     borrowDate?: string;
     borrower?: MemberResponse;
-    category?: 'ALGORITHM' | 'DATA' | 'DESIGN' | 'PROGRAMMING' | 'SYSTEM';
+    category?: 'AI' | 'APP' | 'CERTIFICATION_CAREER' | 'COMPUTER_LANGUAGE' | 'DATA_ANALYSIS_SECURITY' | 'ETC' | 'FRONTEND' | 'GAME' | 'LECTURE_TEXTBOOK' | 'MATH_ELECTRONICS';
     description?: string;
     discount?: number;
     donor?: string;

@@ -13,14 +13,15 @@ type SectionMenuProps = {
   items: SectionMenuItem[];
   loading?: boolean;
   loadingFallback?: ReactNode;
+  className?: string;
 };
 
-export const SectionMenu = ({ items, loading = false, loadingFallback = null }: SectionMenuProps) => (
-  <MenuBlock>
+export const SectionMenu = ({ items, loading = false, loadingFallback = null, className }: SectionMenuProps) => (
+  <MenuBlock className={className}>
     <MenuList>
       {loading && loadingFallback}
       {!loading &&
-        items.map((item) => <MenuItem key={item.to}>{item.active ? <SelectedLinkButton to={item.to}>{item.label}</SelectedLinkButton> : <LinkButton to={item.to}>{item.label}</LinkButton>}</MenuItem>)}
+        items.map((item) => <MenuItem key={item.to}>{item.active ? <SelectedLinkButton aria-current="page" to={item.to}>{item.label}</SelectedLinkButton> : <LinkButton to={item.to}>{item.label}</LinkButton>}</MenuItem>)}
     </MenuList>
   </MenuBlock>
 );

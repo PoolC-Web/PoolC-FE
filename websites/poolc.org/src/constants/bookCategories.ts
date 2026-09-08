@@ -1,9 +1,14 @@
 export const BOOK_CATEGORY_OPTIONS = [
-  { value: 'PROGRAMMING', label: '프로그래밍' },
-  { value: 'ALGORITHM', label: '알고리즘' },
-  { value: 'SYSTEM', label: '시스템' },
-  { value: 'DATA', label: '데이터' },
-  { value: 'DESIGN', label: '설계' },
+  { value: 'COMPUTER_LANGUAGE', label: '컴퓨터 언어' },
+  { value: 'CERTIFICATION_CAREER', label: '자격증/취업' },
+  { value: 'ETC', label: '기타' },
+  { value: 'FRONTEND', label: '프론트엔드' },
+  { value: 'GAME', label: '게임' },
+  { value: 'APP', label: '앱' },
+  { value: 'LECTURE_TEXTBOOK', label: '강의 교재' },
+  { value: 'AI', label: 'AI' },
+  { value: 'DATA_ANALYSIS_SECURITY', label: '데이터분석/보안' },
+  { value: 'MATH_ELECTRONICS', label: '수학/전자' },
 ] as const;
 
 export type BookCategory = (typeof BOOK_CATEGORY_OPTIONS)[number]['value'];

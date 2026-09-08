@@ -283,7 +283,7 @@ export default function MyPageCollectionPage() {
                   <span className={styles.ballBalance} aria-label={`포켓볼 ${ballCount}개 보유`}><img src={pokeballImage} alt="" aria-hidden="true" /><strong>{ballCount}</strong></span>
                   <div className={styles.drawButtons} aria-describedby={shinyDrawGuide ? 'shiny-draw-guide' : undefined}>
                     <Tooltip title={normalDrawUnavailable ? '일반 도감을 모두 완성했습니다.' : '포켓볼 1개로 일반 포켓몬 뽑기'}><Button aria-label={normalDrawUnavailable ? '일반 도감을 모두 완성했습니다.' : '포켓볼 1개로 일반 포켓몬 뽑기'} className={styles.drawButton} type="primary" loading={drawing === 'NORMAL'} disabled={!summary || drawing !== null || normalDrawUnavailable || ballCount < 1} onClick={() => handleDraw(false)}><img src={pokeballImage} alt="" aria-hidden="true" /><span>×1</span></Button></Tooltip>
-                    <Tooltip title={shinyDrawUnavailable ? '획득한 포켓몬의 이로치를 모두 수집했습니다.' : '포켓볼 2개로 이로치 포켓몬 뽑기'}><Button aria-label={shinyDrawUnavailable ? '획득한 포켓몬의 이로치를 모두 수집했습니다.' : '포켓볼 2개로 이로치 포켓몬 뽑기'} className={cx(styles.drawButton, styles.shinyDrawButton, { [styles.shinyDrawUnavailable]: shinyDrawUnavailable })} aria-describedby={shinyDrawGuide ? 'shiny-draw-guide' : undefined} loading={drawing === 'SHINY'} disabled={!summary || drawing !== null || shinyDrawUnavailable || ballCount < 2} onClick={() => handleDraw(true)}><img src={pokeballImage} alt="" aria-hidden="true" /><StarFilled aria-hidden="true" /><span>×2</span></Button></Tooltip>
+                    <Tooltip title={shinyDrawUnavailable ? '획득한 포켓몬의 이로치를 모두 수집했습니다.' : '포켓볼 20개로 이로치 포켓몬 뽑기'}><Button aria-label={shinyDrawUnavailable ? '획득한 포켓몬의 이로치를 모두 수집했습니다.' : '포켓볼 20개로 이로치 포켓몬 뽑기'} className={cx(styles.drawButton, styles.shinyDrawButton, { [styles.shinyDrawUnavailable]: shinyDrawUnavailable })} aria-describedby={shinyDrawGuide ? 'shiny-draw-guide' : undefined} loading={drawing === 'SHINY'} disabled={!summary || drawing !== null || shinyDrawUnavailable || ballCount < 20} onClick={() => handleDraw(true)}><img src={pokeballImage} alt="" aria-hidden="true" /><StarFilled aria-hidden="true" /><span>×20</span></Button></Tooltip>
                   </div>
                   <span id="shiny-draw-guide" className={styles.shinyDrawGuide} aria-live={shinyDrawGuide ? 'polite' : undefined}>{shinyDrawGuide}</span>
                 </div>
@@ -322,7 +322,7 @@ export default function MyPageCollectionPage() {
             </Popover>
           </div>
 
-          {loading ? <Spin className={styles.spinner} /> : visibleCollection.length === 0 ? <Empty description="표시할 도감이 없습니다." /> : (
+          {loading ? <Spin /> : visibleCollection.length === 0 ? <Empty description="표시할 도감이 없습니다." /> : (
             <div className={styles.grid}>
             {visibleCollection.map((item) => (
               <CollectionCard
@@ -393,7 +393,6 @@ const useStyles = createStyles(({ css }) => ({
   filterPanel: css`display:flex; width:180px; flex-direction:column; gap:12px; label{display:flex; flex-direction:column; gap:5px; color:#69716d; font-size:.78rem; font-weight:700;} .ant-btn{align-self:flex-start; padding:0;}`,
   filterButton: css`width:44px; height:44px; padding:0; flex:none;`,
   activeFilter: css`border-color:#49bf9e !important; color:#249b78 !important;`,
-  spinner: css`display:block; margin:72px auto;`,
   grid: css`display:grid; grid-template-columns:repeat(auto-fill, minmax(160px, 1fr)); gap:12px;`,
   card: css`position:relative; display:flex; min-height:172px; flex-direction:column; justify-content:space-between; padding:10px; border:1px solid #e2e5e4; border-radius:4px; background:#fff; transition:border-color .15s ease, box-shadow .15s ease; &:hover{border-color:#9edbc9; box-shadow:0 4px 12px rgba(39, 112, 88, .08);}`,
   unowned: css`background:#f6f7f7; img{filter:brightness(0) opacity(.22);}`,

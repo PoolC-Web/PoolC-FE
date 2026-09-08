@@ -1,9 +1,9 @@
 import { useEffect, useState } from 'react';
 import { useSelector } from 'react-redux';
 import { withRouter } from 'react-router-dom';
+import { Spin } from 'antd';
 import * as projectAPI from '../../../lib/api/project';
 import ProjectDetail from '../../../components/projects/ProjectDetail/ProjectDetail';
-import Spinner from '../../../components/common/Spinner/Spinner';
 import { SUCCESS } from '../../../constants/statusCode';
 
 const ProjectDetailContainer = ({ location }) => {
@@ -31,7 +31,7 @@ const ProjectDetailContainer = ({ location }) => {
 
   return (
     <>
-      {loading && <Spinner />}
+      {loading && <Spin />}
       {!loading && <ProjectDetail project={project} member={member} />}
     </>
   );

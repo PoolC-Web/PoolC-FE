@@ -1,7 +1,7 @@
 import { createStyles } from 'antd-style';
+import { Spin } from 'antd';
 import { Suspense } from 'react';
 import { Block, WhiteBlock } from '~/styles/common/Block.styles';
-import Spinner from '../common/Spinner/Spinner';
 import MessageListContent from './MessageListContent';
 
 const useStyles = createStyles(({ css }) => ({
@@ -16,7 +16,7 @@ export default function MessageListView() {
   return (
     <Block>
       <WhiteBlock className={styles.whiteBlock}>
-        <Suspense fallback={<Spinner />}>
+        <Suspense fallback={<Spin />}>
           <MessageListContent />
         </Suspense>
       </WhiteBlock>
