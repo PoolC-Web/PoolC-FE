@@ -30,7 +30,14 @@ const useStyles = createStyles(({ css }) => ({
       }
 
       .ant-drawer-body {
+        display: flex;
+        min-height: 0;
         padding: 20px 20px 0;
+      }
+
+      .ant-drawer-content-wrapper {
+        height: 100dvh !important;
+        max-height: 100dvh;
       }
     }
   `,

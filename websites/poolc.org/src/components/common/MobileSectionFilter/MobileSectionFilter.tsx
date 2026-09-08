@@ -52,6 +52,12 @@ export const MobileSectionFilter = ({
         onClose={() => setOpen(false)}
         height="auto"
         styles={{
+          mask: {
+            height: '100dvh',
+            background: 'rgba(34, 35, 35, 0.42)',
+            backdropFilter: 'blur(2px)',
+            WebkitBackdropFilter: 'blur(2px)',
+          },
           body: {
             maxHeight: '70vh',
             overflowY: 'auto',
