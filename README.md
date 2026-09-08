@@ -1,88 +1,95 @@
-# poolc-dialga
+<div align="center">
 
-<img src="./_images/dialga.webp" width="300px" title="Dialga" alt="Dialga"/>
+<picture>
+  <source media="(prefers-color-scheme: dark)" srcset="https://raw.githubusercontent.com/PoolC/.github/main/profile/assets/poolc.dark.svg" />
+  <img src="https://raw.githubusercontent.com/PoolC/.github/main/profile/assets/poolc.vertical.svg" width="100%" alt="PoolC" />
+</picture>
 
-- PoolC Renewal 2023 Web Frontend(forked from [Haribo](https://github.com/PoolC/Haribo))
-- Backend Repository: [Palkia](https://github.com/PoolC/Palkia)
+연세대학교 공과대학 프로그래밍 학술동아리 **PoolC** 홈페이지
 
-## stacks
+<img src="https://img.shields.io/badge/React-18-61DAFB?style=flat-square&logo=react&logoColor=black" alt="React 18" />
+<img src="https://img.shields.io/badge/TypeScript-5-3178C6?style=flat-square&logo=typescript&logoColor=white" alt="TypeScript 5" />
+<img src="https://img.shields.io/badge/Vite-5-646CFF?style=flat-square&logo=vite&logoColor=white" alt="Vite 5" />
+<img src="https://img.shields.io/badge/AWS-S3%20%7C%20CloudFront-FF9900?style=flat-square&logo=amazonaws&logoColor=white" alt="AWS" />
 
-- yarn berry monorepo
-- react
-- react-dom
-- vite
-- typescript
-- antd
-- emotion
-- tanstack-query
-- redux
-- ...
+</div>
 
-## setting
+<br />
 
-### run
+## Features
 
-- Node.js ^20
-- yarn ^3.7.0
+| 회원 · 운영 | 콘텐츠 | 게임화 |
+| :---: | :---: | :---: |
+| 인증 · 회원 · 동아리방 예약 | 세미나 · 게시판 · 도서 · 프로젝트 | 포켓몬 도감 · 퀘스트 · 포켓볼 |
 
-```sh
-yarn # install packages
-yarn web-client codegen # generate types
-yarn web-client dev # load dev server
+## Stack
+
+| Area | Stack |
+| --- | --- |
+| UI | React 18 · TypeScript · Vite |
+| Design system | Ant Design · Emotion · antd-style |
+| Data | TanStack Query · Redux · Axios |
+| Editor | Toast UI Editor |
+| Delivery | GitHub Actions · Amazon S3 · CloudFront |
+
+## Local Development
+
+<img src="https://img.shields.io/badge/Node.js-20-339933?style=flat-square&logo=nodedotjs&logoColor=white" alt="Node.js 20" />
+<img src="https://img.shields.io/badge/Yarn-4-2C8EBB?style=flat-square&logo=yarn&logoColor=white" alt="Yarn" />
+
+```bash
+yarn install --immutable
+yarn workspace @dialga/poolc.org start
 ```
 
-### local backend
+| Service | Address |
+| --- | --- |
+| Frontend | http://localhost:3000 |
+| Backend API | http://localhost:8080 |
 
-로컬 백엔드는 Palkia 저장소에서 `docker-compose.local.yml`로 띄운 뒤,
-프론트엔드 개발 서버를 로컬 API로 연결합니다.
+전체 개발 환경은 BE 저장소의 Docker Compose로 함께 실행할 수 있습니다.
 
-```sh
-VITE_API_BASE_URL=http://localhost:8080 VITE_FILE_URL=http://localhost:8080 yarn install
-VITE_API_BASE_URL=http://localhost:8080 VITE_FILE_URL=http://localhost:8080 yarn workspace @dialga/poolc.org dev --host 0.0.0.0
+```bash
+docker compose -f ../be/docker-compose.local.yml up -d
 ```
 
-브라우저에서 [http://localhost:3000](http://localhost:3000)을 열고 `admin / poolc1234`로 로그인합니다.
+## Environment
 
-`VITE_*` 값은 브라우저에 노출되는 공개 설정입니다. 기본값은 `src/lib/config/publicConfig.ts`에 커밋되어 있고,
-필요한 경우 `.env.local`로 개인 환경에서만 override합니다.
+`VITE_*` 값은 브라우저에 공개되는 설정입니다. 개인 환경에서는 `.env.local`로만 override합니다.
 
-### vscode setting
+| Variable | Description |
+| --- | --- |
+| `VITE_API_BASE_URL` | API base URL |
+| `VITE_FILE_URL` | 파일 제공 base URL |
+| `VITE_MAX_FILE_SIZE` | 일반 첨부 최대 크기 |
+| `VITE_MAX_IMAGE_FILE_SIZE` | 이미지 업로드 최대 크기 |
 
-1. install [ZipFS extension](https://marketplace.visualstudio.com/items?itemName=arcanis.vscode-zipfs)
-2. run `yarn dlx @yarnpkg/sdks vscode` in terminal
-3. `View > Command Palette > Typescript: Select Typescript version > Use Workspace Version`
+## Quality
 
-[https://kimyanglogging.tistory.com/8](https://kimyanglogging.tistory.com/8)
+```bash
+yarn workspace @dialga/poolc.org check:type
+yarn workspace @dialga/poolc.org build --mode prod
+```
 
-## 수정사항
+## Delivery
 
-- node 버전 20.x로 업그레이드
-- react 버전 18.x로 업그레이드
-  - react 18 업그레이드 해야 antd 관련 불필요한 warning 방지 가능함. [관련 이슈](https://github.com/ant-design/ant-design/issues/44994)
-- 신규 기능들 typescript 5.x로 제작
-- 디자인 시안 부재 + 톤앤매너 맞추기 위해 antd 사용. 당장의 생산성 + 향후 다크모드 도입시의 빠른 기능 추가 위해 antd-style 이용해 커스텀
-- styled-components를 emotion으로 마이그레이션
-  - antd와의 호환성, 더 적은 용량
-- cdn 이용한 font awesome 의존성 제거하고 antd icons를 사용
-- meta tag 추가
-- cra환경을 vite로 마이그레이션
-- api 중복 호출 및 정합성 깨지는 문제를 tanstack-query로 해결. 백엔드 api와의 정합성 유지 위해 openapi-typescript-generator 사용
-- 수정사항에 맞게 배포환경 dockerizing
-- toast-ui editor를 v2에서 v3로 업그레이드
+```text
+master push
+  → type check · production build
+  → S3 static asset publish
+  → CloudFront cache invalidation
+```
 
-## 신규 기능들
+## Contributors
 
-- 게시판
-- 마이페이지
-- 뱃지관리기능
-- 동아리방예약
-- 백준 익스텐션 제작해서 사이트와 연동
-- 기타 ui 틀어지는 곳들 수정
+<div align="center">
 
-## TODOS
+| [Mayne0213](https://github.com/Mayne0213) | [jinhodotchoi](https://github.com/jinhodotchoi) | [mingd1023](https://github.com/mingd1023) | [Hys-Lee](https://github.com/Hys-Lee) | [jimmy0006](https://github.com/jimmy0006) |
+| :---: | :---: | :---: | :---: | :---: |
+| <img src="https://github.com/Mayne0213.png?size=160" width="88" alt="Mayne0213" /> | <img src="https://github.com/jinhodotchoi.png?size=160" width="88" alt="jinhodotchoi" /> | <img src="https://github.com/mingd1023.png?size=160" width="88" alt="mingd1023" /> | <img src="https://github.com/Hys-Lee.png?size=160" width="88" alt="Hys-Lee" /> | <img src="https://github.com/jimmy0006.png?size=160" width="88" alt="jimmy0006" /> |
 
-- react-router-dom v6 업그레이드(or tanstack router?)
-- suspense 도입 및 레기서 api호출들 tanstack-query로 모두 전환
-- vite-ssr 도입 -> 세미나 메타태그 생성
-- redux 제거. 정 상태관리 필요한 곳은 가벼운 다른 라이브러리로 대체
-- 레거시 페이지들 마이그레이션
+</div>
+
+---
+
+PoolC 내부 운영 프로젝트입니다.

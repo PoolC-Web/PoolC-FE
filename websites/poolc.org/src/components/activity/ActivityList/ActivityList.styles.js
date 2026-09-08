@@ -116,9 +116,8 @@ export const ActivityFloatingCreateButton = styled(Link)`
     align-items: center;
     justify-content: center;
     gap: 8px;
-    min-height: 64px;
-    padding: 0 20px;
-    padding-bottom: env(safe-area-inset-bottom);
+    min-height: calc(64px + env(safe-area-inset-bottom, 0px));
+    padding: 0 20px env(safe-area-inset-bottom, 0px);
     background: ${colors.mint[2]};
     color: ${colors.gray[0]};
     font-size: 1rem;
