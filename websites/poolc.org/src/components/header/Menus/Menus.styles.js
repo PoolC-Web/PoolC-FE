@@ -69,8 +69,13 @@ export const MobileDrawerHeader = styled.div`
 
 export const MobileDrawerContent = styled.div`
   display: flex;
-  min-height: 100%;
+  width: 100%;
+  min-height: 0;
+  height: 100%;
   flex-direction: column;
+  overflow-y: auto;
+  overscroll-behavior: contain;
+  padding-bottom: env(safe-area-inset-bottom, 0px);
 `;
 
 export const MobileDrawerCloseButton = styled.button`

@@ -1,12 +1,14 @@
-import { CheckCircleOutlined, CheckOutlined, GiftOutlined, WifiOutlined } from '@ant-design/icons';
+import { ArrowRightOutlined, CheckCircleOutlined, CheckOutlined, GiftOutlined, WifiOutlined } from '@ant-design/icons';
 import { Button, Progress, Spin } from 'antd';
 import { createStyles } from 'antd-style';
 import { useEffect, useMemo, useState } from 'react';
+import { Link } from 'react-router-dom';
 import { PageHeader } from '~/components/common/PageHeader/PageHeader';
 import { PageContent } from '~/components/common/PageLayout/PageLayout';
 import { SectionTabs } from '~/components/common/SectionTabs/SectionTabs';
 import { useMessage } from '~/hooks/useMessage';
 import * as gameAPI from '~/lib/api/gamification';
+import { MENU } from '~/constants/menus';
 import { Block, WhiteBlock } from '~/styles/common/Block.styles';
 import { media } from '~/styles/responsive';
 
@@ -22,6 +24,10 @@ type Quest = {
   rewardAmount: number;
   claimed: boolean;
   claimableCount: number;
+};
+
+type GameSummary = {
+  ballBalances?: { normal?: number };
 };
 
 const normalBallImage = 'https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/items/poke-ball.png';
@@ -48,11 +54,13 @@ export default function PokemonAchievementsPage() {
   const [loading, setLoading] = useState(true);
   const [claiming, setClaiming] = useState<string | null>(null);
   const [selectedType, setSelectedType] = useState<QuestType | 'ALL'>('DAILY');
+  const [ballCount, setBallCount] = useState(0);
 
   const load = async () => {
     try {
-      const response = await gameAPI.getAchievements();
-      setQuests(response.data);
+      const [achievementResponse, summaryResponse] = await Promise.all([gameAPI.getAchievements(), gameAPI.getGameSummary()]);
+      setQuests(achievementResponse.data);
+      setBallCount((summaryResponse.data as GameSummary).ballBalances?.normal ?? 0);
     } catch {
       message.error('퀘스트 정보를 불러오지 못했습니다.');
     } finally {
@@ -90,6 +98,15 @@ export default function PokemonAchievementsPage() {
       <WhiteBlock className={styles.whiteBlock}>
         <PageContent className={styles.content}>
           <PageHeader title="퀘스트" />
+          <section className={styles.drawCta} aria-label="포켓몬 도감">
+            <div className={styles.drawCtaInfo}>
+              <span><img src={normalBallImage} alt="" aria-hidden="true" /> 포켓볼 {ballCount}개 보유</span>
+              <strong>보상을 받았다면 포켓몬을 뽑아보세요.</strong>
+            </div>
+            <Link to={`/${MENU.POKEMON}/${MENU.POKEMON_COLLECTION}`} className={styles.drawCtaLink}>
+              도감에서 뽑기 <ArrowRightOutlined aria-hidden="true" />
+            </Link>
+          </section>
           <SectionTabs
             className={styles.questTabs}
             activeKey={selectedType}
@@ -132,6 +149,9 @@ function QuestSection({ title, quests, claiming, onClaim, styles }: { title?: st
 const useStyles = createStyles(({ css }) => ({
   whiteBlock: css`box-sizing:border-box; padding:60px 0; align-items:center;`,
   content: css`max-width:1210px;`,
+  drawCta: css`display:flex; align-items:center; justify-content:space-between; gap:16px; margin:0 0 24px; padding:16px 20px; border:1px solid #d9ebe5; border-radius:10px; background:#f4fbf8; ${media.mobile}{align-items:stretch; flex-direction:column; padding:14px 16px;}`,
+  drawCtaInfo: css`display:flex; min-width:0; flex-direction:column; gap:5px; span{display:flex; align-items:center; gap:5px; color:#276f59; font-size:.82rem; font-weight:700;} span img{width:22px; height:22px; object-fit:contain;} strong{color:#4c3722; font-size:.95rem; line-height:1.4;}`,
+  drawCtaLink: css`display:inline-flex; min-height:42px; align-items:center; justify-content:center; gap:8px; flex:none; padding:0 16px; border-radius:7px; background:#2b9c7d; color:#fff; font-size:.88rem; font-weight:800; white-space:nowrap; &:hover{background:#21886c; color:#fff; text-decoration:none;} ${media.mobile}{width:100%;}`,
   questTabs: css`margin-bottom:24px;`,
   dailySummary: css`padding:20px 24px; margin:0 0 24px; border:1px solid #d9ebe5; border-radius:8px; background:#f4fbf8;`,
   summaryHeading: css`display:flex; justify-content:space-between; gap:20px; h2{margin:0 0 4px; color:#4c3722; font-size:1.2rem;} p{margin:0; color:#747b77; font-size:.85rem;}`,
