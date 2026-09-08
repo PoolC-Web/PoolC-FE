@@ -143,7 +143,8 @@ export const ActivityFloatingRegisterButton = styled.div`
     left: 0;
     z-index: 20;
     display: block;
-    padding-bottom: env(safe-area-inset-bottom);
+    min-height: calc(64px + env(safe-area-inset-bottom, 0px));
+    padding-bottom: env(safe-area-inset-bottom, 0px);
     background: ${colors.mint[2]};
 
     & > button {
