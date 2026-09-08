@@ -2,6 +2,11 @@ import { css } from '@emotion/react';
 import { fontFamily } from '~/styles/font';
 
 export const globalStyles = css`
+  html {
+    min-height: 100%;
+    background: transparent;
+  }
+
   * {
     margin: 0;
     padding: 0;
@@ -37,6 +42,7 @@ export const globalStyles = css`
   body {
     position: relative;
     min-height: 100vh;
+    min-height: 100dvh;
     line-height: 1;
     background-color: rgb(250, 250, 250);
     outline: none;
@@ -47,6 +53,7 @@ export const globalStyles = css`
 
   #root {
     min-height: 100vh;
+    min-height: 100dvh;
     position: relative;
     margin: 0;
     padding: 0;

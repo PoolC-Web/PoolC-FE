@@ -51,7 +51,20 @@ export const MobileSectionFilter = ({
         open={isOpen}
         onClose={() => setOpen(false)}
         height="auto"
-        styles={showDrawerHeader ? undefined : { header: { display: 'none' } }}
+        styles={{
+          mask: {
+            height: '100dvh',
+            background: 'rgba(34, 35, 35, 0.42)',
+            backdropFilter: 'blur(2px)',
+            WebkitBackdropFilter: 'blur(2px)',
+          },
+          body: {
+            maxHeight: '70vh',
+            overflowY: 'auto',
+            overscrollBehavior: 'contain',
+          },
+          ...(showDrawerHeader ? {} : { header: { display: 'none' } }),
+        }}
       >
         <FilterOptions>
           {items.map((item) => {

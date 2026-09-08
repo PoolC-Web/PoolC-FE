@@ -10,6 +10,8 @@ import { BookControllerService, CreateBookRequest, CustomApi, queryKey, useAppMu
 import { useMessage } from '~/hooks/useMessage';
 import getFileUrl from '~/lib/utils/getFileUrl';
 import { BOOK_CATEGORY_OPTIONS, BookCategory } from '~/constants/bookCategories';
+import { publicConfig } from '~/lib/config/publicConfig';
+import { createCardImage, createDetailImage } from '~/lib/utils/createCardImage';
 
 export interface FormType {
   id: number;
@@ -79,17 +81,35 @@ export default function AdminBookForm({ initValues, onModalCancel }: AdminBookFo
   };
   const { mutate: createBook } = useAppMutation({ mutationFn: BookControllerService.addBookUsingPost, onSuccess: handleSaveSuccess });
   const { mutate: updateBook } = useAppMutation({ mutationFn: BookControllerService.updateBookUsingPut, onSuccess: handleSaveSuccess });
-  const { mutate: uploadImage, isPending: isUploadPending } = useAppMutation({ mutationFn: CustomApi.uploadFile });
+  const { mutate: uploadImage, isPending: isUploadPending } = useAppMutation({
+    mutationFn: ({ original, card, detail }: { original: File; card: File; detail: File }) => CustomApi.uploadImageSet(original, card, detail),
+  });
 
-  const handleChangeBookImage = (info: UploadChangeParam<UploadFile>) => {
-    const imageFile: File & { status?: string } = info?.file as unknown as File;
+  const handleChangeBookImage = async (info: UploadChangeParam<UploadFile>) => {
+    const imageFile = info?.file;
 
     if (imageFile?.status === 'removed') {
       form.setFieldValue('image', '');
       return;
     }
 
-    uploadImage(imageFile, {
+    const sourceFile = imageFile?.originFileObj;
+    if (!sourceFile) return;
+    if (!sourceFile.type.startsWith('image/') || sourceFile.size > publicConfig.maxImageFileSize) {
+      message.error('10MB 이하의 이미지 파일만 업로드할 수 있습니다.');
+      return;
+    }
+
+    let cardImage: File;
+    let detailImage: File;
+    try {
+      [cardImage, detailImage] = await Promise.all([createCardImage(sourceFile), createDetailImage(sourceFile)]);
+    } catch (error) {
+      message.error(error instanceof Error ? error.message : '이미지 변환에 실패했습니다.');
+      return;
+    }
+
+    uploadImage({ original: sourceFile, card: cardImage, detail: detailImage }, {
       onSuccess(imgUrl) {
         form.setFieldValue('image', imgUrl);
       },

@@ -2,7 +2,7 @@ import { Link } from 'react-router-dom';
 import { createStyles } from 'antd-style';
 import { Image } from 'antd';
 import { MENU } from '~/constants/menus';
-import getFileUrl from '~/lib/utils/getFileUrl';
+import getImageVariantUrl from '~/lib/utils/getImageVariantUrl';
 
 const FALLBACK_BOOK_IMAGE = '/main-banner.png';
 
@@ -98,7 +98,7 @@ export default function BookCard({
   data: { id?: number; title?: string; imageURL?: string; author?: string; status?: string };
 }) {
   const { styles } = useStyles();
-  const imageSrc = imageURL ? getFileUrl(imageURL) : FALLBACK_BOOK_IMAGE;
+  const imageSrc = imageURL ? getImageVariantUrl(imageURL, 'CARD') : FALLBACK_BOOK_IMAGE;
 
   return (
     <li className={styles.item}>
@@ -112,6 +112,7 @@ export default function BookCard({
             height="310px"
             fallback={FALLBACK_BOOK_IMAGE}
             preview={false}
+            loading="lazy"
           />
         </div>
         <div className={styles.bookInfo}>
@@ -130,7 +131,7 @@ export function MobileBookRow({
   data: { id?: number; title?: string; imageURL?: string; author?: string; status?: string };
 }) {
   const { styles } = useMobileStyles();
-  const imageSrc = imageURL ? getFileUrl(imageURL) : FALLBACK_BOOK_IMAGE;
+  const imageSrc = imageURL ? getImageVariantUrl(imageURL, 'CARD') : FALLBACK_BOOK_IMAGE;
 
   return (
     <li className={styles.item}>
@@ -139,6 +140,8 @@ export function MobileBookRow({
           className={styles.cover}
           src={imageSrc}
           alt={`${title}의 이미지`}
+          loading="lazy"
+          decoding="async"
           onError={(event) => { event.currentTarget.src = FALLBACK_BOOK_IMAGE; }}
         />
         <div className={styles.info}>
@@ -157,7 +160,7 @@ export function CompactBookCard({
   data: { id?: number; title?: string; imageURL?: string; author?: string; status?: string };
 }) {
   const { styles } = useCompactStyles();
-  const imageSrc = imageURL ? getFileUrl(imageURL) : FALLBACK_BOOK_IMAGE;
+  const imageSrc = imageURL ? getImageVariantUrl(imageURL, 'CARD') : FALLBACK_BOOK_IMAGE;
 
   return (
     <li className={styles.item}>
@@ -166,6 +169,8 @@ export function CompactBookCard({
           className={styles.cover}
           src={imageSrc}
           alt={`${title}의 이미지`}
+          loading="lazy"
+          decoding="async"
           onError={(event) => { event.currentTarget.src = FALLBACK_BOOK_IMAGE; }}
         />
         <strong>{title}</strong>

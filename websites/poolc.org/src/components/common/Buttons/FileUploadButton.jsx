@@ -6,10 +6,9 @@ import Modal from '../Modal/Modal';
 import uploadableTypes from '../../../constants/uploadableTypes';
 import { SUCCESS } from '../../../constants/statusCode';
 import { publicConfig } from '../../../lib/config/publicConfig';
+import { createCardImage, createDetailImage } from '../../../lib/utils/createCardImage';
 
-const FileUploadButton = ({ files, onSubmit, multiple, buttonStyle }) => {
-  const formData = new FormData();
-
+const FileUploadButton = ({ files, onSubmit, multiple, buttonStyle, optimizeCardImage = false }) => {
   const [file, setFile] = useState(null);
   const [modalVisible, setModalVisible] = useState(false);
   const [errorModalVisible, setErrorModalVisible] = useState(false);
@@ -17,20 +16,22 @@ const FileUploadButton = ({ files, onSubmit, multiple, buttonStyle }) => {
 
   const onBrowseFile = (e) => {
     e.preventDefault();
-    if (e.target.files[0].size > publicConfig.maxFileSize) {
+    const selectedFile = e.target.files[0];
+    const maxSize = selectedFile.type.startsWith('image/') ? publicConfig.maxImageFileSize : publicConfig.maxFileSize;
+    if (selectedFile.size > maxSize) {
       setErrorMessage('첨부 가능한 최대 크기를 초과하였습니다.');
       onShowErrorModal();
       return;
     }
-    if (!uploadableTypes.includes(e.target.files[0].type)) {
+    if (!uploadableTypes.includes(selectedFile.type)) {
       setErrorMessage('png, jpg, jpeg, pdf, ppt, pptx 형식만 첨부 가능합니다.');
       onShowErrorModal();
       return;
     }
-    setFile(e.target.files[0]);
+    setFile(selectedFile);
   };
 
-  const onUploadFile = (e) => {
+  const onUploadFile = async (e) => {
     e.preventDefault();
     e.stopPropagation();
     if (file === null) {
@@ -39,26 +40,31 @@ const FileUploadButton = ({ files, onSubmit, multiple, buttonStyle }) => {
       return;
     }
     setModalVisible(false);
-    formData.append('file', file);
-    fileAPI
-      .createFile(formData)
-      .then((res) => {
-        if (res.status === SUCCESS.OK) {
-          setFile(res.data);
-          if (multiple) {
-            onSubmit([...files, res.data]);
-          }
-          if (!multiple) {
-            onSubmit(res.data);
-          }
-        }
-      })
-      .catch(() => {
-        setFile(null);
+    try {
+      let response;
+      if (optimizeCardImage) {
+        const [card, detail] = await Promise.all([createCardImage(file), createDetailImage(file)]);
+        response = await fileAPI.createImageSet(file, card, detail);
+      } else {
+        const formData = new FormData();
+        formData.append('file', file);
+        response = await fileAPI.createFile(formData);
+      }
 
-        setErrorMessage(e.response?.data);
-        onShowErrorModal();
-      });
+      if (response.status === SUCCESS.OK) {
+        setFile(response.data);
+        if (multiple) {
+          onSubmit([...files, response.data]);
+        }
+        if (!multiple) {
+          onSubmit(response.data);
+        }
+      }
+    } catch (error) {
+      setFile(null);
+      setErrorMessage(error.response?.data ?? error.message ?? '파일 업로드에 실패했습니다.');
+      onShowErrorModal();
+    }
   };
 
   const onShowModal = (e) => {

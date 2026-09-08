@@ -33,6 +33,8 @@ type CollectionItem = {
   rarity: Rarity;
   spriteUrl?: string;
   shinySpriteUrl?: string;
+  cardSpriteUrl?: string;
+  shinyCardSpriteUrl?: string;
   category?: string;
   description?: string;
   heightDecimeters?: number;
@@ -150,8 +152,8 @@ const CollectionCard = memo(({
       tabIndex={canOpen ? 0 : undefined}
     >
       {shinyOwned && <span className={shinyBadgeClassName}><StarFilled /> 이로치</span>}
-      {shinyOwned && item.shinySpriteUrl && <img src={item.shinySpriteUrl} alt="" aria-hidden="true" className={shinyPreviewClassName} loading="lazy" />}
-      {item.spriteUrl ? <img src={item.spriteUrl} alt={canOpen ? item.name : '미획득'} className={spriteClassName} loading="lazy" /> : <div className={spriteFallbackClassName} />}
+      {shinyOwned && (item.shinyCardSpriteUrl ?? item.shinySpriteUrl) && <img src={item.shinyCardSpriteUrl ?? item.shinySpriteUrl} alt="" aria-hidden="true" className={shinyPreviewClassName} loading="lazy" decoding="async" />}
+      {item.cardSpriteUrl ?? item.spriteUrl ? <img src={item.cardSpriteUrl ?? item.spriteUrl} alt={canOpen ? item.name : '미획득'} className={spriteClassName} loading="lazy" decoding="async" /> : <div className={spriteFallbackClassName} />}
       <div className={cardMetaClassName}>
         <Typography.Text className={numberClassName} style={{ color: canOpen ? rarityColor[item.rarity] : undefined }}>No.{String(item.externalId).padStart(3, '0')}</Typography.Text>
         <Typography.Text className={cardNameClassName}>{canOpen ? item.name : '????'}</Typography.Text>
@@ -207,9 +209,6 @@ export default function MyPageCollectionPage() {
   const ballCount = summary?.ballBalances?.normal ?? 0;
   const normalDrawUnavailable = totalCatalogCount > 0 && collectedCount >= totalCatalogCount;
   const shinyDrawStatus = summary?.shinyDrawStatus ?? 'NEEDS_NORMAL';
-  const shinyDrawGuide = shinyDrawStatus === 'NEEDS_NORMAL'
-    ? '일반 포켓몬을 먼저 획득하면 이로치 뽑기를 이용할 수 있습니다.'
-    : null;
   const shinyDrawUnavailable = shinyDrawStatus !== 'AVAILABLE';
   const shinyComplete = shinyDrawStatus === 'COMPLETE';
   const openCollectionItem = useCallback((item: CollectionItem) => {
@@ -281,11 +280,10 @@ export default function MyPageCollectionPage() {
               <div className={styles.drawPanel}>
                 <div className={styles.drawAction}>
                   <span className={styles.ballBalance} aria-label={`포켓볼 ${ballCount}개 보유`}><img src={pokeballImage} alt="" aria-hidden="true" /><strong>{ballCount}</strong></span>
-                  <div className={styles.drawButtons} aria-describedby={shinyDrawGuide ? 'shiny-draw-guide' : undefined}>
+                  <div className={styles.drawButtons}>
                     <Tooltip title={normalDrawUnavailable ? '일반 도감을 모두 완성했습니다.' : '포켓볼 1개로 일반 포켓몬 뽑기'}><Button aria-label={normalDrawUnavailable ? '일반 도감을 모두 완성했습니다.' : '포켓볼 1개로 일반 포켓몬 뽑기'} className={styles.drawButton} type="primary" loading={drawing === 'NORMAL'} disabled={!summary || drawing !== null || normalDrawUnavailable || ballCount < 1} onClick={() => handleDraw(false)}><img src={pokeballImage} alt="" aria-hidden="true" /><span>×1</span></Button></Tooltip>
-                    <Tooltip title={shinyDrawUnavailable ? '획득한 포켓몬의 이로치를 모두 수집했습니다.' : '포켓볼 20개로 이로치 포켓몬 뽑기'}><Button aria-label={shinyDrawUnavailable ? '획득한 포켓몬의 이로치를 모두 수집했습니다.' : '포켓볼 20개로 이로치 포켓몬 뽑기'} className={cx(styles.drawButton, styles.shinyDrawButton, { [styles.shinyDrawUnavailable]: shinyDrawUnavailable })} aria-describedby={shinyDrawGuide ? 'shiny-draw-guide' : undefined} loading={drawing === 'SHINY'} disabled={!summary || drawing !== null || shinyDrawUnavailable || ballCount < 20} onClick={() => handleDraw(true)}><img src={pokeballImage} alt="" aria-hidden="true" /><StarFilled aria-hidden="true" /><span>×20</span></Button></Tooltip>
+                    <Tooltip title={shinyDrawUnavailable ? '획득한 포켓몬의 이로치를 모두 수집했습니다.' : '포켓볼 20개로 이로치 포켓몬 뽑기'}><Button aria-label={shinyDrawUnavailable ? '획득한 포켓몬의 이로치를 모두 수집했습니다.' : '포켓볼 20개로 이로치 포켓몬 뽑기'} className={cx(styles.drawButton, styles.shinyDrawButton, { [styles.shinyDrawUnavailable]: shinyDrawUnavailable })} loading={drawing === 'SHINY'} disabled={!summary || drawing !== null || shinyDrawUnavailable || ballCount < 20} onClick={() => handleDraw(true)}><img src={pokeballImage} alt="" aria-hidden="true" /><StarFilled aria-hidden="true" /><span>×20</span></Button></Tooltip>
                   </div>
-                  <span id="shiny-draw-guide" className={styles.shinyDrawGuide} aria-live={shinyDrawGuide ? 'polite' : undefined}>{shinyDrawGuide}</span>
                 </div>
               </div>
             }
@@ -380,12 +378,11 @@ const useStyles = createStyles(({ css }) => ({
   catalogMetrics: css`display:inline-flex; align-items:center; color:#737c77; font-size:.82rem; font-weight:600; font-variant-numeric:tabular-nums; white-space:nowrap; > span{display:inline-flex; align-items:center;} strong{min-width:108px; color:#249b78; font-size:.9rem; text-align:center;} ${media.mobile}{strong{font-size:1rem;}}`,
   catalogMetricSkeleton: css`display:inline-flex; width:108px; height:18px; border-radius:4px; background:#e7efed;`,
   drawPanel: css`display:flex; width:330px; align-items:center; justify-content:flex-end; ${media.mobile}{width:100%; align-items:flex-start;}`,
-  drawAction: css`position:relative; display:grid; width:100%; min-height:50px; grid-template-columns:68px max-content; align-items:center; justify-content:end; column-gap:8px; padding-bottom:18px; ${media.mobile}{min-height:62px; justify-content:center;}`,
+  drawAction: css`position:relative; display:grid; width:100%; min-height:50px; grid-template-columns:68px max-content; align-items:center; justify-content:end; column-gap:8px; ${media.mobile}{min-height:62px; justify-content:center;}`,
   drawButtons: css`display:flex; gap:8px; flex-wrap:nowrap; .ant-btn{display:inline-flex; align-items:center; gap:5px; font-size:.82rem;} .ant-btn img{width:18px; height:18px; object-fit:contain;} .ant-btn .anticon{font-size:.68rem;}`,
   drawButton: css`${media.mobile}{min-width:68px; min-height:44px; padding:0 10px;}`,
   shinyDrawButton: css`border-color:#d5a62d !important; color:#8d6810 !important; &:not(:disabled):hover{border-color:#ba8a13 !important; color:#74530a !important;} ${media.mobile}{min-width:78px;}`,
   shinyDrawUnavailable: css`cursor:not-allowed; opacity:.55;`,
-  shinyDrawGuide: css`position:absolute; right:0; bottom:0; left:0; min-height:18px; color:#7b736a; font-size:.74rem; line-height:18px; text-align:right; ${media.mobile}{text-align:center;}`,
   ballBalance: css`display:inline-flex; align-items:center; gap:5px; min-width:68px; color:#276f59; font-variant-numeric:tabular-nums; font-weight:700; img{width:21px; height:21px; object-fit:contain;} strong{font-size:.9rem;} ${media.mobile}{min-height:44px; justify-content:center;}`,
   emptyGuide: css`display:flex; flex-direction:column; gap:4px; padding:14px 16px; margin:0 0 18px; border-left:3px solid #49bf9e; background:#f8fcfb; strong{color:#276f59;} .ant-typography{font-size:.82rem; color:#6e7772;}`,
   filters: css`display:flex; align-items:center; gap:8px; margin-bottom:18px; border-bottom:1px solid rgba(76, 55, 34, .08); ${media.mobile}{min-height:44px; gap:12px;}`,

@@ -140,7 +140,7 @@ const AdminProjectForm = ({
           <Input valueText={startDate} labelText="프로젝트 시작일" typeText="date" nameText="startDate" onChangeFunc={onChangeStartDate} />
           <Input valueText={endDate} labelText="프로젝트 종료일" typeText="date" nameText="endDate" onChangeFunc={onChangeEndDate} />
           <label>썸네일 이미지 첨부</label>
-          <FileUploadButton onSubmit={setThumbnailURL} />
+          <FileUploadButton onSubmit={setThumbnailURL} optimizeCardImage />
           <FileName style={{ marginBottom: '0rem' }}>{thumbnailURL ? getFileUrl(thumbnailURL) : '선택된 파일이 없습니다'}</FileName>
           <ImageContainer>
             <ImageContainerHeader>현재 이미지</ImageContainerHeader>

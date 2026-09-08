@@ -1,6 +1,5 @@
 import { MENU } from '../../../constants/menus';
-import getFileUrl from '../../../lib/utils/getFileUrl';
-import { getParametersForUnsplash } from '../../../lib/utils/imageUtils';
+import getImageVariantUrl from '../../../lib/utils/getImageVariantUrl';
 import {
   Card,
   ProjectCardBlock,
@@ -29,22 +28,12 @@ const splitProjectName = (name) => {
 
 const getProjectPlaceholder = (id) => `https://picsum.photos/seed/poolc-project-${id}/480/270`;
 
-const getProjectThumbnail = ({ id, thumbnailURL, variant }) => {
+const getProjectThumbnail = ({ id, thumbnailURL }) => {
   if (!thumbnailURL) {
     return getProjectPlaceholder(id);
   }
 
-  const size = variant === 'home' ? { width: 240, height: 120 } : { width: 480, height: 270 };
-
-  return (
-    getFileUrl(thumbnailURL) +
-    getParametersForUnsplash({
-      width: size.width,
-      height: size.height,
-      quality: 80,
-      format: 'jpg',
-    })
-  );
+  return getImageVariantUrl(thumbnailURL, 'CARD');
 };
 
 const ProjectCard = ({ project, variant = 'default' }) => {
@@ -57,8 +46,10 @@ const ProjectCard = ({ project, variant = 'default' }) => {
         <Card data-variant={variant}>
           <ThumbnailContainer>
             <ProjectThumbnail
-              src={getProjectThumbnail({ id, thumbnailURL, variant })}
+              src={getProjectThumbnail({ id, thumbnailURL })}
               alt={title}
+              loading="lazy"
+              decoding="async"
               onError={(event) => {
                 event.currentTarget.onerror = null;
                 event.currentTarget.src = getProjectPlaceholder(id);

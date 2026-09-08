@@ -5,7 +5,7 @@ import React from 'react';
 import { useQueryClient } from '@tanstack/react-query';
 import { BookControllerService, queryKey, useAppMutation, useAppQuery } from '~/lib/api-v2';
 import { useAppSelector } from '~/hooks/useAppSelector';
-import getFileUrl from '~/lib/utils/getFileUrl';
+import getImageVariantUrl from '~/lib/utils/getImageVariantUrl';
 import { PageContent, PagePanel, PageShell } from '~/components/common/PageLayout/PageLayout';
 import { PageHeader } from '~/components/common/PageHeader/PageHeader';
 import colors from '~/lib/styles/colors';
@@ -245,7 +245,7 @@ export default function BookDetail({ bookId }: { bookId: number }) {
             .with({ status: 'success' }, ({ data }) => {
               const bookStatus = data.status;
               const { author, borrowDate, borrower, description, donor, imageURL, publishedDate, publisher, title } = data;
-              const imageSrc = imageURL ? getFileUrl(imageURL) : FALLBACK_BOOK_IMAGE;
+              const imageSrc = imageURL ? getImageVariantUrl(imageURL, 'DETAIL') : FALLBACK_BOOK_IMAGE;
 
               return (
                 <div className={styles.detailBody}>
