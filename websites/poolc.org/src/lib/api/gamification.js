@@ -10,5 +10,6 @@ export const drawCollectible = ({ shiny = false } = {}) => client.post('/gamific
 export const exchangeMasterBall = () => client.post('/gamification/me/master-balls/exchange');
 export const getAchievements = () => client.get('/gamification/me/achievements');
 export const claimAchievement = (achievementKey) => client.post(`/gamification/me/achievements/${achievementKey}/claim`);
+export const recordAchievementEvent = (achievementKey) => client.post(`/gamification/me/achievements/${achievementKey}/record`);
 export const startCatalogSync = () => client.post('/gamification/admin/catalog/sync');
 export const getLatestCatalogSync = () => client.get('/gamification/admin/catalog/sync/latest');

@@ -1,9 +1,20 @@
 import { AimOutlined, MailOutlined, PhoneOutlined } from '@ant-design/icons';
 import { FooterBlock, FooterContent, FooterContentText, FooterDivider, FooterIcon, FooterItem } from './Footer.styles';
+import * as gameAPI from '~/lib/api/gamification';
 
 const Footer = ({ presidentName, location, phoneNumber }) => {
   const date = new Date();
   const thisYear = date.getFullYear();
+  const visitExternalAchievement = (achievementKey, href) => async (event) => {
+    if (event.metaKey || event.ctrlKey || event.shiftKey || event.button !== 0 || !localStorage.getItem('accessToken')) return;
+    event.preventDefault();
+    try {
+      await gameAPI.recordAchievementEvent(achievementKey);
+    } catch {
+      // External navigation must remain available even when progress tracking fails.
+    }
+    window.location.assign(href);
+  };
   return (
     <FooterBlock>
       <FooterItem>
@@ -48,9 +59,9 @@ const Footer = ({ presidentName, location, phoneNumber }) => {
       <FooterItem>
         <div className="detail_content">
           <FooterContentText>
-            <a href="http://poolc.github.io/Regulation/">동아리 회칙 </a>
+            <a href="https://poolc-lab.github.io/Regulation/" onClick={visitExternalAchievement('PERMANENT_REGULATION', 'https://poolc-lab.github.io/Regulation/')}>동아리 회칙 </a>
             <span>&nbsp;|&nbsp;</span>
-            <a href="https://github.com/PoolC"> GitHub</a>
+            <a href="https://github.com/PoolC" onClick={visitExternalAchievement('PERMANENT_GITHUB', 'https://github.com/PoolC')}> GitHub</a>
           </FooterContentText>
         </div>
         <div className="footer_rights_content">
