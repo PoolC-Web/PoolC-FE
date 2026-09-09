@@ -10,49 +10,64 @@ const useStyles = createStyles(({ css }) => ({
   item: css`
     display: flex;
     width: 236px;
-    height: 392px;
+    height: 426px;
     margin: 0;
   `,
   wrapper: css`
-    width: 236px;
+    width: 100%;
     box-sizing: border-box;
     display: flex;
     flex-direction: column;
     align-items: center;
-    height: 392px;
+    height: 100%;
     margin: 0;
+    padding: 12px;
+    border: 1px solid #eee7de;
+    border-radius: 10px;
+    background: #fff;
+    color: #4c3722;
+    transition: box-shadow 160ms ease, transform 160ms ease;
 
     &:hover {
       text-decoration: none;
+      box-shadow: 0 10px 24px rgba(76, 55, 34, 0.12);
+      transform: translateY(-2px);
     }
   `,
   coverFrame: css`
     display: flex;
-    width: 236px;
-    height: 310px;
+    width: 204px;
+    height: 291px;
     align-items: center;
     justify-content: center;
+    overflow: hidden;
+    background: #faf9f7;
   `,
   bookInfo: css`
     display: flex;
-    width: 236px;
+    width: 100%;
+    min-height: 88px;
     flex-direction: column;
     align-items: center;
-    gap: 8px;
-    margin-top: 14px;
+    gap: 5px;
+    margin-top: 10px;
   `,
   cover: css`
-    box-shadow: 2px 2px 21.7px rgba(115, 115, 115, 0.25);
+    width: 100%;
+    height: 100%;
 
     .ant-image-img {
-      object-fit: cover;
+      width: 100% !important;
+      height: 100% !important;
+      object-fit: contain;
     }
   `,
   title: css`
     display: -webkit-box;
-    width: 236px;
+    width: 100%;
     margin: 0;
     overflow: hidden;
+    color: #4c3722;
     overflow-wrap: break-word;
     font-weight: 700;
     font-size: 16px;
@@ -77,10 +92,11 @@ const useStyles = createStyles(({ css }) => ({
     justify-content: center;
     align-items: center;
     min-width: 58px;
-    height: 22px;
-    padding: 0 8px;
+    height: 20px;
+    margin-top: auto;
+    padding: 0 7px;
     border-radius: 999px;
-    font-size: 12px;
+    font-size: 11px;
     font-weight: 700;
   `,
   borrowStateDisabled: css`
@@ -108,8 +124,8 @@ export default function BookCard({
             className={styles.cover}
             src={imageSrc}
             alt={`${title}의 이미지`}
-            width="236px"
-            height="310px"
+            width="204px"
+            height="291px"
             fallback={FALLBACK_BOOK_IMAGE}
             preview={false}
             loading="lazy"
@@ -142,7 +158,10 @@ export function MobileBookRow({
           alt={`${title}의 이미지`}
           loading="lazy"
           decoding="async"
-          onError={(event) => { event.currentTarget.src = FALLBACK_BOOK_IMAGE; }}
+          onError={(event) => {
+            const image = event.currentTarget;
+            image.src = FALLBACK_BOOK_IMAGE;
+          }}
         />
         <div className={styles.info}>
           <strong>{title}</strong>
@@ -171,7 +190,10 @@ export function CompactBookCard({
           alt={`${title}의 이미지`}
           loading="lazy"
           decoding="async"
-          onError={(event) => { event.currentTarget.src = FALLBACK_BOOK_IMAGE; }}
+          onError={(event) => {
+            const image = event.currentTarget;
+            image.src = FALLBACK_BOOK_IMAGE;
+          }}
         />
         <strong>{title}</strong>
         {author && <span>{author}</span>}
@@ -216,7 +238,7 @@ const useMobileStyles = createStyles(({ css }) => ({
     strong {
       display: -webkit-box;
       overflow: hidden;
-      color: #249b78;
+      color: #4c3722;
       font-size: 15px;
       line-height: 1.45;
       -webkit-box-orient: vertical;
@@ -272,7 +294,7 @@ const useCompactStyles = createStyles(({ css }) => ({
       width: 100%;
       margin-top: 10px;
       overflow: hidden;
-      color: #249b78;
+      color: #4c3722;
       font-size: 14px;
       line-height: 1.4;
       text-align: center;

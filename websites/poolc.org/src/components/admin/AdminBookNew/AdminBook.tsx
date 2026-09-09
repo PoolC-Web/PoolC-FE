@@ -1,7 +1,9 @@
-import { Modal, Popconfirm, Result, Skeleton } from 'antd';
+import { Dropdown, Modal, Result, Skeleton } from 'antd';
+import { MoreOutlined } from '@ant-design/icons';
 import { createStyles } from 'antd-style';
 import { useMemo, useState } from 'react';
 import { useQueryClient } from '@tanstack/react-query';
+import { useHistory } from 'react-router-dom';
 import { BookControllerService, queryKey, useAppMutation, useAppQuery } from '~/lib/api-v2';
 import { BOOK_CATEGORY_TABS, BookCategoryTab, getBookCategoryLabel } from '~/constants/bookCategories';
 import { useMessage } from '~/hooks/useMessage';
@@ -10,11 +12,20 @@ import { WhiteNarrowBlock } from '~/styles/common/Block.styles';
 import ActionButton from '../../common/Buttons/ActionButton';
 import { ListSearchToolbar } from '../../common/ListSearchToolbar/ListSearchToolbar';
 import { SectionTabs } from '../../common/SectionTabs/SectionTabs';
-import AdminBookForm, { FormType } from '../AdminBookFormNew/AdminBookForm';
 
-type ModalInfo = { isOpen: boolean; data?: FormType };
-
-type BookRow = FormType & {
+type BookRow = {
+  id: number;
+  title: string;
+  link: string;
+  image: string;
+  author: string;
+  discount: number;
+  publisher: string;
+  isbn: string;
+  description: string;
+  pubdate: string;
+  donor: string;
+  category: BookCategory;
   status?: string;
   borrower?: { name?: string } | null;
 };
@@ -91,6 +102,7 @@ const useStyles = createStyles(({ css }) => ({
     width: 100%;
     min-width: 980px;
     border-collapse: collapse;
+    table-layout: fixed;
     color: #4c3722;
     font-size: 0.84rem;
 
@@ -102,12 +114,17 @@ const useStyles = createStyles(({ css }) => ({
       vertical-align: middle;
     }
 
-    th:nth-of-type(1) { width: 31%; }
-    th:nth-of-type(2) { width: 16%; }
-    th:nth-of-type(3) { width: 13%; }
-    th:nth-of-type(4) { width: 15%; }
+    th:nth-of-type(1) { width: 32%; }
+    th:nth-of-type(2) { width: 15%; }
+    th:nth-of-type(3) { width: 14%; }
+    th:nth-of-type(4) { width: 14%; }
     th:nth-of-type(5) { width: 13%; }
     th:nth-of-type(6) { width: 12%; }
+
+    th:last-of-type,
+    td:last-of-type {
+      white-space: nowrap;
+    }
 
     tbody tr:last-of-type td {
       border-bottom: 0;
@@ -124,7 +141,7 @@ const useStyles = createStyles(({ css }) => ({
   `,
   row: css`
     &:hover {
-      background: rgba(229, 240, 237, 0.45);
+      background: rgba(229, 240, 237, 0.22);
     }
   `,
   bookIdentity: css`
@@ -136,12 +153,13 @@ const useStyles = createStyles(({ css }) => ({
     text-align: left;
 
     strong {
-      display: block;
+      display: -webkit-box;
       overflow: hidden;
       font-size: 0.92rem;
       font-weight: 800;
       text-overflow: ellipsis;
-      white-space: nowrap;
+      -webkit-box-orient: vertical;
+      -webkit-line-clamp: 2;
     }
   `,
   cover: css`
@@ -154,38 +172,34 @@ const useStyles = createStyles(({ css }) => ({
   `,
   status: css`
     display: inline-flex;
-    padding: 5px 8px;
+    padding: 4px 7px;
     border-radius: 999px;
-    background: #e5f7f0;
-    color: #32b895;
-    font-size: 0.75rem;
+    background: #edf8f4;
+    color: #3aaa90;
+    font-size: 0.72rem;
     font-weight: 800;
   `,
   unavailableStatus: css`
     background: #f2f3f4;
     color: #7b7f83;
   `,
-  actions: css`
+  actionMenu: css`
     display: inline-flex;
+    width: 36px;
+    height: 36px;
     align-items: center;
     justify-content: center;
-    gap: 6px;
-
-    > a,
-    > button {
-      margin: 0;
-    }
-  `,
-  deleteButton: css`
-    min-width: 56px;
-    padding: 7px 10px;
-    border: 1px solid #f2b5b5;
-    border-radius: 5px;
-    background: #fff;
-    color: #d95757;
+    border: 0;
+    border-radius: 50%;
+    background: transparent;
+    color: #6e6256;
     cursor: pointer;
-    font-size: 0.78rem;
-    font-weight: 800;
+    font-size: 1.1rem;
+
+    &:hover {
+      background: #edf8f4;
+      color: #278e75;
+    }
   `,
   empty: css`
     margin: 0;
@@ -200,9 +214,9 @@ const getStatusLabel = (status?: string) => (status === 'AVAILABLE' ? '대출 �
 
 export default function AdminBook() {
   const { styles, cx } = useStyles();
+  const history = useHistory();
   const message = useMessage();
   const queryClient = useQueryClient();
-  const [modal, setModal] = useState<ModalInfo>({ isOpen: false });
   const [page, setPage] = useState(0);
   const [category, setCategory] = useState<BookCategoryTab>('ALL');
   const [keyword, setKeyword] = useState('');
@@ -220,13 +234,22 @@ export default function AdminBook() {
   const { mutate: deleteBook } = useAppMutation({
     mutationFn: BookControllerService.deleteBookUsingDelete,
     onSuccess: () => {
-      queryClient.invalidateQueries({ queryKey: queryKey.book.all('TITLE') });
+      queryClient.invalidateQueries({
+        predicate: (query) => query.queryKey[0] === 'book.all' || query.queryKey[0] === 'book.search',
+      });
       message.success('도서가 삭제되었습니다.');
     },
   });
 
-  const onModalCancel = () => {
-    setModal((currentModal) => ({ ...currentModal, isOpen: false }));
+  const confirmDelete = (book: BookRow) => {
+    Modal.confirm({
+      title: '도서 삭제',
+      content: `'${book.title}' 도서를 정말 삭제하시겠습니까?`,
+      okText: '삭제',
+      cancelText: '취소',
+      okButtonProps: { danger: true },
+      onOk: () => deleteBook({ id: book.id }),
+    });
   };
 
   const books = useMemo<BookRow[]>(() => {
@@ -269,7 +292,7 @@ export default function AdminBook() {
               setPage(0);
             }}
           >
-            <ActionButton onClick={() => setModal({ isOpen: true })}>도서 생성</ActionButton>
+            <ActionButton onClick={() => history.push('/admin/books/new')}>도서 등록</ActionButton>
           </ListSearchToolbar>
         </div>
       </div>
@@ -311,19 +334,25 @@ export default function AdminBook() {
                 </td>
                 <td>{book.borrower?.name || '-'}</td>
                 <td>
-                  <div className={styles.actions}>
-                    <ActionButton onClick={() => setModal({ isOpen: true, data: book })}>편집</ActionButton>
-                    <Popconfirm
-                      title="도서 삭제"
-                      description={`'${book.title}' 도서를 정말 삭제하시겠습니까?`}
-                      okText="삭제"
-                      cancelText="취소"
-                      okButtonProps={{ danger: true }}
-                      onConfirm={() => deleteBook({ id: book.id })}
-                    >
-                      <button className={styles.deleteButton}>삭제</button>
-                    </Popconfirm>
-                  </div>
+                  <Dropdown
+                    trigger={['click']}
+                    placement="bottomRight"
+                    menu={{
+                      items: [
+                        { key: 'edit', label: '편집' },
+                        { type: 'divider' },
+                        { key: 'delete', label: '삭제', danger: true },
+                      ],
+                      onClick: ({ key }) => {
+                        if (key === 'edit') history.push({ pathname: `/admin/books/edit/${book.id}`, state: { book } });
+                        if (key === 'delete') confirmDelete(book);
+                      },
+                    }}
+                  >
+                    <button type="button" className={styles.actionMenu} aria-label={`${book.title} 조치 메뉴`}>
+                      <MoreOutlined />
+                    </button>
+                  </Dropdown>
                 </td>
               </tr>
             ))}
@@ -337,11 +366,6 @@ export default function AdminBook() {
           <span>{page + 1} / {totalPages} ({totalElements}권)</span>
           <ActionButton disabled={page >= totalPages - 1} onClick={() => setPage((currentPage) => currentPage + 1)}>다음</ActionButton>
         </div>
-      )}
-      {modal.isOpen && (
-        <Modal centered open={modal.isOpen} onCancel={onModalCancel} footer={null} width={1000}>
-          <AdminBookForm initValues={modal.data} onModalCancel={onModalCancel} />
-        </Modal>
       )}
     </WhiteNarrowBlock>
   );

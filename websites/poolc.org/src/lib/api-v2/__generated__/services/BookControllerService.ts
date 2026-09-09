@@ -45,11 +45,11 @@ export class BookControllerService {
         });
     }
     /**
-     * searchBooksFromAPI
+     * searchBooksFromKakao
      * @returns BookApiResponse OK
      * @throws ApiError
      */
-    public static searchBooksFromApiUsingGet({
+    public static searchBooksFromKakaoUsingGet({
         query,
         page,
     }: {
@@ -64,7 +64,7 @@ export class BookControllerService {
     }): CancelablePromise<Array<BookApiResponse>> {
         return __request(OpenAPI, {
             method: 'GET',
-            url: '/book/naver/search',
+            url: '/book/kakao/search',
             query: {
                 'page': page,
                 'query': query,
