@@ -309,7 +309,7 @@ export default function MyPageCollectionPage() {
             className={styles.collectionHeader}
             title={
               <span className={styles.catalogTitle}>
-                <span>포켓몬 도감</span>
+                <span>도감</span>
                 <span className={styles.catalogMetrics}>
                   <span>{hasSummary ? <strong>{collectedCount} / {totalCatalogCount}종</strong> : <span className={styles.catalogMetricSkeleton} aria-label="도감 진행도 불러오는 중" />}</span>
                 </span>
@@ -333,7 +333,7 @@ export default function MyPageCollectionPage() {
               className={styles.collectionTabs}
               activeKey={ownership}
               onChange={(value) => setOwnership(value as CollectionView)}
-              items={[{ key: 'ALL', label: '전체 도감' }, { key: 'OWNED', label: '획득한 포켓몬' }]}
+              items={[{ key: 'ALL', label: '전체 도감' }, { key: 'OWNED', label: '획득 목록' }]}
             />
             <Popover
               trigger="click"

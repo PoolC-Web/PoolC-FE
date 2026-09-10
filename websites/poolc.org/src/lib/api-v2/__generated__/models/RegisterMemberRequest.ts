@@ -11,7 +11,5 @@ export type RegisterMemberRequest = {
     password?: string;
     passwordCheck?: string;
     phoneNumber?: string;
-    profileImageURL?: string;
     studentID?: string;
 };
-

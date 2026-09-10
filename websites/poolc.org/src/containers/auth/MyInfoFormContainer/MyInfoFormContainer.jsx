@@ -66,7 +66,7 @@ const MyInfoFormContainer = ({ history }) => {
     setMessage(msg);
   }
 
-  const onSubmit = ({ name, password, passwordCheck, email, phoneNumber, introduction, profileImageURL }) => {
+  const onSubmit = ({ name, password, passwordCheck, email, phoneNumber, introduction }) => {
     const response = authAPI.updateUser({
       name,
       password,
@@ -74,7 +74,6 @@ const MyInfoFormContainer = ({ history }) => {
       email,
       phoneNumber,
       introduction,
-      profileImageURL,
     });
     response
       .then((res) => {

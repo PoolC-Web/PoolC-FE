@@ -9,6 +9,4 @@ export type UpdateMemberRequest = {
     password?: string;
     passwordCheck?: string;
     phoneNumber?: string;
-    profileImageURL?: string;
 };
-
