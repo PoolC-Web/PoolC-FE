@@ -78,10 +78,10 @@ const AdminProject = ({ projects, onDeleteProject }) => {
   return (
     <WhiteNarrowBlock>
       <PageHeader>
-        <Title>프로젝트 관리</Title>
+        <Title>프로젝트</Title>
         <ToolbarActions>
           <ListSearchToolbar value={keyword} placeholder="프로젝트 검색" onChange={setKeyword} onSubmit={() => setSearchQuery(keyword)}>
-            <ActionButton to={`/${MENU.ADMIN}/projects/new`}>프로젝트 생성</ActionButton>
+            <ActionButton to={`/${MENU.ADMIN}/projects/new`}>프로젝트 등록</ActionButton>
           </ListSearchToolbar>
         </ToolbarActions>
       </PageHeader>
