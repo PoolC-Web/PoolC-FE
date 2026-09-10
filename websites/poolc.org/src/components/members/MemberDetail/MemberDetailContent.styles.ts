@@ -206,6 +206,10 @@ export const Activities = styled.ul`
     min-width: 0;
   }
 
+  @media (min-width: 900px) {
+    grid-template-columns: repeat(auto-fill, minmax(min(290px, 100%), 1fr));
+  }
+
   ${memberDetailTwoColumns} {
     grid-template-columns: repeat(2, minmax(0, 1fr));
   }
