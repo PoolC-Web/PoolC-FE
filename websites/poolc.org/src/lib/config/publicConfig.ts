@@ -14,7 +14,7 @@ const getEnvNumber = (key: string, fallback: number) => {
 };
 
 export const publicConfig = Object.freeze({
-  apiBaseUrl: import.meta.env.DEV ? '/api/mincho' : getEnv('VITE_API_BASE_URL', DEFAULT_PROD_API_BASE_URL),
+  apiBaseUrl: import.meta.env.DEV ? '/api' : getEnv('VITE_API_BASE_URL', DEFAULT_PROD_API_BASE_URL),
   fileUrl: getEnv('VITE_FILE_URL', import.meta.env.PROD ? DEFAULT_PROD_FILE_URL : DEFAULT_DEV_FILE_URL),
   maxFileSize: getEnvNumber('VITE_MAX_FILE_SIZE', 50_000_000),
   maxImageFileSize: getEnvNumber('VITE_MAX_IMAGE_FILE_SIZE', 10_000_000),

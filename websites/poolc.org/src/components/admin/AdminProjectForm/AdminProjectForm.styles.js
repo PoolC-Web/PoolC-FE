@@ -1,104 +1,110 @@
 import styled from '@emotion/styled';
 import colors from '../../../lib/styles/colors';
 import ActionButton from '../../common/Buttons/ActionButton';
+import { DatePicker, Select } from 'antd';
 
-export const TitleContainer = styled.div`
-  display: flex;
-  width: 90%;
-  justify-content: center;
-  align-items: center;
-  font-weight: 700;
-  font-size: 1.5rem;
-  margin: 1rem;
+export const StyledSelect = styled.select`
+  width: 100%;
+  height: 38px;
+  padding: 0 12px;
+  border: 1px solid ${colors.brown[0]};
+  border-radius: 6px;
+  background: #fff;
+  color: ${colors.brown[1]};
+  font-size: 0.9rem;
 `;
 
-export const StyledForm = styled.div`
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  max-width: 100%;
-  & > label {
-    margin: 2rem 0 1rem 0;
-    font-weight: 600;
-  }
+export const ProjectDatePicker = styled(DatePicker)`
+  width: 100%;
+  height: 38px;
+  border-color: ${colors.brown[0]};
+  border-radius: 6px;
 
-  & > select {
-    width: 15rem;
-    max-width: 320px;
-    height: 2rem;
-    border: 1px solid ${colors.brown[0]};
-    border-radius: 2px;
-    background: white;
+  input { color: ${colors.brown[1]}; }
+`;
+
+export const MemberSelect = styled(Select)`
+  width: 100%;
+
+  .ant-select-selector {
+    min-height: 38px !important;
+    border-color: ${colors.brown[0]} !important;
+    border-radius: 6px !important;
+  }
+`;
+
+export const ThumbnailHeader = styled.div`
+  display: flex;
+  width: 100%;
+  align-items: center;
+  justify-content: space-between;
+  gap: 16px;
+
+  > button {
+    flex: 0 0 auto;
+    margin: 0;
+    white-space: nowrap;
+  }
+`;
+
+export const FieldHeader = styled.div`
+  display: flex;
+  align-items: baseline;
+  flex-wrap: wrap;
+  gap: 8px;
+  margin-bottom: 8px;
+
+  label {
     color: ${colors.brown[1]};
+    font-size: 0.9rem;
+    font-weight: 800;
   }
-`;
 
-export const StyledActionButton = styled(ActionButton)`
-  height: 2rem;
-  width: 15rem;
-  margin: 2rem 0;
-`;
-
-export const StyledSearchActionButton = styled(ActionButton)`
-  height: 2rem;
-`;
-
-export const MemberSearchForm = styled.form`
-  display: flex;
-  justify-content: center;
-  align-items: center;
-
-  & > input {
-    width: 10rem;
+  span {
+    color: ${colors.brown[0]};
+    font-size: 0.8rem;
+    line-height: 1.4;
   }
 `;
 
 export const MemberContainer = styled.div`
   display: flex;
   flex-direction: column;
-  align-items: center;
-  margin: 30px 0 10px 0;
-  & > h4 {
-    display: flex;
-    justify-content: center;
-    font-weight: 600;
-    margin-bottom: 20px;
-  }
+  gap: 8px;
+
+  h4, p { margin: 0; }
+  h4 { color: ${colors.brown[1]}; font-size: 0.9rem; font-weight: 800; }
+  p { color: ${colors.brown[0]}; font-size: 0.82rem; }
 `;
 
 export const MemberBlock = styled.div`
   display: flex;
-  margin: 5px 0;
-  padding: 5px 2px 5px 10px;
-  border: 1px solid ${colors.mint[1]};
-  border-radius: 3px;
-  width: 240px;
+  align-items: center;
   justify-content: space-between;
+  gap: 12px;
+  padding: 10px 12px;
+  border: 1px solid #e5e0d7;
+  border-radius: 6px;
+  background: #faf9f7;
 `;
 
 export const MemberInfo = styled.div`
   display: flex;
+  min-width: 0;
   flex-direction: column;
-  & > p {
-    font-size: 0.8rem;
-    margin: 0.25rem;
-  }
-  & > .name {
-    font-size: 0.9rem;
-    font-weight: 600;
-  }
+  gap: 2px;
+
+  strong { color: ${colors.brown[1]}; font-size: 0.88rem; }
+  span { color: ${colors.brown[0]}; font-size: 0.76rem; }
 `;
 
 export const ButtonContainer = styled.div`
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  margin-left: 1rem;
-`;
+  flex: 0 0 auto;
 
-export const EditorWrap = styled.div`
-  width: 100%;
-  & > div {
-    width: 100%;
+  button {
+    min-width: 48px;
+    min-height: 32px;
+    margin: 0;
+    padding: 0 10px;
   }
 `;

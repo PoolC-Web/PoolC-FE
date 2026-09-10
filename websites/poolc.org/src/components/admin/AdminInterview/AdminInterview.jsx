@@ -107,7 +107,7 @@ const AdminInterview = ({ loading, data, handleCancelInterview }) => {
     <WhiteNarrowBlock>
       <PageHeader>
         <div>
-          <Title>면접 신청 조회</Title>
+          <Title>지원 현황</Title>
         </div>
       </PageHeader>
       {loading && <Spin />}

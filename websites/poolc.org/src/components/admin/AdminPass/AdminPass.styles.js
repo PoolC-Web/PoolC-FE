@@ -24,6 +24,19 @@ export const Title = styled.h2`
   line-height: 1.25;
 `;
 
+export const TitleGroup = styled.div`
+  display: flex;
+  align-items: baseline;
+  gap: 12px;
+`;
+
+export const CurrentMinimum = styled.p`
+  margin: 0;
+  color: ${colors.mint[3]};
+  font-size: 1.2rem;
+  font-weight: 800;
+`;
+
 export const SettingsPanel = styled.form`
   display: flex;
   flex-direction: column;
@@ -79,8 +92,9 @@ export const ResultTableContainer = styled.div`
 
 export const ResultTable = styled.table`
   width: 100%;
-  min-width: 840px;
+  min-width: 760px;
   border-collapse: collapse;
+  table-layout: fixed;
   color: ${colors.brown[1]};
   font-size: 0.84rem;
 
@@ -92,12 +106,22 @@ export const ResultTable = styled.table`
     vertical-align: middle;
   }
 
-  th:nth-of-type(1) { width: 22%; }
-  th:nth-of-type(2) { width: 13%; }
-  th:nth-of-type(3) { width: 18%; }
-  th:nth-of-type(4) { width: 15%; }
-  th:nth-of-type(5) { width: 12%; }
-  th:nth-of-type(6) { width: 20%; }
+  ${({ $withExemptionReason }) => $withExemptionReason ? `
+    th:nth-of-type(1) { width: 19%; }
+    th:nth-of-type(2) { width: 12%; }
+    th:nth-of-type(3) { width: 16%; }
+    th:nth-of-type(4) { width: 14%; }
+    th:nth-of-type(5) { width: 14%; }
+    th:nth-of-type(6) { width: 10%; }
+    th:nth-of-type(7) { width: 15%; }
+  ` : `
+    th:nth-of-type(1) { width: 22%; }
+    th:nth-of-type(2) { width: 13%; }
+    th:nth-of-type(3) { width: 18%; }
+    th:nth-of-type(4) { width: 17%; }
+    th:nth-of-type(5) { width: 12%; }
+    th:nth-of-type(6) { width: 18%; }
+  `}
 
   tbody tr:last-of-type td {
     border-bottom: 0;
@@ -159,13 +183,16 @@ export const ActionCell = styled.div`
 
   > button {
     margin: 0;
+    min-width: 54px;
+    padding: 0 10px;
+    white-space: nowrap;
+
+    &:disabled {
+      cursor: not-allowed;
+      opacity: 0.55;
+    }
   }
 
-  .expelled {
-    color: ${colors.brown[0]};
-    font-size: 0.78rem;
-    font-weight: 700;
-  }
 `;
 
 export const ExpellActionButton = styled(ActionButton)`

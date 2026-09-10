@@ -26,6 +26,10 @@ const Grid = styled.ul`
     justify-self: center;
   }
 
+  ${media.desktop} {
+    grid-template-columns: repeat(auto-fill, minmax(min(290px, 100%), 1fr));
+  }
+
   ${media.compact} {
     gap: 14px;
   }

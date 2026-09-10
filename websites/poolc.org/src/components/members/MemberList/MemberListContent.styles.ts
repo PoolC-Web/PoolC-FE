@@ -28,6 +28,10 @@ export const MemberCardGrid = styled(CardGrid)`
     justify-self: stretch;
   }
 
+  ${media.desktop} {
+    grid-template-columns: repeat(auto-fill, minmax(min(290px, 100%), 1fr));
+  }
+
   ${media.mobile} {
     grid-template-columns: minmax(0, 1fr);
   }

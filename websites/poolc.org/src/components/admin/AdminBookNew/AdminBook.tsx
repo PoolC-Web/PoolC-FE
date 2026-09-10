@@ -281,7 +281,7 @@ export default function AdminBook() {
   return (
     <WhiteNarrowBlock>
       <div className={styles.header}>
-        <h2 className={styles.title}>도서 관리</h2>
+        <h2 className={styles.title}>도서</h2>
         <div className={styles.toolbar}>
           <ListSearchToolbar
             value={keyword}

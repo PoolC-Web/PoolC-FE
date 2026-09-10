@@ -1,4 +1,4 @@
-import { useEffect, useState } from 'react';
+import { useCallback, useEffect, useState } from 'react';
 import { withRouter } from 'react-router-dom';
 import AdminProjectForm from '../../../components/admin/AdminProjectForm/AdminProjectForm';
 import * as projectAPI from '../../../lib/api/project';
@@ -100,24 +100,26 @@ const AdminProjectFormContainer = ({ match, history }) => {
       });
   };
 
-  const onSearchMember = (name) => {
-    const response = memberAPI.searchMember({ name });
-    response.then((res) => {
+  const onSearchMember = useCallback((name) => {
+    if (!name) {
+      setSearchMembers([]);
+      return;
+    }
+
+    memberAPI.searchMember({ name }).then((res) => {
       if (res.status === SUCCESS.OK) {
         setSearchMembers(res.data.data);
       }
     });
-  };
+  }, []);
 
-  const onAddMember = (e, member) => {
-    e.preventDefault();
-    setMembers([...members, member]);
-  };
+  const onAddMember = useCallback((member) => {
+    setMembers((currentMembers) => currentMembers.some((item) => item.loginID === member.loginID) ? currentMembers : [...currentMembers, member]);
+  }, []);
 
-  const onDeleteMember = (e, member) => {
-    e.preventDefault();
-    setMembers(members.filter((m) => m.loginID !== member.loginID));
-  };
+  const onDeleteMember = useCallback((member) => {
+    setMembers((currentMembers) => currentMembers.filter((item) => item.loginID !== member.loginID));
+  }, []);
 
   const onShowErrorModal = () => {
     setErrorModalVisible(true);

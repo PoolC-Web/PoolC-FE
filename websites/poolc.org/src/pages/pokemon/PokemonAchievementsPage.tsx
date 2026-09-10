@@ -160,7 +160,7 @@ function QuestSection({ title, quests, claiming, claimingAll, onClaim, styles }:
       const isClubWifiQuest = quest.key === 'DAILY_CLUB_WIFI';
       return <article className={`${styles.quest} ${canClaim ? styles.claimable : ''} ${isCompleted ? styles.completed : ''}`} key={quest.key}>
         <div className={styles.questIcon}><QuestIcon /></div>
-        <div className={styles.questBody}><div className={styles.questTitle}><h3>{quest.title}</h3></div>{isClubWifiQuest && !isCompleted && <p className={styles.clubWifiGuide}>동아리방 Wi-Fi에 연결한 뒤 VPN과 iCloud Private Relay를 해제하면 출석할 수 있어요.</p>}{!isCompleted && <div className={styles.questProgress}><Progress percent={percentage} showInfo={false} strokeColor={completed ? '#48b99a' : '#9bbab0'} trailColor="#e7efed" /><strong>{progressLabel}</strong></div>}</div>
+        <div className={styles.questBody}><div className={styles.questTitle}><h3>{quest.title}</h3></div>{isClubWifiQuest && !isCompleted && <p className={styles.clubWifiGuide}>동아리방 Wi-Fi “poolc_5g”에 연결한 뒤 VPN과 iCloud Private Relay를 해제하면 출석할 수 있어요.</p>}{!isCompleted && <div className={styles.questProgress}><Progress percent={percentage} showInfo={false} strokeColor={completed ? '#48b99a' : '#9bbab0'} trailColor="#e7efed" /><strong>{progressLabel}</strong></div>}</div>
         <div className={styles.questActions}>
           <div className={styles.questReward}><strong><img className={styles.rewardBallIcon} src={normalBallImage} alt="일반 포켓볼" /> × {quest.rewardAmount}</strong></div>
           {isCompleted ? <span className={styles.completedBadge}><CheckOutlined /> 수령 완료</span> : canClaim && <Button type="primary" loading={claiming === quest.key} disabled={claimingAll} onClick={() => onClaim(quest.key)} icon={<CheckOutlined />}>보상 받기</Button>}

@@ -83,6 +83,7 @@ const MessageAllListPage = lazy(() => import('./pages/message/MessageAllListPage
 const MessageListPage = lazy(() => import('./pages/message/MessageListPage'));
 const MessageFormPage = lazy(() => import('./pages/message/MessageFormPage'));
 const SpaceReservationPage = lazy(() => import('~/pages/room-reservation/RoomReservationPage'));
+const OfficialActivityCheckInPage = lazy(() => import('./pages/official-activity/OfficialActivityCheckInPage') as unknown as Promise<LazyPageModule>);
 
 function App() {
   const { styles } = useStyles();
@@ -129,6 +130,7 @@ function App() {
             <Route component={MyPageMyScrapsPage} path={`/${MENU.MY_PAGE}/${MENU.MY_PAGE_MY_SCRAPS}`} />
             <Route component={MyPageCollectionPage} path={`/${MENU.MY_PAGE}/${MENU.MY_PAGE_COLLECTION}`} />
             <Route component={SpaceReservationPage} path={`/${MENU.ROOM_RESERVATION}`} />
+            <Route component={OfficialActivityCheckInPage} path="/official-activities/check-in/:token" exact />
             <Route component={NotFoundPage} path="/" />
           </Switch>
         </Suspense>

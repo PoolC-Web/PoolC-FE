@@ -8,6 +8,9 @@ import AdminInterviewContainer from '../../containers/admin/AdminInterviewContai
 import AdminInterviewTimeContainer from '../../containers/admin/AdminInterviewTimeContainer/AdminInterviewTimeContainer';
 import AdminMemberContainer from '../../containers/admin/AdminMemberContainer/AdminMemberContainer';
 import AdminPassContainer from '../../containers/admin/AdminPassContainer/AdminPassContainer';
+import AdminOfficialActivityContainer from '../../containers/admin/AdminOfficialActivityContainer/AdminOfficialActivityContainer';
+import AdminOfficialActivityFormContainer from '../../containers/admin/AdminOfficialActivityFormContainer/AdminOfficialActivityFormContainer';
+import AdminOfficialActivityDetailContainer from '../../containers/admin/AdminOfficialActivityDetailContainer/AdminOfficialActivityDetailContainer';
 import AdminProjectContainer from '../../containers/admin/AdminProjectContainer/AdminProjectContainer';
 import AdminProjectFormContainer from '../../containers/admin/AdminProjectFormContainer/AdminProjectFormContainer';
 import useAdminCheck from '../../hooks/useAdminCheck';
@@ -19,16 +22,17 @@ import { TwoColumnPageShell } from '../../components/common/PageLayout/PageLayou
 
 const AdminPage = ({ history }) => {
   const menus = [
-    { name: '관리자 홈', url: '' },
-    { name: '동아리 정보 관리', url: '/info' },
-    { name: '회원 관리', url: '/members' },
-    { name: '최소활동기준 관리', url: '/pass' },
-    { name: '프로젝트 관리', url: '/projects' },
-    { name: '활동 관리', url: '/activities' },
-    { name: '도서 관리', url: '/books' },
-    { name: '도감 동기화', url: '/gamification' },
-    { name: '면접 시간 관리', url: '/interview-time' },
-    { name: '면접 신청 조회', url: '/interview' },
+    { name: '대시보드', url: '' },
+    { name: '동아리 정보', url: '/info' },
+    { name: '회원 목록', url: '/members' },
+    { name: '최소 활동 기준', url: '/pass' },
+    { name: '공식 활동', url: '/official-activities' },
+    { name: '프로젝트', url: '/projects' },
+    { name: '세미나·스터디', url: '/activities' },
+    { name: '도서', url: '/books' },
+    { name: '도감 관리', url: '/gamification' },
+    { name: '면접 시간', url: '/interview-time' },
+    { name: '지원 현황', url: '/interview' },
   ];
 
   useAdminCheck(history);
@@ -41,6 +45,9 @@ const AdminPage = ({ history }) => {
 
         <Route component={AdminMemberContainer} path={`/${MENU.ADMIN}/members`} exact />
         <Route component={AdminPassContainer} path={`/${MENU.ADMIN}/pass`} exact />
+        <Route component={AdminOfficialActivityFormContainer} path={[`/${MENU.ADMIN}/official-activities/edit/:activityId`, `/${MENU.ADMIN}/official-activities/new`]} exact />
+        <Route component={AdminOfficialActivityDetailContainer} path={`/${MENU.ADMIN}/official-activities/:activityId`} exact />
+        <Route component={AdminOfficialActivityContainer} path={`/${MENU.ADMIN}/official-activities`} exact />
         <Route component={AdminProjectFormContainer} path={[`/${MENU.ADMIN}/projects/edit/:projectID`, `/${MENU.ADMIN}/projects/new`]} exact />
         <Route component={AdminProjectContainer} path={`/${MENU.ADMIN}/projects`} exact />
         <Route component={AdminActivityContainer} path={`/${MENU.ADMIN}/activities`} exact />

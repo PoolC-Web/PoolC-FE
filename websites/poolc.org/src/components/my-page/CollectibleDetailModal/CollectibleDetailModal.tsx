@@ -35,6 +35,7 @@ type CollectibleDetailModalProps = {
   onDrawAgain?: () => void;
   drawAgainLoading?: boolean;
   drawAgainDisabled?: boolean;
+  remainingBallCount?: number;
 };
 
 const rarityLabel: Record<Rarity, string> = {
@@ -51,11 +52,12 @@ const rarityColor: Record<Rarity, string> = {
   LEGENDARY: '#d59a12',
 };
 
-export default function CollectibleDetailModal({ collectible, title, description, onClose, onDrawAgain, drawAgainLoading = false, drawAgainDisabled = false }: CollectibleDetailModalProps) {
+export default function CollectibleDetailModal({ collectible, title, description, onClose, onDrawAgain, drawAgainLoading = false, drawAgainDisabled = false, remainingBallCount }: CollectibleDetailModalProps) {
   const { styles } = useStyles();
   const [showShiny, setShowShiny] = useState(false);
   const canShowShiny = Boolean(collectible?.shinyOwned && collectible.shinySpriteUrl);
   const showingShiny = canShowShiny && showShiny;
+  const showDexDetails = !title;
   useEffect(() => {
     setShowShiny(Boolean(collectible?.shiny));
   }, [collectible]);
@@ -63,7 +65,7 @@ export default function CollectibleDetailModal({ collectible, title, description
   return (
     <Modal
       open={Boolean(collectible)}
-      footer={<div className={styles.footer}>{onDrawAgain && <Button className={styles.drawAgainButton} loading={drawAgainLoading} disabled={drawAgainDisabled} onClick={onDrawAgain}><img src={pokeballImage} alt="" aria-hidden="true" />한 번 더 뽑기</Button>}<Button type="primary" onClick={onClose}>닫기</Button></div>}
+      footer={<div className={styles.footer}>{onDrawAgain && <><span className={styles.remainingBalls}><img src={pokeballImage} alt="" aria-hidden="true" />남은 포켓볼 <strong>{remainingBallCount ?? 0}개</strong></span><Button className={styles.drawAgainButton} loading={drawAgainLoading} disabled={drawAgainDisabled} onClick={onDrawAgain}><img src={pokeballImage} alt="" aria-hidden="true" />한 번 더 뽑기</Button></>}<Button type="primary" onClick={onClose}>닫기</Button></div>}
       closeIcon={<CloseOutlined aria-label="닫기" />}
       onCancel={onClose}
       centered
@@ -77,17 +79,17 @@ export default function CollectibleDetailModal({ collectible, title, description
           <Typography.Text style={{ color: rarityColor[collectible.rarity] }}>No.{String(collectible.externalId ?? 0).padStart(3, '0')}</Typography.Text>
         </div>
         <Tag color={showingShiny ? 'gold' : 'green'}>{showingShiny ? '이로치' : rarityLabel[collectible.rarity]}</Tag>
-        {description && <Typography.Text className={styles.description}>{description}</Typography.Text>}
-        {(collectible.category || collectible.description) && <section className={styles.dexEntry}>
+        {showDexDetails && description && <Typography.Text className={styles.description}>{description}</Typography.Text>}
+        {showDexDetails && (collectible.category || collectible.description) && <section className={styles.dexEntry}>
           {collectible.category && <strong>{collectible.category}</strong>}
           {collectible.description && <Typography.Paragraph>{collectible.description}</Typography.Paragraph>}
         </section>}
-        {(collectible.heightDecimeters !== undefined || collectible.weightHectograms !== undefined || collectible.abilities) && <dl className={styles.profile}>
+        {showDexDetails && (collectible.heightDecimeters !== undefined || collectible.weightHectograms !== undefined || collectible.abilities) && <dl className={styles.profile}>
           {collectible.heightDecimeters !== undefined && <div><dt>키</dt><dd>{(collectible.heightDecimeters / 10).toFixed(1)} m</dd></div>}
           {collectible.weightHectograms !== undefined && <div><dt>몸무게</dt><dd>{(collectible.weightHectograms / 10).toFixed(1)} kg</dd></div>}
           {collectible.abilities && <div data-ability><dt>특성</dt><dd>{collectible.abilities}</dd></div>}
         </dl>}
-        {[collectible.hp, collectible.attack, collectible.defense, collectible.specialAttack, collectible.specialDefense, collectible.speed].some((stat) => stat !== undefined) && <section className={styles.stats}>
+        {showDexDetails && [collectible.hp, collectible.attack, collectible.defense, collectible.specialAttack, collectible.specialDefense, collectible.speed].some((stat) => stat !== undefined) && <section className={styles.stats}>
           <strong>기본 능력치</strong>
           <div>
             {[['HP', collectible.hp], ['공격', collectible.attack], ['방어', collectible.defense], ['특수공격', collectible.specialAttack], ['특수방어', collectible.specialDefense], ['스피드', collectible.speed]].map(([label, value]) => (
@@ -109,5 +111,6 @@ const useStyles = createStyles(({ css }) => ({
   profile: css`display:grid; width:100%; grid-template-columns:1fr 1fr; margin:0; border:1px solid #e5f0ed; border-radius:4px; > div{padding:9px 12px; text-align:left;} dt{font-size:.72rem; color:#7b736a;} dd{margin:2px 0 0; color:#3d4843; font-size:.86rem; font-weight:700;} [data-ability]{grid-column:1 / -1; border-top:1px solid #e5f0ed;}`,
   stats: css`width:100%; text-align:left; > strong{display:block; margin-bottom:7px; color:#4c3722; font-size:.82rem;} > div{display:grid; grid-template-columns:repeat(3, 1fr); gap:5px;} span{padding:6px 7px; border-radius:3px; background:#f5f8f7; color:#67716c; font-size:.72rem;} b{float:right; color:#276f59;}`,
   footer: css`display:flex; align-items:center; justify-content:flex-end; gap:8px;`,
+  remainingBalls: css`display:inline-flex; align-items:center; gap:5px; margin-right:auto; color:#63706b; font-size:.82rem; white-space:nowrap; img{width:18px; height:18px; object-fit:contain;} strong{color:#276f59; font-variant-numeric:tabular-nums;}`,
   drawAgainButton: css`display:inline-flex; align-items:center; gap:5px; img{width:18px; height:18px; object-fit:contain;}`,
 }));
