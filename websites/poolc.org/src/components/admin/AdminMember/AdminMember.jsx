@@ -5,8 +5,6 @@ import { WhiteNarrowBlock } from '../../../styles/common/Block.styles';
 import { ListSearchToolbar } from '../../common/ListSearchToolbar/ListSearchToolbar';
 import { SectionTabs } from '../../common/SectionTabs/SectionTabs';
 import {
-  AccountActionButton,
-  AccountActions,
   EmptyResult,
   FilterControl,
   MemberIdentity,
@@ -14,9 +12,10 @@ import {
   MemberTable,
   MemberTableContainer,
   PageHeader,
-  RoleActionButton,
+  PendingActionButton,
+  PendingActions,
+  PendingDeleteButton,
   RoleSelect,
-  StatusBadge,
   TableHead,
   TabFilterRow,
   Title,
@@ -27,36 +26,34 @@ const MEMBER_TAB = {
   PENDING: 'PENDING',
   ACTIVE: 'ACTIVE',
   INACTIVE: 'INACTIVE',
-  ALL: 'ALL',
+  TERMINATED: 'TERMINATED',
 };
 
-const INACTIVE_ROLES = ['INACTIVE', 'EXPELLED', 'QUIT', 'PUBLIC'];
+const TERMINATED_ROLES = ['EXPELLED', 'QUIT'];
+const INACTIVE_ROLES = ['INACTIVE', 'GRADUATED', 'COMPLETE'];
 
 const getMemberTab = (member) => {
   if (member.role === 'UNACCEPTED') return MEMBER_TAB.PENDING;
-  if (!member.isActivated || INACTIVE_ROLES.includes(member.role)) return MEMBER_TAB.INACTIVE;
+  if (INACTIVE_ROLES.includes(member.role)) return MEMBER_TAB.INACTIVE;
+  if (TERMINATED_ROLES.includes(member.role)) return MEMBER_TAB.TERMINATED;
   return MEMBER_TAB.ACTIVE;
 };
 
-const MemberTableHead = () => (
+const MemberTableHead = ({ showPendingActions }) => (
   <thead>
     <TableHead>
       <th>회원</th>
       <th>학과</th>
       <th>학번</th>
       <th>연락처</th>
-      <th>회원 상태</th>
-      <th>계정 조치</th>
+      <th>{showPendingActions ? '조치' : '역할'}</th>
     </TableHead>
   </thead>
 );
 
-const MemberRow = ({ member, roles, onAcceptMember, onWithdrawMember, onUpdateMemberRole, history }) => {
-  const isPending = getMemberTab(member) === MEMBER_TAB.PENDING;
-
+const MemberRow = ({ member, roles, showPendingActions, onAcceptMember, onWithdrawMember, onUpdateMemberRole, history }) => {
   const stopRowNavigation = (event) => event.stopPropagation();
   const moveToMemberDetail = () => history.push(`/${MENU.MEMBER}/${member.loginID}`);
-  const roleDescription = roles?.find((item) => item.name === member.role)?.description ?? member.role;
 
   return (
     <MemberListRow onClick={moveToMemberDetail}>
@@ -69,25 +66,21 @@ const MemberRow = ({ member, roles, onAcceptMember, onWithdrawMember, onUpdateMe
       <td>{member.department || '-'}</td>
       <td>{member.studentID || '-'}</td>
       <td>{member.phoneNumber || '-'}</td>
-      <td onClick={stopRowNavigation}>
-        {member.isActivated ? (
-          <RoleSelect value={member.role || 'MEMBER'} onChange={(event) => onUpdateMemberRole({ loginID: member.loginID, role: event.target.value })} aria-label={`${member.name} 회원 상태`}>
-            {roles?.map((item) => (
-              <option key={item.name} value={item.name}>
-                {item.description}
-              </option>
-            ))}
-          </RoleSelect>
-        ) : (
-          <StatusBadge>{isPending ? '승인 대기' : roleDescription}</StatusBadge>
-        )}
-      </td>
-      <td onClick={stopRowNavigation}>
-        <AccountActions>
-          {isPending && <RoleActionButton onClick={() => onAcceptMember(member.loginID)}>승인</RoleActionButton>}
-          <AccountActionButton onClick={() => onWithdrawMember(member.loginID)}>{isPending ? '삭제' : '탈퇴 처리'}</AccountActionButton>
-        </AccountActions>
-      </td>
+      {showPendingActions && <td onClick={stopRowNavigation}>
+        <PendingActions>
+          <PendingActionButton onClick={() => onAcceptMember(member.loginID)}>승인</PendingActionButton>
+          <PendingDeleteButton onClick={() => onWithdrawMember(member.loginID)}>삭제</PendingDeleteButton>
+        </PendingActions>
+      </td>}
+      {!showPendingActions && <td onClick={stopRowNavigation}>
+        <RoleSelect value={member.role || 'MEMBER'} onChange={(event) => onUpdateMemberRole({ loginID: member.loginID, role: event.target.value })} aria-label={`${member.name} 역할`}>
+          {roles?.map((role) => (
+            <option key={role.name} value={role.name}>
+              {role.description}
+            </option>
+          ))}
+        </RoleSelect>
+      </td>}
     </MemberListRow>
   );
 };
@@ -103,10 +96,9 @@ const AdminMember = ({ members, onAcceptMember, onWithdrawMember, onUpdateMember
       members.reduce(
         (counts, member) => {
           counts[getMemberTab(member)] += 1;
-          counts[MEMBER_TAB.ALL] += 1;
           return counts;
         },
-        { [MEMBER_TAB.PENDING]: 0, [MEMBER_TAB.ACTIVE]: 0, [MEMBER_TAB.INACTIVE]: 0, [MEMBER_TAB.ALL]: 0 },
+        { [MEMBER_TAB.PENDING]: 0, [MEMBER_TAB.ACTIVE]: 0, [MEMBER_TAB.INACTIVE]: 0, [MEMBER_TAB.TERMINATED]: 0 },
       ),
     [members],
   );
@@ -114,28 +106,35 @@ const AdminMember = ({ members, onAcceptMember, onWithdrawMember, onUpdateMember
   const visibleMembers = useMemo(() => {
     const normalizedQuery = searchQuery.trim().toLowerCase();
 
-    return members.filter((member) => {
-      const isInTab = activeTab === MEMBER_TAB.ALL || getMemberTab(member) === activeTab;
+    const filteredMembers = members.filter((member) => {
+      const isInTab = getMemberTab(member) === activeTab;
       const matchesRole = roleFilter === 'ALL' || member.role === roleFilter;
       const searchableValues = [member.name, member.loginID, member.email, member.studentID, member.department].filter(Boolean).join(' ').toLowerCase();
       const matchesQuery = !normalizedQuery || searchableValues.includes(normalizedQuery);
 
       return isInTab && matchesRole && matchesQuery;
     });
+
+    if (activeTab === MEMBER_TAB.INACTIVE) {
+      filteredMembers.sort((left, right) => Number(right.role === 'INACTIVE') - Number(left.role === 'INACTIVE'));
+    }
+
+    return filteredMembers;
   }, [activeTab, members, roleFilter, searchQuery]);
+  const showPendingActions = activeTab === MEMBER_TAB.PENDING;
 
   const tabs = [
     { key: MEMBER_TAB.PENDING, label: `승인 대기 ${tabCounts[MEMBER_TAB.PENDING]}` },
     { key: MEMBER_TAB.ACTIVE, label: `활동 ${tabCounts[MEMBER_TAB.ACTIVE]}` },
     { key: MEMBER_TAB.INACTIVE, label: `비활동 ${tabCounts[MEMBER_TAB.INACTIVE]}` },
-    { key: MEMBER_TAB.ALL, label: `전체 ${tabCounts[MEMBER_TAB.ALL]}` },
+    { key: MEMBER_TAB.TERMINATED, label: `탈퇴/상실 ${tabCounts[MEMBER_TAB.TERMINATED]}` },
   ];
 
   return (
     <WhiteNarrowBlock>
       <PageHeader>
         <div>
-          <Title>회원 관리</Title>
+          <Title>회원 목록</Title>
         </div>
         <ToolbarActions>
           <ListSearchToolbar value={keyword} placeholder="이름, 아이디, 학과 검색" onChange={setKeyword} onSubmit={() => setSearchQuery(keyword)} />
@@ -154,13 +153,14 @@ const AdminMember = ({ members, onAcceptMember, onWithdrawMember, onUpdateMember
       </TabFilterRow>
       <MemberTableContainer>
         <MemberTable>
-          <MemberTableHead />
+          <MemberTableHead showPendingActions={showPendingActions} />
           <tbody>
             {visibleMembers.map((member) => (
               <MemberRow
                 key={member.loginID}
                 member={member}
                 roles={roles}
+                showPendingActions={showPendingActions}
                 onAcceptMember={onAcceptMember}
                 onWithdrawMember={onWithdrawMember}
                 onUpdateMemberRole={onUpdateMemberRole}

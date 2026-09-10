@@ -79,7 +79,7 @@ export default function MemberListContent() {
     const normalizedSearchValue = searchInfo.keyword.trim().toLowerCase();
 
     return visibleMembers.filter((member) => {
-      const matchesFilter = filter === 'ALL' || (filter === 'ADMIN' ? member.isAdmin || ADMIN_MEMBER_ROLES.includes(member.role) : member.role === filter);
+      const matchesFilter = filter === 'ALL' || (filter === 'ADMIN' ? member.role === 'ADMIN' : member.role === filter);
 
       if (!matchesFilter) {
         return false;

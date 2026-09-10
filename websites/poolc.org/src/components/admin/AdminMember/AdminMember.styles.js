@@ -78,7 +78,7 @@ export const MemberTableContainer = styled.div`
 
 export const MemberTable = styled.table`
   width: 100%;
-  min-width: 980px;
+  min-width: 720px;
   border-collapse: collapse;
   table-layout: fixed;
   color: ${colors.brown[1]};
@@ -92,12 +92,11 @@ export const MemberTable = styled.table`
     vertical-align: middle;
   }
 
-  th:nth-of-type(1) { width: 20%; }
-  th:nth-of-type(2) { width: 15%; }
-  th:nth-of-type(3) { width: 13%; }
-  th:nth-of-type(4) { width: 18%; }
-  th:nth-of-type(5) { width: 12%; }
-  th:nth-of-type(6) { width: 22%; }
+  th:nth-of-type(1) { width: 24%; }
+  th:nth-of-type(2) { width: 18%; }
+  th:nth-of-type(3) { width: 16%; }
+  th:nth-of-type(4) { width: 22%; }
+  th:nth-of-type(5) { width: 20%; }
 
   tbody tr:last-of-type td {
     border-bottom: 0;
@@ -140,14 +139,31 @@ export const MemberIdentity = styled.div`
   }
 `;
 
-export const StatusBadge = styled.span`
+export const PendingActions = styled.div`
   display: inline-flex;
-  padding: 4px 7px;
-  border-radius: 999px;
-  background: #f3f4f5;
-  color: ${colors.brown[0]};
-  font-size: 0.75rem;
-  font-weight: 800;
+  gap: 6px;
+
+  button {
+    width: 60px;
+    height: 36px;
+    padding: 0;
+    border-radius: 5px;
+    font-size: 0.78rem;
+    font-weight: 800;
+    white-space: nowrap;
+  }
+`;
+
+export const PendingActionButton = styled.button`
+  border: 1px solid #b7ded1;
+  background: #fff;
+  color: ${colors.mint[3]};
+`;
+
+export const PendingDeleteButton = styled.button`
+  border: 1px solid #f2b5b5;
+  background: #fff;
+  color: #d95757;
 `;
 
 export const RoleSelect = styled.select`
@@ -159,51 +175,6 @@ export const RoleSelect = styled.select`
   background: #fff;
   color: ${colors.brown[1]};
   font-size: 0.78rem;
-`;
-
-export const RoleActionButton = styled.button`
-  width: 60px;
-  height: 36px;
-  padding: 0;
-  border: 1px solid ${({ $active }) => ($active ? colors.mint[2] : '#b7ded1')};
-  border-radius: 5px;
-  background: ${({ $active }) => ($active ? colors.mint[0] : '#fff')};
-  color: ${colors.mint[3]};
-  cursor: pointer;
-  font-size: 0.78rem;
-  font-weight: 800;
-
-  &:disabled {
-    border-color: #e1e1e1;
-    color: #9b9b9b;
-    cursor: default;
-  }
-`;
-
-export const AccountActionButton = styled.button`
-  display: inline-flex;
-  width: 60px;
-  height: 36px;
-  align-items: center;
-  justify-content: center;
-  padding: 0;
-  border: 1px solid #f2b5b5;
-  border-radius: 5px;
-  background: #fff;
-  color: #d95757;
-  cursor: pointer;
-  font-size: 0.78rem;
-  font-weight: 800;
-  line-height: 1;
-  text-align: center;
-  white-space: nowrap;
-`;
-
-export const AccountActions = styled.div`
-  display: inline-flex;
-  align-items: center;
-  justify-content: center;
-  gap: 6px;
 `;
 
 export const EmptyResult = styled.p`

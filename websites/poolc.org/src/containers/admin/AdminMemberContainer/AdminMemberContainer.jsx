@@ -2,8 +2,8 @@ import { useEffect, useState } from 'react';
 import { Spin } from 'antd';
 import AdminMember from '../../../components/admin/AdminMember/AdminMember';
 import * as memberAPI from '../../../lib/api/member';
-import { SUCCESS } from '../../../constants/statusCode';
 import { MEMBER_ROLE } from '../../../constants/memberRoles';
+import { SUCCESS } from '../../../constants/statusCode';
 import { useMessage } from '../../../hooks/useMessage';
 
 const AdminMemberContainer = () => {
@@ -38,7 +38,9 @@ const AdminMemberContainer = () => {
     memberAPI.acceptMember(loginID).then((res) => {
       if (res.status === SUCCESS.OK) {
         message.success('회원 승인이 완료되었습니다.');
-        setMembers((currentMembers) => currentMembers.map((member) => (member.loginID === loginID ? { ...member, isActivated: true, role: MEMBER_ROLE.MEMBER } : member)));
+        setMembers((currentMembers) => currentMembers.map((member) => (
+          member.loginID === loginID ? { ...member, isActivated: true, role: MEMBER_ROLE.MEMBER } : member
+        )));
       }
     });
   };
@@ -46,7 +48,7 @@ const AdminMemberContainer = () => {
   const onWithdrawMember = (loginID) => {
     memberAPI.withdrawMember(loginID).then((res) => {
       if (res.status === SUCCESS.OK) {
-        alert('회원 탈퇴가 완료되었습니다.');
+        message.success('승인 대기 회원을 삭제했습니다.');
         setMembers((currentMembers) => currentMembers.filter((member) => member.loginID !== loginID));
       }
     });
@@ -55,8 +57,10 @@ const AdminMemberContainer = () => {
   const onUpdateMemberRole = ({ loginID, role }) => {
     memberAPI.updateMemberRole({ loginID, role }).then((res) => {
       if (res.status === SUCCESS.OK) {
-        message.success('회원 상태가 변경되었습니다.');
-        setMembers((currentMembers) => currentMembers.map((member) => (member.loginID === loginID ? { ...member, role } : member)));
+        message.success('역할이 변경되었습니다.');
+        setMembers((currentMembers) => currentMembers.map((member) => (
+          member.loginID === loginID ? { ...member, role } : member
+        )));
       }
     });
   };
