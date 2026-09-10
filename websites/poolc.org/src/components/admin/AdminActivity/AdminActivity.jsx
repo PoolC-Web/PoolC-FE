@@ -62,7 +62,7 @@ const AdminActivity = ({ activities, onOpenActivity, onCloseActivity, onDeleteAc
   return (
     <WhiteNarrowBlock>
       <PageHeader>
-        <Title>활동 관리</Title>
+        <Title>세미나·스터디</Title>
         <ToolbarActions>
           <ListSearchToolbar value={keyword} placeholder="활동, 개설자 검색" onChange={setKeyword} onSubmit={() => setSearchQuery(keyword)} />
         </ToolbarActions>

@@ -51,7 +51,7 @@ export default function AdminGamification() {
     <WhiteNarrowBlock>
       <header className={styles.header}>
         <div>
-          <h2 className={styles.title}>도감 동기화</h2>
+          <h2 className={styles.title}>도감 관리</h2>
           <p className={styles.description}>전 세대 수집 대상을 PokeAPI에서 동기화합니다.</p>
         </div>
         <ActionButton className={styles.syncButton} disabled={starting || run?.status === 'RUNNING'} onClick={startSync}>동기화 실행</ActionButton>

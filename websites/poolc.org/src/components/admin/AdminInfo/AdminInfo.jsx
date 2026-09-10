@@ -96,7 +96,7 @@ const AdminInfo = ({ info, onUpdate, errorMessage, buttons, errorModalVisible, o
       <WhiteNarrowBlock>
         <FormContent>
           <TitleContainer>
-            <Title>동아리 정보 관리</Title>
+            <Title>동아리 정보</Title>
           </TitleContainer>
           <StyledForm>
             <FormGrid>

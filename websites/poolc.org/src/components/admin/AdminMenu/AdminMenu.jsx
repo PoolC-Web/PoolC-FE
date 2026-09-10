@@ -9,17 +9,13 @@ const AdminMenu = ({ menus, location }) => {
   return (
     <MenuBlock>
       <MenuList>
-        {menus.map((menu) =>
-          currentLocation === menu.url ? (
-            <MenuItem key={menu.url}>
-              <SelectedLinkButton to={`/${MENU.ADMIN}${menu.url}`}>{menu.name}</SelectedLinkButton>
-            </MenuItem>
-          ) : (
-            <MenuItem key={menu.url}>
-              <LinkButton to={`/${MENU.ADMIN}${menu.url}`}>{menu.name}</LinkButton>
-            </MenuItem>
-          ),
-        )}
+        {menus.map((menu) => (
+          <MenuItem key={menu.url}>
+            {currentLocation === menu.url
+              ? <SelectedLinkButton to={`/${MENU.ADMIN}${menu.url}`}>{menu.name}</SelectedLinkButton>
+              : <LinkButton to={`/${MENU.ADMIN}${menu.url}`}>{menu.name}</LinkButton>}
+          </MenuItem>
+        ))}
       </MenuList>
     </MenuBlock>
   );

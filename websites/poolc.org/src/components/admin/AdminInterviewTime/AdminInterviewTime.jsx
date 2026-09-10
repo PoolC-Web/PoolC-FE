@@ -116,7 +116,7 @@ const AdminInterviewTime = ({ data, loading, setData, onCreateInterviewTime, onD
   return (
     <WhiteNarrowBlock>
       <PageHeader>
-        <div><Title>면접 시간 관리</Title></div>
+        <div><Title>면접 시간</Title></div>
         <HeaderActions><ActionButton onClick={addDate}>날짜 추가</ActionButton></HeaderActions>
       </PageHeader>
       {loading && <Spin />}
