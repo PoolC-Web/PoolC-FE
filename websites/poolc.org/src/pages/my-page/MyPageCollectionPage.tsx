@@ -252,7 +252,6 @@ export default function MyPageCollectionPage() {
       setDetailModal({
         collectible: preparedDraw,
         title: isNewVariant ? draw.shiny ? '이로치 포켓몬 획득!' : '새 포켓몬 획득!' : '이미 수집한 포켓몬이에요',
-        description: isNewVariant ? `${draw.shiny ? '이로치' : '일반'} 도감에 새로 등록되었습니다.` : undefined,
       });
       setSummary((current) => current && {
         ...current,
@@ -402,6 +401,7 @@ export default function MyPageCollectionPage() {
         onDrawAgain={detailModal?.title ? () => handleDraw(false) : undefined}
         drawAgainLoading={drawing === 'NORMAL'}
         drawAgainDisabled={!summary || drawing !== null || normalDrawUnavailable || ballCount < 1}
+        remainingBallCount={ballCount}
       />
     </Block>
   );
