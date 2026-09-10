@@ -15,11 +15,10 @@ export default defineConfig(({ mode }) => {
       open: process.env.VITE_OPEN !== 'false',
       port: 3000,
       proxy: {
-        '/api/mincho': {
+        '/api': {
           target: apiProxyTarget,
-          // target: 'http://localhost:8000',
           changeOrigin: true,
-          rewrite: (path: string) => path.replace(/^\/api\/mincho/, ''),
+          rewrite: (path: string) => path.replace(/^\/api/, ''),
           secure: false,
         },
       },
