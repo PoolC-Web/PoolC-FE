@@ -46,8 +46,10 @@ const ProjectTableHead = () => (
 );
 
 const formatActivityPeriod = (project) => {
-  if (!project.startDate) return '-';
-  return project.endDate ? `${project.startDate} - ${project.endDate}` : `${project.startDate} - 진행 중`;
+  if (project.startDate) {
+    return project.endDate ? `${project.startDate} - ${project.endDate}` : `${project.startDate} - 진행 중`;
+  }
+  return project.duration || '-';
 };
 
 const AdminProject = ({ projects, onDeleteProject }) => {
