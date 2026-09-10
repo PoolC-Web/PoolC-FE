@@ -5,7 +5,7 @@ import { useMemo, useState } from 'react';
 import { useQueryClient } from '@tanstack/react-query';
 import { useHistory } from 'react-router-dom';
 import { BookControllerService, queryKey, useAppMutation, useAppQuery } from '~/lib/api-v2';
-import { BOOK_CATEGORY_TABS, BookCategoryTab, getBookCategoryLabel } from '~/constants/bookCategories';
+import { BOOK_CATEGORY_TABS, BookCategory, BookCategoryTab, getBookCategoryLabel } from '~/constants/bookCategories';
 import { useMessage } from '~/hooks/useMessage';
 import getFileUrl from '~/lib/utils/getFileUrl';
 import { WhiteNarrowBlock } from '~/styles/common/Block.styles';
