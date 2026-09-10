@@ -122,7 +122,7 @@ export default function MyPageContainer() {
     },
     ...(canAccessPokemon
       ? [{
-          title: '포켓몬 도감',
+          title: '도감',
           icon: <AppstoreOutlined size={24} />,
           link: `/${MENU.MY_PAGE}/${MENU.MY_PAGE_COLLECTION}`,
         }]
@@ -388,14 +388,14 @@ export default function MyPageContainer() {
       {canAccessPokemon && <section className={styles.collectionOverview} aria-labelledby="my-collection-title">
         <div className={styles.collectionOverviewHeader}>
           <div>
-            <Typography.Title id="my-collection-title" level={5} className={styles.collectionOverviewTitle}>포켓몬 도감</Typography.Title>
+            <Typography.Title id="my-collection-title" level={5} className={styles.collectionOverviewTitle}>도감</Typography.Title>
           </div>
           <Link to={`/${MENU.MY_PAGE}/${MENU.MY_PAGE_COLLECTION}`} className={styles.collectionLink}>도감 보기 <ArrowRightOutlined /></Link>
         </div>
         <div className={styles.collectionOverviewBody}>
           <div className={styles.collectionStats}>
             <div className={cx(styles.collectionStat, styles.collectionStatPrimary)}>
-              <img className={cx(styles.collectionStatVisual, styles.collectionStatVisualPokedex)} src={pokedexDeviceImage} alt="포켓몬 도감" />
+              <img className={cx(styles.collectionStatVisual, styles.collectionStatVisualPokedex)} src={pokedexDeviceImage} alt="도감" />
               <strong>{collectedCount} <span>/ {totalCatalogCount}종</span></strong>
               <Typography.Text>도감 완성</Typography.Text>
             </div>

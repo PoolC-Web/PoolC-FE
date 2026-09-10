@@ -122,7 +122,7 @@ export default function PokemonAchievementsPage() {
       <WhiteBlock className={styles.whiteBlock}>
         <PageContent className={styles.content}>
           <PageHeader title="퀘스트" actions={claimableQuests.length > 0 ? <Button type="primary" icon={<GiftOutlined />} loading={claimingAll} disabled={claiming !== null} onClick={claimAll}>모두 수령 ({claimableQuests.length})</Button> : undefined} />
-          <section className={styles.drawCta} aria-label="포켓몬 도감">
+          <section className={styles.drawCta} aria-label="도감">
             <div className={styles.drawCtaInfo}>
               <span><img src={normalBallImage} alt="" aria-hidden="true" /> 포켓볼 {ballCount}개 보유</span>
               <strong>보상을 받았다면 포켓몬을 뽑아보세요.</strong>

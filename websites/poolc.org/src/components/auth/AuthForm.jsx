@@ -1,17 +1,12 @@
 import { useState } from 'react';
 import { Input as AntdInput, Select } from 'antd';
-import profileImagePlaceholders from '../../constants/profileImagePlaceholders';
 import RegisterModalContainer from '../../containers/auth/RegisterModalContainer/RegisterModalContainer';
 import useInput from '../../hooks/useInput';
-import getFileUrl from '../../lib/utils/getFileUrl';
 import { emailValidation, idValidation, notEmptyValidation, passwordValidation, phoneNumberValidation, withdrawCheckValidation } from '../../lib/utils/validation';
 import { Block, WhiteBlock } from '../../styles/common/Block.styles';
 import {
   FormList,
   FormListHeader,
-  ProfileImage,
-  ProfileImageSelect,
-  ProfileImageSelectContainer,
   StyledInput,
   StyledLabel,
   StyledLink,
@@ -53,9 +48,6 @@ const AuthForm = ({ type, onSubmit, message, onChangeMessage, modalVisible, hand
   const [department, onChangeDepartment, departmentError] = useInput(userInfo ? userInfo.department : '', notEmptyValidation);
   const [studentId, onChangeStudentId, studentIdError] = useInput(userInfo ? userInfo.studentID : '', notEmptyValidation);
   const [introduction, onChangeIntroduction, introductionError] = useInput(userInfo ? userInfo.introduction : '', notEmptyValidation);
-
-  // eslint-disable-next-line no-nested-ternary
-  const [profileImageURL, setProfileImageURL] = useState(userInfo ? (userInfo.profileImageURL ? userInfo.profileImageURL : profileImagePlaceholders[0]) : profileImagePlaceholders[0]);
 
   const [role, setRole] = useState(userInfo ? userInfo.role : 'MEMBER');
 
@@ -136,7 +128,6 @@ const AuthForm = ({ type, onSubmit, message, onChangeMessage, modalVisible, hand
       studentId,
       phoneNumber,
       introduction,
-      profileImageURL,
     });
   }, 1000);
 
@@ -153,7 +144,6 @@ const AuthForm = ({ type, onSubmit, message, onChangeMessage, modalVisible, hand
       email,
       phoneNumber,
       introduction,
-      profileImageURL,
     });
   }, 1000);
 
@@ -168,10 +158,6 @@ const AuthForm = ({ type, onSubmit, message, onChangeMessage, modalVisible, hand
     if (type === 'update') {
       handleUpdate();
     }
-  };
-
-  const onChangeProfileImageURL = (e) => {
-    setProfileImageURL(profileImagePlaceholders[e.target.value]);
   };
 
   const handleUpdateMemberRoleBySelf = (e) => {
@@ -248,15 +234,6 @@ const AuthForm = ({ type, onSubmit, message, onChangeMessage, modalVisible, hand
                   disabledCondition={type === 'update'}
                   placeholderText="ex) 2021000000"
                 />
-                <label>프로필 이미지</label>
-                <ProfileImageSelectContainer>
-                  {[0, 1, 2, 3, 4].map((num) => (
-                    <ProfileImageSelect key={num}>
-                      <input type="radio" value={num} onChange={onChangeProfileImageURL} checked={profileImageURL === profileImagePlaceholders[num]} />
-                      <ProfileImage src={getFileUrl(profileImagePlaceholders[num])} />
-                    </ProfileImageSelect>
-                  ))}
-                </ProfileImageSelectContainer>
                 <label htmlFor="introduction">자기소개</label>
                 <AntdInput.TextArea value={introduction} name="introduction" id="introduction" cols="30" rows="5" onChange={onChangeIntroduction} placeholder="자기 소개를 적어주세요">
                   {introduction}

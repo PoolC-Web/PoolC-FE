@@ -16,7 +16,7 @@ const MemberCard = ({
     role: string;
   };
 }) => {
-  const memberStatus = isAdmin ? '임원진' : role === MEMBER_ROLE.TECHNICIAN ? '기여자' : null;
+  const memberStatus = role === MEMBER_ROLE.TECHNICIAN ? '기여자' : isAdmin ? '임원진' : null;
 
   return (
     <StyledLink to={`/${MENU.MEMBER}/${loginID}`}>

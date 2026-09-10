@@ -75,29 +75,6 @@ export const SubmitButton = styled.button`
   }
 `;
 
-export const ProfileImageSelectContainer = styled.div`
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  width: 100%;
-  flex-wrap: wrap;
-`;
-
-export const ProfileImageSelect = styled.div`
-  display: flex;
-  flex-direction: column;
-  justify-content: center;
-  align-items: center;
-  margin: 5px 5px 25px 5px;
-`;
-
-export const ProfileImage = styled.img`
-  width: 80px;
-  height: 80px;
-  border-radius: 50px;
-  margin: 10px 5px 0 5px;
-`;
-
 export const StyledSelect = styled(Select)`
   outline: 0;
   height: 2rem;
