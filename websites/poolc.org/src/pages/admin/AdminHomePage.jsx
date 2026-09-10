@@ -16,6 +16,7 @@ import AdminBookFormNew from '../../components/admin/AdminBookFormNew/AdminBookF
 import AdminBookNew from '../../components/admin/AdminBookNew/AdminBook';
 import AdminGamification from '../../components/admin/AdminGamification/AdminGamification';
 import { TwoColumnPageShell } from '../../components/common/PageLayout/PageLayout';
+import DrivePage from '../drive/DrivePage';
 
 const AdminPage = ({ history }) => {
   const menus = [
@@ -26,6 +27,7 @@ const AdminPage = ({ history }) => {
     { name: '프로젝트 관리', url: '/projects' },
     { name: '활동 관리', url: '/activities' },
     { name: '도서 관리', url: '/books' },
+    { name: '파일 관리', url: '/drive' },
     { name: '도감 동기화', url: '/gamification' },
     { name: '면접 시간 관리', url: '/interview-time' },
     { name: '면접 신청 조회', url: '/interview' },
@@ -48,6 +50,7 @@ const AdminPage = ({ history }) => {
         <Route component={AdminBookFormNew} path={[`/${MENU.ADMIN}/books/new`, `/${MENU.ADMIN}/books/edit/:bookID`]} exact />
         {/* <Route component={AdminBookContainer} path={`/${MENU.ADMIN}/books`} exact /> */}
         <Route component={AdminBookNew} path={`/${MENU.ADMIN}/books`} exact />
+        <Route component={DrivePage} path={`/${MENU.ADMIN}/drive`} exact />
         <Route component={AdminGamification} path={`/${MENU.ADMIN}/gamification`} exact />
         <Route component={AdminInterviewTimeContainer} path={`/${MENU.ADMIN}/interview-time`} exact />
         <Route component={AdminInterviewContainer} path={`/${MENU.ADMIN}/interview`} exact />
