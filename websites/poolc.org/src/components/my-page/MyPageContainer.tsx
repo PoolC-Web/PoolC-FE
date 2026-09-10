@@ -11,6 +11,7 @@ import { getProfileImageUrl } from '~/lib/utils/getProfileImageUrl';
 import pokedexDeviceImage from '~/assets/images/pokedex-device.webp';
 import pokeballImage from '~/assets/images/pokeball.png';
 import * as gameAPI from '~/lib/api/gamification';
+import * as infoAPI from '~/lib/api/info';
 import { loadUser } from '~/modules/auth';
 import { useMessage } from '~/hooks/useMessage';
 import { media } from '~/styles/responsive';
@@ -95,7 +96,7 @@ export default function MyPageContainer() {
   const [selectedShiny, setSelectedShiny] = useState(false);
   const [savingFeatured, setSavingFeatured] = useState(false);
 
-  const [{ data: activitySummary }, { data: me }] = useAppSuspenseQueries({
+  const [{ data: activitySummary }, { data: me }, { data: poolcInfo }] = useAppSuspenseQueries({
     queries: [
       {
         queryKey: queryKey.member.activitySummary,
@@ -104,6 +105,10 @@ export default function MyPageContainer() {
       {
         queryKey: queryKey.member.me,
         queryFn: MemberControllerService.getMeUsingGet,
+      },
+      {
+        queryKey: ['poolc.info'],
+        queryFn: async () => (await infoAPI.getPoolCInfo()).data,
       },
     ],
   });
@@ -211,7 +216,10 @@ export default function MyPageContainer() {
     }
   };
 
-  const activityMinimumHour = 10;
+  const configuredActivityMinimumHour = Number(poolcInfo.minimumActivityHours);
+  const activityMinimumHour = Number.isInteger(configuredActivityMinimumHour) && configuredActivityMinimumHour > 0
+    ? configuredActivityMinimumHour
+    : 10;
   const recordedActivityHours = activitySummary.totalHours ?? 0;
   const hasRoleExemption = me.role === MEMBER_ROLE.ADMIN || me.role === MEMBER_ROLE.TECHNICIAN;
   const hasManualExemption = Boolean(me.isExcepted) && !hasRoleExemption;
