@@ -80,6 +80,7 @@ export const MemberTable = styled.table`
   width: 100%;
   min-width: 980px;
   border-collapse: collapse;
+  table-layout: fixed;
   color: ${colors.brown[1]};
   font-size: 0.84rem;
 
@@ -95,8 +96,8 @@ export const MemberTable = styled.table`
   th:nth-of-type(2) { width: 15%; }
   th:nth-of-type(3) { width: 13%; }
   th:nth-of-type(4) { width: 18%; }
-  th:nth-of-type(5) { width: 18%; }
-  th:nth-of-type(6) { width: 16%; }
+  th:nth-of-type(5) { width: 12%; }
+  th:nth-of-type(6) { width: 22%; }
 
   tbody tr:last-of-type td {
     border-bottom: 0;
@@ -161,8 +162,9 @@ export const RoleSelect = styled.select`
 `;
 
 export const RoleActionButton = styled.button`
-  min-height: 32px;
-  padding: 0 9px;
+  width: 60px;
+  height: 36px;
+  padding: 0;
   border: 1px solid ${({ $active }) => ($active ? colors.mint[2] : '#b7ded1')};
   border-radius: 5px;
   background: ${({ $active }) => ($active ? colors.mint[0] : '#fff')};
@@ -179,8 +181,12 @@ export const RoleActionButton = styled.button`
 `;
 
 export const AccountActionButton = styled.button`
-  min-width: 78px;
-  padding: 7px 10px;
+  display: inline-flex;
+  width: 60px;
+  height: 36px;
+  align-items: center;
+  justify-content: center;
+  padding: 0;
   border: 1px solid #f2b5b5;
   border-radius: 5px;
   background: #fff;
@@ -188,6 +194,8 @@ export const AccountActionButton = styled.button`
   cursor: pointer;
   font-size: 0.78rem;
   font-weight: 800;
+  line-height: 1;
+  text-align: center;
   white-space: nowrap;
 `;
 
