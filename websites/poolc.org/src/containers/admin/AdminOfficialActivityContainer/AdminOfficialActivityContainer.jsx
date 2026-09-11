@@ -22,12 +22,21 @@ const AdminOfficialActivityContainer = () => {
     }
   };
 
-  const onGenerateQr = async (id) => {
-    const response = await officialActivityAPI.generateOfficialActivityQr(id);
-    return response.data;
+  const onToggleQr = async (activity) => {
+    const response = activity.qrEnabled
+      ? await officialActivityAPI.disableOfficialActivityQr(activity.id)
+      : await officialActivityAPI.generateOfficialActivityQr(activity.id);
+    if (response.status !== SUCCESS.OK) return;
+
+    setOfficialActivities((currentActivities) => currentActivities.map((currentActivity) => (
+      currentActivity.id === activity.id
+        ? (activity.qrEnabled ? response.data : { ...currentActivity, qrEnabled: true })
+        : currentActivity
+    )));
+    message.success(activity.qrEnabled ? '출석 QR을 껐습니다.' : '출석 QR을 켰습니다.');
   };
 
-  return <AdminOfficialActivityList officialActivities={officialActivities} onDeleteOfficialActivity={onDeleteOfficialActivity} onGenerateQr={onGenerateQr} />;
+  return <AdminOfficialActivityList officialActivities={officialActivities} onDeleteOfficialActivity={onDeleteOfficialActivity} onToggleQr={onToggleQr} />;
 };
 
 export default AdminOfficialActivityContainer;
