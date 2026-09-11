@@ -12,4 +12,8 @@ export const deleteOfficialActivity = (id) => client.delete(`/official-activitie
 
 export const generateOfficialActivityQr = (id) => client.post(`/official-activities/${id}/qr`);
 
+export const getOfficialActivityQr = (id) => client.get(`/official-activities/${id}/qr`);
+
+export const disableOfficialActivityQr = (id) => client.delete(`/official-activities/${id}/qr`);
+
 export const checkInOfficialActivity = (token) => client.post(`/official-activities/check-in/${token}`);
