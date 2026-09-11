@@ -10,7 +10,7 @@ import {
 import { dayjs } from '../../../lib/utils/dayjs';
 
 const PARTICIPANT_TAB = { ALL: 'ALL', QR: 'QR', MANUAL: 'MANUAL' };
-const formatAttendanceTime = (attendedAt) => (attendedAt ? dayjs(attendedAt).format('YYYY년 MM월 DD일 HH:mm') : '-');
+const formatAttendanceTime = (attendedAt) => (attendedAt ? dayjs.utc(attendedAt).utcOffset(9).format('YYYY년 MM월 DD일 HH:mm') : '-');
 
 const AdminOfficialActivityDetail = ({ activity, onRemoveMember, onShowQr }) => {
   const [activeTab, setActiveTab] = useState(PARTICIPANT_TAB.ALL);
