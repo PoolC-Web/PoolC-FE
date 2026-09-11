@@ -29,10 +29,6 @@ const AdminProjectFormContainer = ({ match, history }) => {
     }
   }, [projectID]);
 
-  if (projectID && project === null) {
-    return null;
-  }
-
   const onCreateProject = ({ name, thumbnailURL, genre, category, startDate, endDate, description, body }) => {
     if (!name || !category || !description || !startDate || !thumbnailURL || !body) {
       setErrorMessage('모든 항목을 입력하세요');
@@ -131,6 +127,10 @@ const AdminProjectFormContainer = ({ match, history }) => {
   };
 
   const buttons = <ActionButton onClick={onCloseErrorModal}>확인</ActionButton>;
+
+  if (projectID && project === null) {
+    return null;
+  }
 
   return (
     <AdminProjectForm
