@@ -21,6 +21,11 @@ export const ProjectCardBlock = styled.li`
   &[data-variant='home']:first-of-type {
     margin-left: 0;
   }
+
+  &[data-variant='member-detail'] {
+    height: 262px;
+    aspect-ratio: auto;
+  }
 `;
 
 export const Card = styled.div`
@@ -55,6 +60,11 @@ export const Card = styled.div`
     box-shadow: 0px 0px 10px ${colors.gray[1]};
     transform: none;
   }
+
+  &[data-variant='member-detail'] {
+    height: 262px;
+    padding: 10px;
+  }
 `;
 
 export const ThumbnailContainer = styled.div`
@@ -70,6 +80,12 @@ export const ThumbnailContainer = styled.div`
     aspect-ratio: auto;
     border-radius: 8px;
   }
+
+  [data-variant='member-detail'] & {
+    flex: 1;
+    height: auto;
+    aspect-ratio: auto;
+  }
 `;
 
 export const ProjectThumbnail = styled.img`
@@ -80,6 +96,10 @@ export const ProjectThumbnail = styled.img`
   [data-variant='home'] & {
     width: 240px;
     height: 120px;
+  }
+
+  [data-variant='member-detail'] & {
+    height: auto;
   }
 `;
 
@@ -94,6 +114,11 @@ export const TextContent = styled.div`
   [data-variant='home'] & {
     width: 230px;
     height: 110px;
+    flex: 0 0 auto;
+    padding-top: 8px;
+  }
+
+  [data-variant='member-detail'] & {
     flex: 0 0 auto;
     padding-top: 8px;
   }
@@ -120,6 +145,18 @@ export const ProjectTitle = styled.p`
     line-height: 1.25;
     white-space: nowrap;
     text-overflow: ellipsis;
+    -webkit-line-clamp: 1;
+  }
+
+  [data-variant='member-detail'] & {
+    display: block;
+    min-height: 20px;
+    margin: 0;
+    overflow: hidden;
+    font-size: 0.95rem;
+    line-height: 1.35;
+    text-overflow: ellipsis;
+    white-space: nowrap;
     -webkit-line-clamp: 1;
   }
 `;
