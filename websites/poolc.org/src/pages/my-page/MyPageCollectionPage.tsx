@@ -10,6 +10,7 @@ import { PageContent } from '~/components/common/PageLayout/PageLayout';
 import { useMessage } from '~/hooks/useMessage';
 import * as gameAPI from '~/lib/api/gamification';
 import pokeballImage from '~/assets/images/pokeball.png';
+import masterBallImage from '~/assets/images/masterball.png';
 import { breakpoints, media } from '~/styles/responsive';
 
 type Rarity = 'COMMON' | 'RARE' | 'EPIC' | 'LEGENDARY';
@@ -115,8 +116,6 @@ const rarityColor: Record<Rarity, string> = {
   EPIC: '#9c5cc6',
   LEGENDARY: '#d59a12',
 };
-
-const masterBallImage = 'https://archives.bulbagarden.net/media/upload/a/a6/Bag_Master_Ball_SV_Sprite.png';
 
 const hasNormalOwned = (item: Pick<CollectionItem, 'normalOwned' | 'normalOwnedCount'>) => item.normalOwned ?? (item.normalOwnedCount ?? 0) > 0;
 const hasShinyOwned = (item: Pick<CollectionItem, 'shinyOwned' | 'shinyCount'>) => item.shinyOwned ?? (item.shinyCount ?? 0) > 0;

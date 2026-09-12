@@ -58,11 +58,13 @@ const ProjectCard = ({ project, variant = 'default' }) => {
           </ThumbnailContainer>
           <TextContent>
             <ProjectTitle>{title}</ProjectTitle>
-            <ProjectGenre>
-              {track && <ProjectTrack>{track}</ProjectTrack>}
-              <span>{genre}</span>
-            </ProjectGenre>
-            <ProjectDescription>{description}</ProjectDescription>
+            {variant !== 'member-detail' && <>
+              <ProjectGenre>
+                {track && <ProjectTrack>{track}</ProjectTrack>}
+                <span>{genre}</span>
+              </ProjectGenre>
+              <ProjectDescription>{description}</ProjectDescription>
+            </>}
           </TextContent>
         </Card>
       </ProjectCardBlock>
