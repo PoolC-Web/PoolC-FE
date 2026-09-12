@@ -31,6 +31,7 @@ const MENU = {
   MESSAGE: 'message',
   MESSAGE_FORM: 'form',
   ROOM_RESERVATION: 'room-reservation',
+  DRIVE: 'drive',
 };
 
 export { MENU };

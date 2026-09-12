@@ -1,4 +1,5 @@
 import { useMemo, useState } from 'react';
+import { Modal } from 'antd';
 import { withRouter } from 'react-router-dom';
 import { MENU } from '../../../constants/menus';
 import { WhiteNarrowBlock } from '../../../styles/common/Block.styles';
@@ -54,6 +55,14 @@ const MemberTableHead = ({ showPendingActions }) => (
 const MemberRow = ({ member, roles, showPendingActions, onAcceptMember, onWithdrawMember, onUpdateMemberRole, history }) => {
   const stopRowNavigation = (event) => event.stopPropagation();
   const moveToMemberDetail = () => history.push(`/${MENU.MEMBER}/${member.loginID}`);
+  const confirmDelete = () => Modal.confirm({
+    title: '승인 대기 회원 삭제',
+    content: `${member.name} 회원의 가입 신청을 정말 삭제하시겠습니까?`,
+    okText: '삭제',
+    cancelText: '취소',
+    okButtonProps: { danger: true },
+    onOk: () => onWithdrawMember(member.loginID),
+  });
 
   return (
     <MemberListRow onClick={moveToMemberDetail}>
@@ -69,7 +78,7 @@ const MemberRow = ({ member, roles, showPendingActions, onAcceptMember, onWithdr
       {showPendingActions && <td onClick={stopRowNavigation}>
         <PendingActions>
           <PendingActionButton onClick={() => onAcceptMember(member.loginID)}>승인</PendingActionButton>
-          <PendingDeleteButton onClick={() => onWithdrawMember(member.loginID)}>삭제</PendingDeleteButton>
+          <PendingDeleteButton onClick={confirmDelete}>삭제</PendingDeleteButton>
         </PendingActions>
       </td>}
       {!showPendingActions && <td onClick={stopRowNavigation}>

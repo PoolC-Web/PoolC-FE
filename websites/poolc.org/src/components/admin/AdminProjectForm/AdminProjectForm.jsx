@@ -3,7 +3,7 @@ import { useEffect, useRef, useState } from 'react';
 // eslint-disable-next-line import/no-extraneous-dependencies
 import { Editor } from '@dialga/react-editor';
 import { DeleteOutlined } from '@ant-design/icons';
-import { Select } from 'antd';
+import { Modal as AntModal, Select } from 'antd';
 import koKR from 'antd/locale/ko_KR';
 import useInput from '../../../hooks/useInput';
 import ActionButton from '../../common/Buttons/ActionButton';
@@ -23,14 +23,25 @@ import getFileUrl from '../../../lib/utils/getFileUrl';
 import { dayjs } from '../../../lib/utils/dayjs';
 import throttle from '../../../lib/utils/throttle';
 
-const Member = ({ member, onDeleteMember }) => (
-  <MemberBlock>
-    <MemberInfo><strong>{member.name}</strong><span>{member.studentID}</span><span>{member.department}</span></MemberInfo>
-    <ButtonContainer>
-      <ActionButton type="button" aria-label={`${member.name} 참여자 제거`} onClick={() => onDeleteMember(member)}><DeleteOutlined /></ActionButton>
-    </ButtonContainer>
-  </MemberBlock>
-);
+const Member = ({ member, onDeleteMember }) => {
+  const confirmRemove = () => AntModal.confirm({
+    title: '참여자 제거',
+    content: `${member.name} 회원을 참여자 목록에서 정말 제거하시겠습니까?`,
+    okText: '제거',
+    cancelText: '취소',
+    okButtonProps: { danger: true },
+    onOk: () => onDeleteMember(member),
+  });
+
+  return (
+    <MemberBlock>
+      <MemberInfo><strong>{member.name}</strong><span>{member.studentID}</span><span>{member.department}</span></MemberInfo>
+      <ButtonContainer>
+        <ActionButton type="button" aria-label={`${member.name} 참여자 제거`} onClick={confirmRemove}><DeleteOutlined /></ActionButton>
+      </ButtonContainer>
+    </MemberBlock>
+  );
+};
 
 const AdminProjectForm = ({ onCreateProject, onSearchMember, onUpdateProject, members, searchMembers, onAddMember, onDeleteMember, project, errorMessage, buttons, errorModalVisible, onCloseErrorModal }) => {
   const editorRef = useRef();

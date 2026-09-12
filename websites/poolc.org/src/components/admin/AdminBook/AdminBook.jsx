@@ -1,4 +1,5 @@
 import ActionButton from '../../common/Buttons/ActionButton';
+import { Modal } from 'antd';
 
 import { MENU } from '../../../constants/menus';
 import { BookListRow, ButtonContainer, ContentsContainer, StyledActionButton, StyledImage, Table, TableHead, TitleContainer } from './AdminBook.styles';
@@ -6,9 +7,16 @@ import { WhiteNarrowBlock } from '../../../styles/common/Block.styles';
 import getFileUrl from '../../../lib/utils/getFileUrl';
 
 const AdminBook = ({ books, onDeleteBook }) => {
-  const handleDelete = (e, bookID) => {
+  const handleDelete = (e, book) => {
     e.preventDefault();
-    onDeleteBook(bookID);
+    Modal.confirm({
+      title: '도서 삭제',
+      content: `'${book.title}' 도서를 정말 삭제하시겠습니까?`,
+      okText: '삭제',
+      cancelText: '취소',
+      okButtonProps: { danger: true },
+      onOk: () => onDeleteBook(book.id),
+    });
   };
   return (
     <WhiteNarrowBlock>
@@ -38,7 +46,7 @@ const AdminBook = ({ books, onDeleteBook }) => {
                 <td className="book-list-row hide">{book.status === 'AVAILABLE' ? '이용 가능' : '대출중'}</td>
                 <td className="book-list-row">
                   <StyledActionButton to={`/${MENU.ADMIN}/books/edit/${book.id}`}>편집</StyledActionButton>
-                  <StyledActionButton onClick={(e) => handleDelete(e, book.id)}>삭제</StyledActionButton>
+                  <StyledActionButton onClick={(e) => handleDelete(e, book)}>삭제</StyledActionButton>
                 </td>
               </BookListRow>
             ))}
