@@ -1,5 +1,6 @@
 import { useEffect, useState } from 'react';
 import { DownloadOutlined } from '@ant-design/icons';
+import { Modal } from 'antd';
 import { WhiteNarrowBlock } from '../../../styles/common/Block.styles';
 import { SectionTabs } from '../../common/SectionTabs/SectionTabs';
 import { MemberIdentity, PageHeader, Title, TitleMeta } from '../AdminMember/AdminMember.styles';
@@ -56,6 +57,14 @@ const AdminOfficialActivityDetail = ({ activity, onRemoveMember, onShowQr }) => 
       window.URL.revokeObjectURL(objectUrl);
     }, 0);
   };
+  const confirmRemoveMember = (participant) => Modal.confirm({
+    title: '참여자 제거',
+    content: `${participant.name} 회원을 참여자 목록에서 정말 제거하시겠습니까?`,
+    okText: '제거',
+    cancelText: '취소',
+    okButtonProps: { danger: true },
+    onOk: () => onRemoveMember(participant.loginId),
+  });
 
   return <WhiteNarrowBlock>
     <PageHeader style={{ position: 'relative', paddingRight: 96 }}>
@@ -76,7 +85,7 @@ const AdminOfficialActivityDetail = ({ activity, onRemoveMember, onShowQr }) => 
               <td>{participant.phoneNumber || '-'}</td>
               <td><AttendanceSourceBadge $source={participant.source}>{participant.source === 'QR' ? 'QR출석' : '수동 기입'}</AttendanceSourceBadge></td>
               <td>{formatAttendanceTime(participant.attendedAt)}</td>
-              <td><DeleteButton type="button" aria-label={`${participant.name} 참여자 제거`} onClick={() => onRemoveMember(participant.loginId)}>삭제</DeleteButton></td>
+              <td><DeleteButton type="button" aria-label={`${participant.name} 참여자 제거`} onClick={() => confirmRemoveMember(participant)}>삭제</DeleteButton></td>
             </ParticipantTableRow>
           ))}
         </tbody>

@@ -1,5 +1,5 @@
 import { useMemo, useState } from 'react';
-import { Spin } from 'antd';
+import { Modal, Spin } from 'antd';
 import { WhiteNarrowBlock } from '../../../styles/common/Block.styles';
 import { SectionTabs } from '../../common/SectionTabs/SectionTabs';
 import { getHourMinuteString } from '../../../lib/utils/getDateString';
@@ -25,9 +25,14 @@ const getSlotStatus = (applicantCount, capacity) => {
 
 const Applicant = ({ interviewee, handleCancelInterview }) => {
   const cancel = () => {
-    if (window.confirm(`${interviewee.name}님의 면접 신청을 취소하시겠습니까?`)) {
-      handleCancelInterview({ loginId: interviewee.loginID });
-    }
+    Modal.confirm({
+      title: '면접 신청 취소',
+      content: `${interviewee.name}님의 면접 신청을 취소하시겠습니까?`,
+      okText: '취소',
+      cancelText: '닫기',
+      okButtonProps: { danger: true },
+      onOk: () => handleCancelInterview({ loginId: interviewee.loginID }),
+    });
   };
 
   return (

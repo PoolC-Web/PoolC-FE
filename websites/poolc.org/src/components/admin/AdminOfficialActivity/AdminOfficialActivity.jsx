@@ -1,5 +1,6 @@
 import { useEffect, useState } from 'react';
 import { DeleteOutlined } from '@ant-design/icons';
+import { Modal } from 'antd';
 import koKR from 'antd/locale/ko_KR';
 import useInput from '../../../hooks/useInput';
 import ActionButton from '../../common/Buttons/ActionButton';
@@ -45,6 +46,14 @@ const AdminOfficialActivity = ({ activity, searchMembers, onSearchMember, onCrea
 
   const selectedMemberIds = selectedMembers.map((member) => member.loginID);
   const selectableMembers = searchMembers.filter((member) => !selectedMemberIds.includes(member.loginID));
+  const confirmRemoveMember = (member) => Modal.confirm({
+    title: '참여자 제거',
+    content: `${member.name} 회원을 참여자 목록에서 정말 제거하시겠습니까?`,
+    okText: '제거',
+    cancelText: '취소',
+    okButtonProps: { danger: true },
+    onOk: () => setSelectedMembers((currentMembers) => currentMembers.filter((item) => item.loginID !== member.loginID)),
+  });
 
   const submit = async (event) => {
     event.preventDefault();
@@ -113,7 +122,7 @@ const AdminOfficialActivity = ({ activity, searchMembers, onSearchMember, onCrea
                 {selectedMembers.length === 0 ? <p>참여자를 추가하세요.</p> : selectedMembers.map((member) => (
                   <MemberBlock key={member.loginID}>
                     <MemberInfo><strong>{member.name}</strong><span>{member.studentID}</span><span>{member.department}</span>{member.source === 'QR' && <QrAttendanceBadge>QR출석</QrAttendanceBadge>}</MemberInfo>
-                    <ButtonContainer><ActionButton type="button" aria-label={`${member.name} 참여자 제거`} onClick={() => setSelectedMembers((currentMembers) => currentMembers.filter((item) => item.loginID !== member.loginID))}><DeleteOutlined /></ActionButton></ButtonContainer>
+                    <ButtonContainer><ActionButton type="button" aria-label={`${member.name} 참여자 제거`} onClick={() => confirmRemoveMember(member)}><DeleteOutlined /></ActionButton></ButtonContainer>
                   </MemberBlock>
                 ))}
               </MemberContainer>

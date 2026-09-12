@@ -1,5 +1,5 @@
 import { useState } from 'react';
-import { Spin } from 'antd';
+import { Modal, Spin } from 'antd';
 import { WhiteNarrowBlock } from '../../../styles/common/Block.styles';
 import ActionButton from '../../common/Buttons/ActionButton';
 import { SectionTabs } from '../../common/SectionTabs/SectionTabs';
@@ -51,10 +51,17 @@ const SlotRow = ({ id, date, startTime, endTime, capacity, applicantCount, onCre
 
   const remove = (event) => {
     event.preventDefault();
-    const message = applicantCount > 0
+    const content = applicantCount > 0
       ? `현재 ${applicantCount}명이 신청한 슬롯입니다. 정말 삭제하시겠습니까?`
       : '이 면접 슬롯을 삭제하시겠습니까?';
-    if (window.confirm(message)) onDeleteInterviewTime({ slotId: id });
+    Modal.confirm({
+      title: '면접 시간 삭제',
+      content,
+      okText: '삭제',
+      cancelText: '취소',
+      okButtonProps: { danger: true },
+      onOk: () => onDeleteInterviewTime({ slotId: id }),
+    });
   };
 
   return (
@@ -110,7 +117,14 @@ const AdminInterviewTime = ({ data, loading, setData, onCreateInterviewTime, onD
     ...data.map((group) => ({ key: group.date, label: group.date })),
   ];
   const deleteAll = () => {
-    if (window.confirm('모든 면접 시간 슬롯과 신청 정보를 삭제하시겠습니까?')) onDeleteAllInterviewTime();
+    Modal.confirm({
+      title: '면접 시간 전체 삭제',
+      content: '모든 면접 시간 슬롯과 신청 정보를 삭제하시겠습니까?',
+      okText: '전체 삭제',
+      cancelText: '취소',
+      okButtonProps: { danger: true },
+      onOk: onDeleteAllInterviewTime,
+    });
   };
 
   return (
